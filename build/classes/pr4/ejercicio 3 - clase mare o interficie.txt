@@ -1,0 +1,9 @@
+En este caso sería mejor utilizar una clase madre AbstractDAO ya que con la 
+Interfaz Persistable los métodos de delete, search y getMAP los tienes que 
+reescribir en en las 3 implementaciones, mientras que con AbstractDAO solo
+tienes que definirlos una vez (en la madre) y solo reescribir el método 
+add en los hijos.
+
+Por lo tanto, en casos que la definición de los métodos es igual en todos, 
+o casi, todos los métodos ahorra reescribir código hacer una clase madre
+AbstractDAO.
