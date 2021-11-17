@@ -1,13 +1,11 @@
 package pr5;
 
 public class Address {
-
     private String locality;
     private String province;
     private String zipCode;
     private String address;
-    
-    //Constructor
+
     public Address(String locality, String province, String zipCode, String address) {
         this.locality = locality;
         this.province = province;
@@ -17,10 +15,11 @@ public class Address {
 
     @Override
     public String toString() {
-        return "Address{" + "locality=" + locality + ", province=" + province + ", zipCode=" + zipCode + ", address=" + address + '}';
+        return "Address{" + "locality=" + locality + ", province=" + province + ", zipCode=" + zipCode + ", address="
+                + address + '}';
     }
-    
-    //Setters
+    //TODO
+
     public void setLocality(String locality) {
         this.locality = locality;
     }
@@ -37,8 +36,6 @@ public class Address {
         this.address = address;
     }
 
-
-    //Getters
     public String getLocality() {
         return locality;
     }
@@ -54,5 +51,4 @@ public class Address {
     public String getAddress() {
         return address;
     }
-
 }

@@ -1,36 +1,31 @@
 package pr5;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ManagerProduct<T> implements Persistable<T> {
-    // Para poder almancenar Productos o Pack el HashMaps es de Object y se casteará
-    // a Pack o Product
     private HashMap<Integer, T> productsHashMap = new HashMap<Integer, T>();
 
-    // Interfaces
     @Override
-    public Object add(Object obj) {
-        if (obj != null) {
-            if (obj instanceof Product) {
-                if (obj instanceof Pack pack) {
+    public T add(Object prod) {
+        if (prod != null) {
+            if (prod instanceof Product) {
+                if (prod instanceof Pack pack) {
                     if (productsHashMap.containsKey(pack.getIdProduct())) {
                         return null;
                     } else {
-                        productsHashMap.put(pack.getIdProduct(), (T) obj);
-                        return obj;
+                        productsHashMap.put(pack.getIdProduct(), (T) prod);
+                        return (T)prod;
                     }
                 } else {
-                    if (productsHashMap.containsKey(((Product) obj).getIdProduct())) {
+                    if (productsHashMap.containsKey(((Product) prod).getIdProduct())) {
                         return null;
                     } else {
-                        productsHashMap.put(((Product) obj).getIdProduct(), (T) obj);
-                        return obj;
+                        productsHashMap.put(((Product) prod).getIdProduct(), (T) prod);
+                        return (T)prod;
                     }
                 }
             }
         }
-
         return null;
     }
 
@@ -53,28 +48,11 @@ public class ManagerProduct<T> implements Persistable<T> {
             return null;
         }
     }
+    //TODO
 
     @Override
     public HashMap<Integer, T> getMap() {
         return productsHashMap;
-    }
-
-    public boolean addProduct(Product prod) {
-        if (productsHashMap.containsKey(prod.getIdProduct())) {
-            return false;
-        } else {
-            productsHashMap.put(prod.getIdProduct(), (T) prod);
-            return true;
-        }
-    }
-
-    public boolean addPack(Pack pack) {
-        if (productsHashMap.containsKey(pack.getIdProduct())) {
-            return false;
-        } else {
-            productsHashMap.put(pack.getIdProduct(), (T) pack);
-            return true;
-        }
     }
 
     // Busca un producto en el HashMap, con el segundo parámetro "type"

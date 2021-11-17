@@ -9,9 +9,9 @@ public class View {
     private String numberRegex = "\\d+";
 
     private Scanner keyboard = new Scanner(System.in);
-    private ManagerClient managerClient = new ManagerClient();
-    private ManagerSupplier managerSupplier = new ManagerSupplier();
-    private ManagerProduct managerProduct = new ManagerProduct();
+    private Manager managerClient = new Manager();
+    private Manager managerSupplier = new Manager();
+    private Manager managerProduct = new Manager();
 
     public void run() {
         String menuOption;
@@ -36,6 +36,9 @@ public class View {
             // Proveedores
             case "3":
                 menuSupplier();
+                break;
+            default:
+                System.out.println("Introduce una opción correcta!");
                 break;
             }
         } while (!"0".equals(menuOption));
@@ -108,7 +111,7 @@ public class View {
 
             if (idProduct.matches(numberRegex) && price.matches(numberRegex) && stock.matches(numberRegex)) {
                 prod = new Product(Integer.parseInt(idProduct), name, Integer.parseInt(price), Integer.parseInt(stock));
-                if (managerProduct.add(prod) != null) {
+                if (managerProduct.add(prod, Integer.parseInt(idProduct)) != null) {
                     System.out.println("Producto añadido!\n");
                 } else {
                     System.out.println("El producto ya está añadido, prueba otro id\n ");
@@ -156,7 +159,7 @@ public class View {
                     pack = new Pack(idProdList, Integer.parseInt(discount) / 100, Integer.parseInt(idProduct), name,
                             Integer.parseInt(price));
 
-                    if (managerProduct.add(pack) != null) {
+                    if (managerProduct.add(pack, Integer.parseInt(idProduct)) != null) {
                         System.out.println("Pack añadido!\n");
                     } else {
                         System.out.println("Ya existe un pack con ese ID\n");
@@ -179,7 +182,7 @@ public class View {
                             idProduct = keyboard.nextLine();
 
                             if (idProduct.matches(numberRegex)) {
-                                pack = (Pack) managerProduct.searchProduct(Integer.parseInt(idProduct), "pack");
+                                pack = (Pack) managerProduct.get(Integer.parseInt(idProduct));
 
                                 if (pack != null && pack instanceof Pack) {
                                     if (pack.addProduct(prod.getIdProduct())) {
@@ -214,7 +217,7 @@ public class View {
         idProduct = keyboard.nextLine();
 
         if (idProduct.matches(numberRegex)) {
-            prod = (Product) managerProduct.searchProduct(Integer.parseInt(idProduct), "both");
+            prod = (Product) managerProduct.get(Integer.parseInt(idProduct));
             if (prod != null) {
                 System.out.println(prod.toString() + "\n");
             } else {
@@ -236,7 +239,7 @@ public class View {
 
         if (idProduct.matches(numberRegex)) {
             Integer id = Integer.parseInt(idProduct);
-            Object obj = managerProduct.searchProduct(id, "both");
+            Object obj = managerProduct.get(id);
 
             if (obj != null) {
                 System.out.println("Introduce el nuevo nombre del producto:");
@@ -399,7 +402,7 @@ public class View {
             if (isClient) {
                 Client client = new Client(Integer.parseInt(id), dni, name, surname, address);
 
-                if (managerClient.add(client) != null) {
+                if (managerClient.add(client, Integer.parseInt(id)) != null) {
                     System.out.println("Cliente añadido!\n");
                 } else {
                     System.out.println("El cliente ya existe, prueba otro id\n");
@@ -407,7 +410,7 @@ public class View {
             } else {
                 Supplier supplier = new Supplier(Integer.parseInt(id), dni, name, surname, address);
 
-                if (managerSupplier.add(supplier) != null) {
+                if (managerSupplier.add(supplier,Integer.parseInt(id)) != null) {
                     System.out.println("Proveedor añadido!\n");
                 } else {
                     System.out.println("El proveedor ya existe, prueba otro id\n");
@@ -500,7 +503,7 @@ public class View {
 
             Address address = askAddress();
 
-            if (managerClient.clientExists(Integer.parseInt(id)) || managerSupplier.supplierExists(Integer.parseInt(id))) {
+            if (managerClient.objExists(Integer.parseInt(id)) || managerSupplier.objExists(Integer.parseInt(id))) {
                 // Según si es cliente o no modifica los datos en clase correspondiente
                 if (isClient) {
                     managerClient.modifyClient(Integer.parseInt(id), dni, name, surname, address);
