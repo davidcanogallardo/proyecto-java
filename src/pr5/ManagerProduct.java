@@ -6,7 +6,7 @@ public class ManagerProduct<T> implements Persistable<T> {
     private HashMap<Integer, T> productsHashMap = new HashMap<Integer, T>();
 
     @Override
-    public T add(Object prod) {
+    public T add(Object prod, int id) {
         if (prod != null) {
             if (prod instanceof Product) {
                 if (prod instanceof Pack pack) {

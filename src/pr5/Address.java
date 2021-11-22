@@ -15,10 +15,9 @@ public class Address {
 
     @Override
     public String toString() {
-        return "Address{" + "locality=" + locality + ", province=" + province + ", zipCode=" + zipCode + ", address="
-                + address + '}';
+        return "Address [" + "locality=" + locality + ", province=" + province + ", zipCode=" + zipCode + ", address="
+                + address + ']';
     }
-    //TODO
 
     public void setLocality(String locality) {
         this.locality = locality;

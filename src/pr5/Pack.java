@@ -51,18 +51,17 @@ public final class Pack extends Product {
 
     @Override
     public String toString() {
-        String str = super.toString() + "\n{\n";
+        String str = super.toString() + "\n [\n";
         for (Integer i : this.idProdList) {
             str += "   " + i + ",\n";
         }
-        str += "}";
+        str += "]";
         return str;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Pack) {
-            Pack pack = (Pack)obj;
+        if (obj instanceof Pack pack) {
             return this.idProdList.equals(pack.getIdProdList());
         } else {
             return false;

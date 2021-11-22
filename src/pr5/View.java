@@ -47,7 +47,6 @@ public class View {
     /*--------------------------------------PRODUCTOS------------------------------------------*/
     public void menuProduct() {
         String menuOption;
-        Persistable p = managerProduct;
 
         do {
             System.out.println("Elige una opción:");
@@ -78,7 +77,7 @@ public class View {
                 break;
             // List all
             case "5":
-                printClassObjects(p);
+                printClassObjects(managerProduct);
                 break;
             }
         } while (!"0".equals(menuOption));
@@ -254,7 +253,7 @@ public class View {
                     keyboard.nextLine();
 
                     if (price.matches(numberRegex)) {
-                        managerProduct.modifyPack(id, name, Integer.parseInt(price), discount / 100);
+                        // managerProduct.modifyPack(id, name, Integer.parseInt(price), discount / 100);
                         System.out.println("Producto modificado!\n");
                     } else {
                         System.out.println("Introduce un número!\n");
@@ -264,7 +263,7 @@ public class View {
                     stock = keyboard.nextInt();
 
                     if (price.matches(numberRegex)) {
-                        managerProduct.modifyProduct(id, name, Integer.parseInt(price), stock);
+                        // managerProduct.modifyProduct(id, name, Integer.parseInt(price), stock);
                         System.out.println("Producto modificado!\n");
                     } else {
                         System.out.println("Introduce un número!\n");
@@ -299,7 +298,6 @@ public class View {
     /*--------------------------------------PERSONAS------------------------------------------*/
     public void menuCliente() {
         String option;
-        Persistable p = managerClient;
 
         do {
             System.out.println("Elige una opción:");
@@ -331,7 +329,7 @@ public class View {
                 break;
             // List
             case "5":
-                printClassObjects(p);
+                printClassObjects(managerClient);
                 break;
             }
         } while (!"0".equals(option));
@@ -339,7 +337,6 @@ public class View {
 
     public void menuSupplier() {
         String option;
-        Persistable p = managerSupplier;
 
         do {
             System.out.println("Elige una opción:");
@@ -371,7 +368,7 @@ public class View {
                 break;
             // List
             case "5":
-                printClassObjects(p);
+                printClassObjects(managerSupplier);
                 break;
             }
         } while (!"0".equals(option));
@@ -410,7 +407,7 @@ public class View {
             } else {
                 Supplier supplier = new Supplier(Integer.parseInt(id), dni, name, surname, address);
 
-                if (managerSupplier.add(supplier,Integer.parseInt(id)) != null) {
+                if (managerSupplier.add(supplier, Integer.parseInt(id)) != null) {
                     System.out.println("Proveedor añadido!\n");
                 } else {
                     System.out.println("El proveedor ya existe, prueba otro id\n");
@@ -506,11 +503,11 @@ public class View {
             if (managerClient.objExists(Integer.parseInt(id)) || managerSupplier.objExists(Integer.parseInt(id))) {
                 // Según si es cliente o no modifica los datos en clase correspondiente
                 if (isClient) {
-                    managerClient.modifyClient(Integer.parseInt(id), dni, name, surname, address);
+                    // managerClient.modifyClient(Integer.parseInt(id), dni, name, surname, address);
                     System.out.println("Datos actualizados:");
                     System.out.println(managerClient.get(Integer.parseInt(id)).toString() + "\n");
                 } else {
-                    managerSupplier.modifySupplier(Integer.parseInt(id), dni, name, surname, address);
+                    // managerSupplier.modifySupplier(Integer.parseInt(id), dni, name, surname, address);
                     System.out.println("Datos actualizados:");
                     System.out.println(managerSupplier.get(Integer.parseInt(id)).toString() + "\n");
                 }
@@ -556,7 +553,7 @@ public class View {
         }
     }
 
-    private void printClassObjects(Persistable p) {
+    private void printClassObjects(Manager p) {
         HashMap<Integer, Object> hashMap = p.getMap();
         for (Object values : hashMap.values()) {
             System.out.println(values.toString() + "\n");

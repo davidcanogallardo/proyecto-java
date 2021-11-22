@@ -15,9 +15,7 @@ public class Product {
     }
     
     public Product(Integer idProduct, String name, Integer price, Integer stock) {
-        this.idProduct = idProduct;
-        this.name = name;
-        this.price = price;
+        this(idProduct, name, price);
         this.stock = stock;
     }
 
@@ -30,9 +28,8 @@ public class Product {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Product) {
-            Product tmp = (Product)obj;
-            return this.name.equals(tmp.getName());
+        if (obj instanceof Product prod) {
+            return this.name.equals(prod.getName());
         } else {
             return false;
         }
@@ -40,7 +37,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" + "idProduct=" + idProduct + ", name=" + name + ", price=" + price + ", stock=" + stock + '}';
+        return "Product [" + "idProduct=" + idProduct + ", name=" + name + ", price=" + price + ", stock=" + stock + ']';
     }
     
     //Getters

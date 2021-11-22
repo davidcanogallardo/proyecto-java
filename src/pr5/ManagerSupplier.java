@@ -6,14 +6,14 @@ public class ManagerSupplier<T> implements Persistable<T> {
     private HashMap<Integer, T> supplierHashMap = new HashMap<Integer, T>();
 
     @Override
-    public T add(T obj) {
+    public T add(Object obj, int id) {
         if (obj != null) {
             if (obj instanceof Supplier supplier) {
                 if (supplierHashMap.containsKey(supplier.getIdPersona())) {
                     return null;
                 } else {
                     supplierHashMap.put(supplier.getIdPersona(), (T) supplier);
-                    return obj;
+                    return (T)obj;
                 }
             }
         }

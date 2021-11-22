@@ -2,20 +2,18 @@ package pr5;
 
 import java.util.HashMap;
 
-public class Manager<T> implements Persistable<T> {
+public class Manager <T> {
     private HashMap<Integer, T> hashMap = new HashMap<>();
 
-    @Override
     public T add(T obj, int id) {
         if (hashMap.containsKey(id)) {
             return null;
         } else {
             hashMap.put(id, obj);
-            return obj;
+            return (T)obj;
         }
     }
 
-    @Override
     public T delete(T id) {
         if (hashMap.containsKey(id)) {
             T obj = hashMap.get(id);
@@ -26,8 +24,7 @@ public class Manager<T> implements Persistable<T> {
         }
     }
 
-    @Override
-    public T get(T id) {
+    public T get(int id) {
         if (hashMap.containsKey(id)) {
             return hashMap.get(id);
         } else {
@@ -35,13 +32,12 @@ public class Manager<T> implements Persistable<T> {
         }
     }
 
-    @Override
     public HashMap<Integer, T> getMap() {
         return new HashMap<>(hashMap);
     }
 
     public void modifyClient(int id, T obj) {
-        
+        System.out.println("w");
     }
 
     public boolean objExists(int id) {
