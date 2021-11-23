@@ -2,7 +2,7 @@ package pr5;
 
 import java.util.Objects;
 
-public class Product {
+public class Product implements Productable{
     private Integer idProduct;
     private String name;
     private Integer price;
@@ -41,7 +41,7 @@ public class Product {
     }
     
     //Getters
-    public Integer getIdProduct() {
+    public int getId() {
         return idProduct;
     }
 
@@ -49,16 +49,16 @@ public class Product {
         return name;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public Integer getStock() {
+    public int getStock() {
         return stock;
     }
 
     //Setters
-    public void setIdProduct(Integer idProduct) {
+    public void setId(Integer idProduct) {
         this.idProduct = idProduct;
     }
 

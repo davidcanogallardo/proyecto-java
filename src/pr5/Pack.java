@@ -2,12 +2,12 @@ package pr5;
 
 import java.util.ArrayList;
 
-public final class Pack extends Product {
+public final class Pack extends Product implements Packable {
 
     private ArrayList<Integer> idProdList;
-    private float discount;
+    private int discount;
 
-    public Pack(ArrayList<Integer> idProdList, float discount, Integer idProduct, String name, Integer price) {
+    public Pack(ArrayList<Integer> idProdList, int discount, Integer idProduct, String name, Integer price) {
         super(idProduct, name, price);
         this.idProdList = idProdList;
         this.discount = discount;
@@ -21,11 +21,11 @@ public final class Pack extends Product {
         this.idProdList = idProdList;
     }
 
-    public float getDiscount() {
+    public int getDiscount() {
         return discount;
     }
 
-    public void setDiscount(float discount) {
+    public void setDiscount(int discount) {
         this.discount = discount;
     }
     
@@ -67,13 +67,5 @@ public final class Pack extends Product {
             return false;
         }
 
-    }
-    
-    
-    
-    
-    
-    
-    
-    
+    } 
 }
