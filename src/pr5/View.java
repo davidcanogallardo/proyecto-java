@@ -5,24 +5,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class View<Object extends Productable, Packable> {
+public class View {
     // Expresión regular para comprobar si un String se puede parsear a int
     private String numberRegex = "\\d+";
 
     private Scanner keyboard = new Scanner(System.in);
-    private Manager managerClient = new Manager();
-    private Manager managerSupplier = new Manager();
-    private Manager managerProduct = new Manager();
+
+    private Manager<Client> managerClient = new Manager<>();
+    private Manager<Supplier> managerSupplier = new Manager<>();
+    private Manager<Product> managerProduct = new Manager<>();
 
     public void run() {
         String menuOption;
 
         do {
             System.out.println("Elige una opción:");
-            System.out.println("0 Salir");
-            System.out.println("1 Productos");
-            System.out.println("2 Clientes");
-            System.out.println("3 Proveedores");
+            System.out.println("[0] Salir");
+            System.out.println("[1] Productos");
+            System.out.println("[2] Clientes");
+            System.out.println("[3] Proveedores");
+            System.out.print("Opción: ");
             menuOption = keyboard.nextLine();
 
             switch (menuOption) {
@@ -38,7 +40,9 @@ public class View<Object extends Productable, Packable> {
             case "3":
                 menuSupplier();
                 break;
+                //TODO opcion 0 que no diga lo de opcion incorrecta
             default:
+                // deleteLine();
                 System.out.println("Introduce una opción correcta!");
                 break;
             }
@@ -50,13 +54,14 @@ public class View<Object extends Productable, Packable> {
         String menuOption;
 
         do {
-            System.out.println("Elige una opción:");
-            System.out.println("0 Volver");
-            System.out.println("1 Añadir producto");
-            System.out.println("2 Buscar producto");
-            System.out.println("3 Modificar producto");
-            System.out.println("4 Borrar producto");
-            System.out.println("5 Mostrar todos los productos\n");
+            System.out.println("\nElige una opción:");
+            System.out.println("[0] Volver");
+            System.out.println("[1] Añadir producto");
+            System.out.println("[2] Buscar producto");
+            System.out.println("[3] Modificar producto");
+            System.out.println("[4] Borrar producto");
+            System.out.println("[5] Mostrar todos los productos");
+            System.out.print("Opción: ");
             menuOption = keyboard.nextLine();
 
             switch (menuOption) {
@@ -80,37 +85,42 @@ public class View<Object extends Productable, Packable> {
             case "5":
                 printClassObjects(managerProduct);
                 break;
+            default:
+                // deleteLine();
+                break;
             }
         } while (!"0".equals(menuOption));
     }
 
     public void addProduct() {
+        //TODO bucle al preguntar
         String answer;
 
-        System.out.println("El producto es un pack? (s/n)");
+        System.out.println("Qué quiere añadir? (PRODUCTO/pack)");
         String tmp = keyboard.nextLine();
         if (tmp.equals("")) {
-            answer = "s";
+            answer = "producto";
         } else {
             answer = tmp;
         }
 
-        if (answer.equalsIgnoreCase("S")) {
-            addPack();
-        } else if (answer.equalsIgnoreCase("N")) {
+        if (answer.equalsIgnoreCase("producto")) {
             addProduct2();
+        } else if (answer.equalsIgnoreCase("pack")) {
+            addPack();
         }
     }
 
     public void addProduct2() {
-        // TODO
+        // TODO el nombre de la funcion
         String idProduct;
         String name;
         String price;
         String stock;
         Product prod;
 
-        System.out.println("\nIntroduce las propiedades del producto:");
+        System.out.println("Introduce las propiedades del producto:");
+        //ID
         do {
             System.out.print("ID: ");
             idProduct = keyboard.nextLine();
@@ -119,9 +129,16 @@ public class View<Object extends Productable, Packable> {
             }
         } while (!idProduct.matches(numberRegex));
 
-        System.out.print("Nombre: ");
-        name = keyboard.nextLine();
+        //name
+        do {
+            System.out.print("Nombre: ");
+            name = keyboard.nextLine();
+            if (name.equals("")) {
+                deleteLine();
+            }
+        } while (name.equals(""));
 
+        //price
         do {
             System.out.print("Precio: ");
             price = keyboard.nextLine();
@@ -130,6 +147,7 @@ public class View<Object extends Productable, Packable> {
             }
         } while (!price.matches(numberRegex));
 
+        //stock
         do {
             System.out.print("Stock: ");
             stock = keyboard.nextLine();
@@ -139,8 +157,10 @@ public class View<Object extends Productable, Packable> {
         } while (!stock.matches(numberRegex));
 
         prod = new Product(Integer.parseInt(idProduct), name, Integer.parseInt(price), Integer.parseInt(stock));
-        if (managerProduct.add(prod, Integer.parseInt(idProduct)) != null) {
-            System.out.println("\nProducto añadido!\n");
+
+        if (managerProduct.add(prod) != null) {
+            System.out.println("\nProducto añadido!");
+            System.out.println(prod.toString()+ "\n");
         } else {
             System.out.println("El producto ya está añadido, prueba otro id\n ");
         }
@@ -161,13 +181,16 @@ public class View<Object extends Productable, Packable> {
         String menuOption;
 
         do {
-            System.out.println("0 Volver");
-            System.out.println("1 Añadir un pack");
-            System.out.println("2 Añadir un producto a un pack");
+            System.out.println("\nElige una opción:");
+            System.out.println("[0] Volver");
+            System.out.println("[1] Añadir un pack");
+            System.out.println("[2] Añadir un producto a un pack");
+            System.out.print("Opción: ");
             menuOption = keyboard.nextLine();
 
             if ("1".equals(menuOption)) {
                 System.out.println("\nIntroduce las propiedades del pack:");
+                //ID
                 do {
                     System.out.print("ID: ");
                     idProduct = keyboard.nextLine();
@@ -176,6 +199,7 @@ public class View<Object extends Productable, Packable> {
                     }
                 } while (!idProduct.matches(numberRegex));
 
+                //discount
                 do {
                     System.out.print("Descuento (0-100): ");
                     discount = keyboard.nextLine();
@@ -184,8 +208,16 @@ public class View<Object extends Productable, Packable> {
                     }
                 } while (!discount.matches(numberRegex));
 
-                System.out.print("Nombre: ");
-                name = keyboard.nextLine();
+                //name
+                do {
+                    System.out.print("Nombre: ");
+                    name = keyboard.nextLine();
+                    if (name.equals("")) {
+                        deleteLine();
+                    }
+                } while (name.equals(""));
+
+                //price
                 do {
                     System.out.print("Precio: ");
                     price = keyboard.nextLine();
@@ -194,14 +226,16 @@ public class View<Object extends Productable, Packable> {
                     }
                 } while (!price.matches(numberRegex));
 
-                ArrayList<Integer> idProdList = new ArrayList<Integer>();
+                //lista de productos 
+                ArrayList<Integer> idProdList = new ArrayList<>();
 
                 // TODO descuento formato
                 pack = new Pack(idProdList, Integer.parseInt(discount), Integer.parseInt(idProduct), name,
                         Integer.parseInt(price));
 
-                if (managerProduct.add(pack, Integer.parseInt(idProduct)) != null) {
-                    System.out.println("\nPack añadido!\n");
+                if (managerProduct.add(pack) != null) {
+                    System.out.println("\nPack añadido!");
+                    System.out.println(pack.toString()+"\n");
                 } else {
                     System.out.println("Ya existe un pack con ese ID\n");
                 }
@@ -270,7 +304,7 @@ public class View<Object extends Productable, Packable> {
         idProduct = keyboard.nextLine();
 
         if (idProduct.matches(numberRegex)) {
-            prod = (Product) managerProduct.get(Integer.parseInt(idProduct));
+            prod = managerProduct.get(Integer.parseInt(idProduct));
             if (prod != null) {
                 System.out.println(prod.toString() + "\n");
             } else {
@@ -282,7 +316,7 @@ public class View<Object extends Productable, Packable> {
     }
 
     public void modifyProduct() {
-        Object obj;
+        Product prod;
         boolean inputIncorrect = false;
         String idProduct;
         String name;
@@ -296,8 +330,8 @@ public class View<Object extends Productable, Packable> {
                 deleteLine();
                 inputIncorrect = true;
             } else {
-                obj = (Object) managerProduct.get(Integer.parseInt(idProduct));
-                if (obj == null) {
+                prod = managerProduct.get(Integer.parseInt(idProduct));
+                if (prod == null) {
                     inputIncorrect = true;
                     deleteLine();
                     System.out.println("No existe!");
@@ -305,47 +339,50 @@ public class View<Object extends Productable, Packable> {
             }
         } while (inputIncorrect);
 
-        obj = (Object) managerProduct.get(Integer.parseInt(idProduct));
+        prod = managerProduct.get(Integer.parseInt(idProduct));
 
-        System.out.print("Nombre [" + obj.getName() + "]: ");
+        System.out.print("Nombre [" + prod.getName() + "]: ");
         name = keyboard.nextLine();
         if (!name.equals("")) {
-            obj.setName(name);
+            prod.setName(name);
         }
 
         do {
-            System.out.print("Precio [" + obj.getPrice() + "]: ");
+            System.out.print("Precio [" + prod.getPrice() + "]: ");
             price = keyboard.nextLine();
             if (!price.matches(numberRegex) && !price.equals("")) {
                 deleteLine();
             }
         } while (!price.matches(numberRegex) && !price.equals(""));
         if (!price.equals("")) {
-            obj.setName(name);
+            prod.setPrice(Integer.parseInt(price));
         }
 
-        if (obj instanceof Pack pack) {
+        if (prod instanceof Pack pack) {
             do {
                 System.out.print("Descuento (0-100)[" + pack.getDiscount() + "]: ");
                 discount = keyboard.nextLine();
                 if (!discount.matches(numberRegex) && !discount.equals("")) {
                     deleteLine();
                 }
-            } while (!discount.matches(numberRegex)  && !discount.equals(""));
+            } while (!discount.matches(numberRegex) && !discount.equals(""));
             if (!discount.equals("")) {
-                obj.setName(name);
+                pack.setDiscount(Integer.parseInt(discount));
             }
-            // TODO modify
+            managerProduct.modify(pack);
         } else {
             do {
-                System.out.print("Stock [" + obj.getStock() + "]: ");
+                System.out.print("Stock [" + prod.getStock() + "]: ");
                 stock = keyboard.nextLine();
-                if (!stock.matches(numberRegex)) {
+                if (!stock.matches(numberRegex) && !stock.equals("")) {
                     deleteLine();
                 }
-            } while (!stock.matches(numberRegex));
+            } while (!stock.matches(numberRegex) && !stock.equals(""));
+            if (!stock.equals("")) {
+                prod.setStock(Integer.parseInt(stock));
+            }
+            managerProduct.modify(prod);
         }
-        keyboard.nextLine();
     }
 
     public void deleteProduct() {
@@ -355,7 +392,8 @@ public class View<Object extends Productable, Packable> {
         idProduct = keyboard.nextLine();
 
         if (idProduct.matches(numberRegex)) {
-            if (managerProduct.delete(Integer.parseInt(idProduct)) != null) {
+            int id = Integer.parseInt(idProduct);
+            if (managerProduct.delete(id) != null) {
                 System.out.println("Producto borrado!\n");
             } else {
                 System.out.println("No existe el producto\n");
@@ -371,12 +409,13 @@ public class View<Object extends Productable, Packable> {
 
         do {
             System.out.println("Elige una opción:");
-            System.out.println("0 Volver");
-            System.out.println("1 Añadir cliente");
-            System.out.println("2 Buscar cliente");
-            System.out.println("3 Modificar cliente");
-            System.out.println("4 Borrar cliente");
-            System.out.println("5 Mostrar todos los clientes");
+            System.out.println("[0] Volver");
+            System.out.println("[1] Añadir cliente");
+            System.out.println("[2] Buscar cliente");
+            System.out.println("[3] Modificar cliente");
+            System.out.println("[4] Borrar cliente");
+            System.out.println("[5] Mostrar todos los clientes");
+            System.out.print("Opción: ");
 
             option = keyboard.nextLine();
 
@@ -410,12 +449,13 @@ public class View<Object extends Productable, Packable> {
 
         do {
             System.out.println("Elige una opción:");
-            System.out.println("0 Volver");
-            System.out.println("1 Añadir proveedor");
-            System.out.println("2 Buscar proveedor");
-            System.out.println("3 Modificar proveedor");
-            System.out.println("4 Borrar proveedor");
-            System.out.println("5 Mostrar todos los proveedor");
+            System.out.println("[0] Volver");
+            System.out.println("[1] Añadir proveedor");
+            System.out.println("[2] Buscar proveedor");
+            System.out.println("[3] Modificar proveedor");
+            System.out.println("[4] Borrar proveedor");
+            System.out.println("[5] Mostrar todos los proveedor");
+            System.out.print("Opción: ");
 
             option = keyboard.nextLine();
 
@@ -469,7 +509,8 @@ public class View<Object extends Productable, Packable> {
             if (isClient) {
                 Client client = new Client(Integer.parseInt(id), dni, name, surname, address);
 
-                if (managerClient.add(client, Integer.parseInt(id)) != null) {
+                // if (managerClient.add(client, Integer.parseInt(id)) != null) {
+                if (true) {
                     System.out.println("Cliente añadido!\n");
                 } else {
                     System.out.println("El cliente ya existe, prueba otro id\n");
@@ -477,7 +518,8 @@ public class View<Object extends Productable, Packable> {
             } else {
                 Supplier supplier = new Supplier(Integer.parseInt(id), dni, name, surname, address);
 
-                if (managerSupplier.add(supplier, Integer.parseInt(id)) != null) {
+                // if (managerSupplier.add(supplier, Integer.parseInt(id)) != null) {
+                if (true) {
                     System.out.println("Proveedor añadido!\n");
                 } else {
                     System.out.println("El proveedor ya existe, prueba otro id\n");

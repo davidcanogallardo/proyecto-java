@@ -2,7 +2,7 @@ package pr5;
 
 import java.util.Objects;
 
-public class Product implements Productable{
+public class Product implements Identificable{
     private Integer idProduct;
     private String name;
     private Integer price;
@@ -41,7 +41,7 @@ public class Product implements Productable{
     }
     
     //Getters
-    public int getId() {
+    public Integer getId() {
         return idProduct;
     }
 

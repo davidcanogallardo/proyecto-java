@@ -4,7 +4,7 @@ import static java.lang.Math.abs;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public abstract class Person {
+public abstract class Person implements Identificable {
     private Integer idPersona;
     private String dni;
     private String name;
@@ -96,7 +96,7 @@ public abstract class Person {
         Person.totalPeople = totalPeople;
     }
 
-    public Integer getIdPersona() {
+    public Integer getId() {
         return idPersona;
     }
 

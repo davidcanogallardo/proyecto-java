@@ -2,7 +2,7 @@ package pr5;
 
 import java.util.ArrayList;
 
-public final class Pack extends Product implements Packable {
+public final class Pack extends Product {
 
     private ArrayList<Integer> idProdList;
     private int discount;
