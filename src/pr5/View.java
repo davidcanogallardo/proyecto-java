@@ -46,12 +46,14 @@ public class View {
                 System.out.println("Introduce una opción correcta!");
                 break;
             }
+            deleteLine();
         } while (!"0".equals(menuOption));
     }
 
     /*--------------------------------------PRODUCTOS------------------------------------------*/
     public void menuProduct() {
         String menuOption;
+        String answer;
 
         do {
             System.out.println("\nElige una opción:");
@@ -67,7 +69,20 @@ public class View {
             switch (menuOption) {
             // Add
             case "1":
-                addProduct();
+                //TODO bucle al preguntar
+                System.out.println("Qué quiere añadir? (PRODUCTO/pack)");
+                String tmp = keyboard.nextLine();
+                if (tmp.equals("")) {
+                    answer = "producto";
+                } else {
+                    answer = tmp;
+                }
+        
+                if (answer.equalsIgnoreCase("producto")) {
+                    addProduct();
+                } else if (answer.equalsIgnoreCase("pack")) {
+                    addPack();
+                }
                 break;
             // Search
             case "2":
@@ -93,25 +108,6 @@ public class View {
     }
 
     public void addProduct() {
-        //TODO bucle al preguntar
-        String answer;
-
-        System.out.println("Qué quiere añadir? (PRODUCTO/pack)");
-        String tmp = keyboard.nextLine();
-        if (tmp.equals("")) {
-            answer = "producto";
-        } else {
-            answer = tmp;
-        }
-
-        if (answer.equalsIgnoreCase("producto")) {
-            addProduct2();
-        } else if (answer.equalsIgnoreCase("pack")) {
-            addPack();
-        }
-    }
-
-    public void addProduct2() {
         // TODO el nombre de la funcion
         String idProduct;
         String name;
@@ -675,7 +671,7 @@ public class View {
     }
 
     public void deleteLine() {
-        int count = 1;
+        int count = 7;
         System.out.print(String.format("\033[%dA", count)); // Move up
         System.out.print("\033[2K"); // Erase line content
     }
