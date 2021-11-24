@@ -40,7 +40,7 @@ public class View {
             case "3":
                 menuSupplier();
                 break;
-                //TODO opcion 0 que no diga lo de opcion incorrecta
+            // TODO opcion 0 que no diga lo de opcion incorrecta
             default:
                 // deleteLine();
                 System.out.println("Introduce una opción correcta!");
@@ -69,7 +69,7 @@ public class View {
             switch (menuOption) {
             // Add
             case "1":
-                //TODO bucle al preguntar
+                // TODO bucle al preguntar
                 System.out.println("Qué quiere añadir? (PRODUCTO/pack)");
                 String tmp = keyboard.nextLine();
                 if (tmp.equals("")) {
@@ -77,7 +77,7 @@ public class View {
                 } else {
                     answer = tmp;
                 }
-        
+
                 if (answer.equalsIgnoreCase("producto")) {
                     addProduct();
                 } else if (answer.equalsIgnoreCase("pack")) {
@@ -110,53 +110,27 @@ public class View {
     public void addProduct() {
         // TODO el nombre de la funcion
         String idProduct;
-        String name;
-        String price;
-        String stock;
+        // String name;
+        // String price;
+        // String stock;
         Product prod;
 
+        int id;
+        String name;
+        int price;
+        int stock;
+
         System.out.println("Introduce las propiedades del producto:");
-        //ID
-        do {
-            System.out.print("ID: ");
-            idProduct = keyboard.nextLine();
-            if (!idProduct.matches(numberRegex)) {
-                deleteLine();
-            }
-        } while (!idProduct.matches(numberRegex));
+        id = getInt("ID: ");
+        name = getString("Nombre: ");
+        price = getInt("Precio: ");
+        stock = getInt("Stock: ");
 
-        //name
-        do {
-            System.out.print("Nombre: ");
-            name = keyboard.nextLine();
-            if (name.equals("")) {
-                deleteLine();
-            }
-        } while (name.equals(""));
-
-        //price
-        do {
-            System.out.print("Precio: ");
-            price = keyboard.nextLine();
-            if (!price.matches(numberRegex)) {
-                deleteLine();
-            }
-        } while (!price.matches(numberRegex));
-
-        //stock
-        do {
-            System.out.print("Stock: ");
-            stock = keyboard.nextLine();
-            if (!stock.matches(numberRegex)) {
-                deleteLine();
-            }
-        } while (!stock.matches(numberRegex));
-
-        prod = new Product(Integer.parseInt(idProduct), name, Integer.parseInt(price), Integer.parseInt(stock));
+        prod = new Product(id, name, price, stock);
 
         if (managerProduct.add(prod) != null) {
             System.out.println("\nProducto añadido!");
-            System.out.println(prod.toString()+ "\n");
+            System.out.println(prod.toString() + "\n");
         } else {
             System.out.println("El producto ya está añadido, prueba otro id\n ");
         }
@@ -165,13 +139,19 @@ public class View {
     public void addPack() {
         String idProduct;
         String idPack;
-        String name;
-        String price;
+        // String name;
+        // String price;
         Product prod;
         Pack pack;
-        String discount;
+        // String discount;
         Object obj;
         boolean inputIncorrect = false;
+        
+        int id;
+        String name;
+        int price;
+        int stock;
+        int discount;
 
         // Variable del menú
         String menuOption;
@@ -186,103 +166,64 @@ public class View {
 
             if ("1".equals(menuOption)) {
                 System.out.println("\nIntroduce las propiedades del pack:");
-                //ID
-                do {
-                    System.out.print("ID: ");
-                    idProduct = keyboard.nextLine();
-                    if (!idProduct.matches(numberRegex)) {
-                        deleteLine();
-                    }
-                } while (!idProduct.matches(numberRegex));
+                id = getInt("ID: ");
+                name = getString("Nombre: ");
+                price = getInt("Precio: ");
+                stock = getInt("Stock: ");
+                discount = getInt("Descuento (0-100): ");
 
-                //discount
-                do {
-                    System.out.print("Descuento (0-100): ");
-                    discount = keyboard.nextLine();
-                    if (!discount.matches(numberRegex)) {
-                        deleteLine();
-                    }
-                } while (!discount.matches(numberRegex));
-
-                //name
-                do {
-                    System.out.print("Nombre: ");
-                    name = keyboard.nextLine();
-                    if (name.equals("")) {
-                        deleteLine();
-                    }
-                } while (name.equals(""));
-
-                //price
-                do {
-                    System.out.print("Precio: ");
-                    price = keyboard.nextLine();
-                    if (!price.matches(numberRegex)) {
-                        deleteLine();
-                    }
-                } while (!price.matches(numberRegex));
-
-                //lista de productos 
+                // lista de productos
                 ArrayList<Integer> idProdList = new ArrayList<>();
 
                 // TODO descuento formato
-                pack = new Pack(idProdList, Integer.parseInt(discount), Integer.parseInt(idProduct), name,
-                        Integer.parseInt(price));
+                pack = new Pack(idProdList, discount, id, name, price);
 
                 if (managerProduct.add(pack) != null) {
                     System.out.println("\nPack añadido!");
-                    System.out.println(pack.toString()+"\n");
+                    System.out.println(pack.toString() + "\n");
                 } else {
                     System.out.println("Ya existe un pack con ese ID\n");
                 }
 
             } else if ("2".equals(menuOption)) {
+                //Obtener el producto que añadir
                 do {
-                    System.out.print("ID del producto que añadir al pack: ");
-                    idProduct = keyboard.nextLine();
-                    if (!idProduct.matches(numberRegex)) {
-                        deleteLine();
+                    id = getInt("ID del producto que añadir al pack: ");
+                    obj = managerProduct.get(id);
+                    if (obj == null) {
                         inputIncorrect = true;
+                        deleteLine();
+                        System.out.println("No existe!");
+                    } else if (obj instanceof Pack) {
+                        inputIncorrect = true;
+                        deleteLine();
+                        System.out.println("No es un producto!");
                     } else {
-                        obj = (Object) managerProduct.get(Integer.parseInt(idProduct));
-                        if (obj == null) {
-                            inputIncorrect = true;
-                            deleteLine();
-                            System.out.println("No existe!");
-                        } else if (obj instanceof Pack) {
-                            inputIncorrect = true;
-                            deleteLine();
-                            System.out.println("No es un producto!");
-                        } else {
-                            inputIncorrect = false;
-                        }
+                        inputIncorrect = false;
                     }
                 } while (inputIncorrect);
 
-                prod = (Product) managerProduct.get(Integer.parseInt(idProduct));
+                prod = managerProduct.get(id);
 
+                //Obtener el pack que añadir al producto
                 do {
-                    System.out.print("ID del pack al que añadir el producto:");
-                    idPack = keyboard.nextLine();
-                    if (!idPack.matches(numberRegex)) {
-                        deleteLine();
+                    id = getInt("ID del pack al que añadir el producto:");
+                    obj = managerProduct.get(id);
+                    if (obj == null) {
                         inputIncorrect = true;
+                        deleteLine();
+                        System.out.println("No existe!");
+                    } else if (!(obj instanceof Pack)) {
+                        inputIncorrect = true;
+                        deleteLine();
+                        System.out.println("No es un pack!");
                     } else {
-                        obj = (Object) managerProduct.get(Integer.parseInt(idPack));
-                        if (obj == null) {
-                            inputIncorrect = true;
-                            deleteLine();
-                            System.out.println("No existe!");
-                        } else if (!(obj instanceof Pack)) {
-                            inputIncorrect = true;
-                            deleteLine();
-                            System.out.println("No es un pack!");
-                        } else {
-                            inputIncorrect = false;
-                        }
+                        inputIncorrect = false;
                     }
                 } while (inputIncorrect);
-                pack = (Pack) managerProduct.get(Integer.parseInt(idPack));
+                
+                pack = (Pack) managerProduct.get(id);
+
                 if (pack.addProduct(prod.getId())) {
                     System.out.println("Producto añadido al pack!\n");
                 } else {
@@ -295,19 +236,14 @@ public class View {
     public void searchProduct() {
         String idProduct;
         Product prod;
+        int id;
 
-        System.out.print("ID: ");
-        idProduct = keyboard.nextLine();
-
-        if (idProduct.matches(numberRegex)) {
-            prod = managerProduct.get(Integer.parseInt(idProduct));
-            if (prod != null) {
-                System.out.println(prod.toString() + "\n");
-            } else {
-                System.out.println("No existe el producto\n");
-            }
+        id = getInt("ID: ");
+        prod = managerProduct.get(id);
+        if (prod != null) {
+            System.out.println(prod.toString() + "\n");
         } else {
-            System.out.println("Introduce un número!\n");
+            System.out.println("No existe el producto\n");
         }
     }
 
@@ -319,29 +255,23 @@ public class View {
         String price;
         String stock;
         String discount;
+
+        int id;
+
         do {
-            System.out.print("ID del producto: ");
-            idProduct = keyboard.nextLine();
-            if (!idProduct.matches(numberRegex)) {
-                deleteLine();
+            id = getInt("ID del producto: ");
+            prod = managerProduct.get(id);
+            if (prod == null) {
                 inputIncorrect = true;
-            } else {
-                prod = managerProduct.get(Integer.parseInt(idProduct));
-                if (prod == null) {
-                    inputIncorrect = true;
-                    deleteLine();
-                    System.out.println("No existe!");
-                }
+                deleteLine();
+                System.out.println("No existe!");
             }
         } while (inputIncorrect);
 
-        prod = managerProduct.get(Integer.parseInt(idProduct));
+        prod = managerProduct.get(id);
 
-        System.out.print("Nombre [" + prod.getName() + "]: ");
-        name = keyboard.nextLine();
-        if (!name.equals("")) {
-            prod.setName(name);
-        }
+
+        name = optionalString("String", "Nombre [" + prod.getName() + "]: ");
 
         do {
             System.out.print("Precio [" + prod.getPrice() + "]: ");
@@ -671,8 +601,55 @@ public class View {
     }
 
     public void deleteLine() {
-        int count = 7;
+        int count = 1;
         System.out.print(String.format("\033[%dA", count)); // Move up
         System.out.print("\033[2K"); // Erase line content
+    }
+
+    public int getInt(String question) {
+        String num;
+        do {
+            System.out.print(question);
+            num = keyboard.nextLine();
+            if (!isInt(num)) {
+                deleteLine();
+            }
+        } while (!isInt(num));
+
+        return Integer.parseInt(num);
+    }
+
+    public String getString(String question) {
+        String string;
+        do {
+            System.out.print(question);
+            string = keyboard.nextLine();
+            if (string.equals("")) {
+                deleteLine();
+            }
+        } while (string.equals(""));
+        return string;
+    }
+
+    public boolean isInt(String num) {
+        return num.matches(numberRegex);
+    }
+
+    public String optionalString(String type, String question) {
+        String result="";
+        if (type.equals("int")) {
+            do {
+                System.out.print(question);
+                result = keyboard.nextLine();
+                if (!isInt(result) && !result.equals("")) {
+                    deleteLine();
+                }
+            } while (!isInt(result) && !result.equals(""));
+        } else if (type.equals("String")) {
+            System.out.print(question);
+            result = keyboard.nextLine();
+        }
+
+        return result;
     }
 }
