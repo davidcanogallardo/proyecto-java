@@ -10,9 +10,9 @@ public class View {
 
     private Scanner keyboard = new Scanner(System.in);
 
-    private Manager<Client> managerClient = new Manager<>();
-    private Manager<Supplier> managerSupplier = new Manager<>();
-    private Manager<Product> managerProduct = new Manager<>();
+    private DAO<Client> managerClient = new DAO<>();
+    private DAO<Person> managerSupplier = new DAO<>();
+    private DAO<Product> managerProduct = new DAO<>();
 
     public void run() {
         String menuOption;
@@ -340,19 +340,16 @@ public class View {
 
     public void deleteProduct() {
         String idProduct;
+        int id;
+        Product prod;
 
         System.out.println("Introduce el id del producto que quieres borrar:");
-        idProduct = keyboard.nextLine();
-
-        if (idProduct.matches(numberRegex)) {
-            int id = Integer.parseInt(idProduct);
-            if (managerProduct.delete(id) != null) {
-                System.out.println("Producto borrado!\n");
-            } else {
-                System.out.println("No existe el producto\n");
-            }
+        id = getInt("ID del producto: ");
+        prod = managerProduct.get(id);
+        if (managerProduct.delete(prod) != null) {
+            System.out.println("Producto borrado!\n");
         } else {
-            System.out.println("Introduce un número!\n");
+            System.out.println("No existe el producto\n");
         }
     }
 
@@ -373,23 +370,18 @@ public class View {
             option = keyboard.nextLine();
 
             switch (option) {
-            // Add
             case "1":
                 addPerson(true);
                 break;
-            // Search
             case "2":
                 searchPerson(true);
                 break;
-            // Modify
             case "3":
                 modifyPerson(true);
                 break;
-            // Delete
             case "4":
                 deletePerson(true);
                 break;
-            // List
             case "5":
                 printClassObjects(managerClient);
                 break;
@@ -413,23 +405,18 @@ public class View {
             option = keyboard.nextLine();
 
             switch (option) {
-            // Add
             case "1":
                 addPerson(false);
                 break;
-            // Search
             case "2":
                 searchPerson(false);
                 break;
-            // Modify
             case "3":
                 modifyPerson(false);
                 break;
-            // Delete
             case "4":
                 deletePerson(false);
                 break;
-            // List
             case "5":
                 printClassObjects(managerSupplier);
                 break;
@@ -438,49 +425,57 @@ public class View {
     }
 
     private void addPerson(boolean isClient) {
-        String id;
+        // String id;
+        int id;
         String dni;
         String name;
         String surname;
 
-        System.out.println("Introduce el id");
-        id = keyboard.nextLine();
+        Person person;
+        boolean exists;
 
-        if (id.matches(numberRegex)) {
-            System.out.println("Introduce el DNI");
-            dni = keyboard.nextLine();
-
-            System.out.println("Introduce el nombre");
-            name = keyboard.nextLine();
-
-            System.out.println("Introduce el apellido");
-            surname = keyboard.nextLine();
-
-            Address address = askAddress();
-
-            // Según si es cliente o no se llama a una clase diferente
+        // Pedir un ID de un producto que exista
+        do {
+            id = getInt("ID del producto: ");
             if (isClient) {
-                Client client = new Client(Integer.parseInt(id), dni, name, surname, address);
-
-                // if (managerClient.add(client, Integer.parseInt(id)) != null) {
-                if (true) {
-                    System.out.println("Cliente añadido!\n");
-                } else {
-                    System.out.println("El cliente ya existe, prueba otro id\n");
-                }
+                person = managerClient.get(id);
             } else {
-                Supplier supplier = new Supplier(Integer.parseInt(id), dni, name, surname, address);
-
-                // if (managerSupplier.add(supplier, Integer.parseInt(id)) != null) {
-                if (true) {
-                    System.out.println("Proveedor añadido!\n");
-                } else {
-                    System.out.println("El proveedor ya existe, prueba otro id\n");
-                }
+                person = managerSupplier.get(id);
             }
+            if (person != null) {
+                exists = false;
+                deleteLine();
+                deleteLine();
+                System.out.println("Ya existe un producto con ese ID!");
+            } else {
+                exists = true;
+            }
+        } while (!exists);
 
+        //TODO dni
+        dni = getString("DNI: ");
+        name = getString("Nombre: ");
+        surname = getString("Apellido: ");
+
+        Address address = askAddress();
+
+        // Según si es cliente o no se llama a una clase diferente
+        if (isClient) {
+            Client client = new Client(id, dni, name, surname, address);
+
+            if (managerClient.add(client) != null) {
+                System.out.println("Cliente añadido!\n");
+            } else {
+                System.out.println("El cliente ya existe, prueba otro id\n");
+            }
         } else {
-            System.out.println("El id solo puedes ser un número\n");
+            Supplier supplier = new Supplier(id, dni, name, surname, address);
+
+            if (managerSupplier.add(supplier) != null) {
+                System.out.println("Proveedor añadido!\n");
+            } else {
+                System.out.println("El proveedor ya existe, prueba otro id\n");
+            }
         }
     }
 
@@ -494,17 +489,14 @@ public class View {
 
         System.out.println("Introduce los datos de la dirección:");
         do {
-            System.out.println("Introduce la localidad");
-            locality = keyboard.nextLine();
+            locality = getString("localidad:");
 
-            System.out.println("Introduce la provincia");
-            province = keyboard.nextLine();
+            province = getString("Provincia: ");
 
-            System.out.println("Introduce el Código Postal (número de 5 cifras)");
-            zipCode = keyboard.nextLine();
+            //TODO bucle CP
+            zipCode = getString("Código Postal (número de 5 cifras): ");
 
-            System.out.println("Introduce la dirección (calle puerta y piso)");
-            address = keyboard.nextLine();
+            address = getString("Dirección: ");
 
             if (!zipCode.matches(zipRegex)) {
                 System.out.println("El Código Postal tiene que ser un número de 5 cifras! Vuelve intentarlo\n");
@@ -515,31 +507,25 @@ public class View {
     }
 
     private void searchPerson(boolean isClient) {
-        String id;
+        int id;
 
-        System.out.println("Introduce el id");
-        id = keyboard.nextLine();
+        id = getInt("ID del producto: ");
 
-        if (id.matches(numberRegex)) {
-            // Según si es cliente o no busca en una clase u otra
-            if (isClient) {
-                Client client = (Client) managerClient.get(Integer.parseInt(id));
-                if (client != null) {
-                    System.out.println(client.toString() + "\n");
-                } else {
-                    System.out.println("No existe el cliente\n");
-                }
+        // Según si es cliente o no busca en una clase u otra
+        if (isClient) {
+            Client client = (Client) managerClient.get(id);
+            if (client != null) {
+                System.out.println(client.toString() + "\n");
             } else {
-                Supplier supplier = (Supplier) managerSupplier.get(Integer.parseInt(id));
-                if (supplier != null) {
-                    System.out.println(supplier.toString() + "\n");
-                } else {
-                    System.out.println("No existe el proveedor\n");
-                }
+                System.out.println("No existe el cliente\n");
             }
-
         } else {
-            System.out.println("El id solo puedes ser un número\n");
+            Supplier supplier = (Supplier) managerSupplier.get(id);
+            if (supplier != null) {
+                System.out.println(supplier.toString() + "\n");
+            } else {
+                System.out.println("No existe el proveedor\n");
+            }
         }
     }
 
@@ -620,7 +606,7 @@ public class View {
         }
     }
 
-    private void printClassObjects(Manager p) {
+    private void printClassObjects(DAO p) {
         HashMap<Integer, Object> hashMap = p.getMap();
         for (Object values : hashMap.values()) {
             System.out.println(values.toString() + "\n");
