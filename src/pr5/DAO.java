@@ -39,7 +39,7 @@ public class DAO<T extends Identificable> {
         hashMap.replace(obj.getId(), get(obj.getId()), obj);
     }
 
-    public boolean objExists(int id) {
+    public boolean exists(int id) {
         return hashMap.containsKey(id);
     }
 }

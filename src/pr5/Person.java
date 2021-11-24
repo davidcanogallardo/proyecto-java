@@ -15,7 +15,7 @@ public abstract class Person implements Identificable {
     private Address fullAddress;
     private static int totalPeople;
 
-    public Person(Integer idPersona, String dni, String name, String surname, Address fullAddress) {
+    protected Person(Integer idPersona, String dni, String name, String surname, Address fullAddress) {
         this.idPersona = idPersona;
         this.dni = dni;
         this.name = name;
@@ -25,7 +25,7 @@ public abstract class Person implements Identificable {
         totalPeople++;
     }
 
-    public Person(Integer idPersona, String dni, String name, String surname, LocalDate birthdate, String email,
+    protected Person(Integer idPersona, String dni, String name, String surname, LocalDate birthdate, String email,
             String phoneNumber, Address fullAddress) {
         this(idPersona, dni, name, surname, fullAddress);
         this.idPersona = idPersona;
