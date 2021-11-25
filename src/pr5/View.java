@@ -13,7 +13,10 @@ public class View {
     private DAO<Client> DAOClient = new DAO<>();
     private DAO<Supplier> DAOSupplier = new DAO<>();
     private DAO<Product> DAOProduct = new DAO<>();
-    //TODO variables de ayuda
+
+    // TODO variables de ayuda
+    //TODO static
+    //precio como loquesea
     public void run() {
         ArrayList<Integer> idProdList = new ArrayList<>();
         Product pr = new Product(1, "prod1", 12, 12);
@@ -75,7 +78,7 @@ public class View {
             switch (menuOption) {
             // Add
             case "1":
-                System.out.println("Qué quiere añadir? (PRODUCTO/pack)");
+                System.out.println("\nQué quieres añadir? (PRODUCTO/pack)");
                 String tmp = keyboard.nextLine();
                 if (tmp.equals("")) {
                     answer = "producto";
@@ -86,7 +89,7 @@ public class View {
                 if (answer.equalsIgnoreCase("producto")) {
                     addProduct(false);
                 } else if (answer.equalsIgnoreCase("pack")) {
-                    addPack();
+                    packMenu();
                 }
                 break;
             // Search
@@ -116,50 +119,7 @@ public class View {
         } while (!"0".equals(menuOption));
     }
 
-    public void addProduct(boolean isPack) {
-        String idProduct;
-        // String name;
-        // String price;
-        // String stock;
-        Product prod;
-        int discount;
-
-        boolean exists = false;
-
-        int id;
-        String name;
-        int price;
-        int stock;
-
-        System.out.println("Introduce las propiedades del producto:");
-        // Pedir un ID de un producto que exista
-        // TODO ! PROD exists done
-        id = getFreeId(DAOProduct, "ID del producto: ");
-
-        name = getString("Nombre: ", false);
-        price = getInteger("Precio: ", false);
-        if (!isPack) {
-            stock = getInteger("Stock: ", false);
-            prod = new Product(id, name, price, stock);
-        } else {
-            discount = getDiscount("Descuento (0-100): ", false);
-
-            // lista de productos
-            ArrayList<Integer> idProdList = new ArrayList<>();
-
-            prod = new Pack(idProdList, discount, id, name, price);
-        }
-
-        if (DAOProduct.add(prod) != null) {
-            System.out.println("\nProducto añadido!");
-            System.out.println(prod.toString() + "\n");
-        } else {
-            System.out.println("El producto ya está añadido, prueba otro id\n ");
-        }
-
-    }
-
-    public void addPack() {
+    public void packMenu() {
         String idProduct;
         String idPack;
         // String name;
@@ -223,14 +183,57 @@ public class View {
         } while (!"0".equals(menuOption));
     }
 
+    public void addProduct(boolean isPack) {
+        String idProduct;
+        // String name;
+        // String price;
+        // String stock;
+        Product prod;
+        int discount;
+
+        boolean exists = false;
+
+        int id;
+        String name;
+        int price;
+        int stock;
+
+        System.out.println("Introduce las propiedades del producto:\n");
+        // Pedir un ID de un producto que exista
+        // TODO ! PROD exists done
+        id = getFreeId(DAOProduct, "ID del producto: ");
+
+        name = getString("Nombre: ", false);
+        price = getInteger("Precio: ", false);
+        if (!isPack) {
+            stock = getInteger("Stock: ", false);
+            prod = new Product(id, name, price, stock);
+        } else {
+            discount = getDiscount("Descuento (0-100): ", false);
+
+            // lista de productos
+            ArrayList<Integer> idProdList = new ArrayList<>();
+
+            prod = new Pack(idProdList, discount, id, name, price);
+        }
+
+        if (DAOProduct.add(prod) != null) {
+            System.out.println("\nProducto añadido!");
+            System.out.println(prod.toString() + "\n");
+        } else {
+            System.out.println("El producto ya está añadido, prueba otro id\n ");
+        }
+
+    }
+
     public void searchProduct() {
         Product prod;
         int id;
-
-        id = getInteger("ID: ", false);
+        System.out.println();
+        id = getInteger("ID del producto: ", false);
         prod = DAOProduct.get(id);
         if (prod != null) {
-            System.out.println(prod.toString() + "\n");
+            System.out.println("\n" + prod.toString() + "\n");
         } else {
             System.out.println("No existe el producto\n");
         }
@@ -248,10 +251,9 @@ public class View {
 
         Integer id;
         System.out.println("");
-        System.out.println("");
         // Pedir un ID de un producto que exista
         // TODO ! prod exists
-        id = getExistingId(DAOProduct, "\nID del producto que añadir al pack: ");
+        id = getExistingId(DAOProduct, "ID del producto que quieres modificar: ");
 
         prod = DAOProduct.get(id);
 
@@ -272,12 +274,16 @@ public class View {
             }
 
             DAOProduct.modify(pack);
+            System.out.println("Producto modificado!\n");
+            System.out.println(pack.toString() + "\n");
         } else {
             stock = getInteger("Stock [" + prod.getStock() + "]: ", true);
             if (stock != null) {
                 prod.setStock(stock);
             }
             DAOProduct.modify(prod);
+            System.out.println("Producto modificado!\n");
+            System.out.println(prod.toString() + "\n");
         }
     }
 
@@ -287,14 +293,14 @@ public class View {
         Product prod;
         boolean exists;
 
-        System.out.println("Introduce el id del producto que quieres borrar:");
+        System.out.println("\nIntroduce el id del producto que quieres borrar:");
         // Pedir un ID de un producto que exista
         id = getInteger("ID del producto: ", false);
         if (DAOProduct.get(id) != null) {
             DAOProduct.delete(DAOProduct.get(id));
-            System.out.println("Producto borrado!\n");
+            System.out.println("\nProducto borrado!\n");
         } else {
-            System.out.println("No existe el producto\n");
+            System.out.println("\nNo existe el producto\n");
         }
     }
 
@@ -393,6 +399,7 @@ public class View {
         Person person;
         boolean exists;
 
+        System.out.println("\nIntroduce los datos de la persona:");
         // Pedir un ID de un producto que exista
         // TODO ! clie exists
         if (isClient) {
@@ -413,7 +420,8 @@ public class View {
             Client client = new Client(id, dni, name, surname, address);
 
             if (DAOClient.add(client) != null) {
-                System.out.println("Cliente añadido!\n");
+                System.out.println("\nCliente añadido!\n");
+                System.out.println(client.toString() + "\n");
             } else {
                 System.out.println("El cliente ya existe, prueba otro id\n");
             }
@@ -421,7 +429,8 @@ public class View {
             Supplier supplier = new Supplier(id, dni, name, surname, address);
 
             if (DAOSupplier.add(supplier) != null) {
-                System.out.println("Proveedor añadido!\n");
+                System.out.println("\nProveedor añadido!\n");
+                System.out.println(supplier.toString() + "\n");
             } else {
                 System.out.println("El proveedor ya existe, prueba otro id\n");
             }
@@ -458,22 +467,22 @@ public class View {
     private void searchPerson(boolean isClient) {
         int id;
 
-        id = getInteger("ID: ", false);
+        id = getInteger("\nID de la persona: ", false);
 
         // Según si es cliente o no busca en una clase u otra
         if (isClient) {
             Client client = (Client) DAOClient.get(id);
             if (client != null) {
-                System.out.println(client.toString() + "\n");
+                System.out.println("\n"+client.toString() + "\n");
             } else {
-                System.out.println("No existe el cliente\n");
+                System.out.println("\nNo existe el cliente\n");
             }
         } else {
             Supplier supplier = (Supplier) DAOSupplier.get(id);
             if (supplier != null) {
-                System.out.println(supplier.toString() + "\n");
+                System.out.println("\n"+supplier.toString() + "\n");
             } else {
-                System.out.println("No existe el proveedor\n");
+                System.out.println("\nNo existe el proveedor\n");
             }
         }
     }
@@ -555,20 +564,22 @@ public class View {
         Person person;
         boolean exists;
 
-        System.out.println("Introduce el id del cliente");
-
+        System.out.println("");
         // Pedir un ID de un producto que exista
-        id = getInteger("ID: ", false);
+        id = getInteger("ID del cliente que borrar: ", false);
 
         if (isClient) {
             DAOClient.delete(DAOClient.get(id));
         } else {
             DAOSupplier.delete(DAOSupplier.get(id));
         }
-        System.out.println("bORRADO1");
+        System.out.println("\nCliente borrado!\n");
     }
-
+    /**********************************
+     * UTILS
+     *******************************************/
     private void printClassObjects(DAO p) {
+        System.out.println("");
         HashMap<Integer, Object> hashMap = p.getMap();
         for (Object values : hashMap.values()) {
             System.out.println(values.toString() + "\n");
