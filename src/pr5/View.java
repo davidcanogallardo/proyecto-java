@@ -13,7 +13,7 @@ public class View {
     private DAO<Client> DAOClient = new DAO<>();
     private DAO<Supplier> DAOSupplier = new DAO<>();
     private DAO<Product> DAOProduct = new DAO<>();
-
+    //TODO variables de ayuda
     public void run() {
         ArrayList<Integer> idProdList = new ArrayList<>();
         Product pr = new Product(1, "prod1", 12, 12);
@@ -48,13 +48,11 @@ public class View {
             case "3":
                 menuSupplier();
                 break;
-            // TODO opcion 0 que no diga lo de opcion incorrecta
             default:
-                // deleteLine();
+                deleteLine(7);
                 System.out.println("Introduce una opción correcta!");
                 break;
             }
-            deleteLine();
         } while (!"0".equals(menuOption));
     }
 
@@ -62,9 +60,9 @@ public class View {
     public void menuProduct() {
         String menuOption;
         String answer;
-
+        System.out.println("\n");
         do {
-            System.out.println("\nElige una opción:");
+            System.out.println("Elige una opción:");
             System.out.println("[0] Volver");
             System.out.println("[1] Añadir producto");
             System.out.println("[2] Buscar producto");
@@ -77,7 +75,6 @@ public class View {
             switch (menuOption) {
             // Add
             case "1":
-                // TODO bucle al preguntar
                 System.out.println("Qué quiere añadir? (PRODUCTO/pack)");
                 String tmp = keyboard.nextLine();
                 if (tmp.equals("")) {
@@ -87,7 +84,7 @@ public class View {
                 }
 
                 if (answer.equalsIgnoreCase("producto")) {
-                    addProduct();
+                    addProduct(false);
                 } else if (answer.equalsIgnoreCase("pack")) {
                     addPack();
                 }
@@ -108,19 +105,24 @@ public class View {
             case "5":
                 printClassObjects(DAOProduct);
                 break;
+            case "0":
+                System.out.println("\n");
+                break;
             default:
-                // deleteLine();
+                deleteLine(9);
+                System.out.println("Introduce una opción correcta!");
                 break;
             }
         } while (!"0".equals(menuOption));
     }
 
-    public void addProduct() {
+    public void addProduct(boolean isPack) {
         String idProduct;
         // String name;
         // String price;
         // String stock;
         Product prod;
+        int discount;
 
         boolean exists = false;
 
@@ -131,24 +133,22 @@ public class View {
 
         System.out.println("Introduce las propiedades del producto:");
         // Pedir un ID de un producto que exista
-        do {
-            id = getInt("ID del producto: ", false);
-            prod = DAOProduct.get(id);
-            if (prod != null) {
-                exists = false;
-                deleteLine();
-                deleteLine();
-                System.out.println("Ya existe un producto con ese ID!");
-            } else {
-                exists = true;
-            }
-        } while (!exists);
+        // TODO ! PROD exists done
+        id = getFreeId(DAOProduct, "ID del producto: ");
 
         name = getString("Nombre: ", false);
-        price = getInt("Precio: ", false);
-        stock = getInt("Stock: ", false);
+        price = getInteger("Precio: ", false);
+        if (!isPack) {
+            stock = getInteger("Stock: ", false);
+            prod = new Product(id, name, price, stock);
+        } else {
+            discount = getDiscount("Descuento (0-100): ", false);
 
-        prod = new Product(id, name, price, stock);
+            // lista de productos
+            ArrayList<Integer> idProdList = new ArrayList<>();
+
+            prod = new Pack(idProdList, discount, id, name, price);
+        }
 
         if (DAOProduct.add(prod) != null) {
             System.out.println("\nProducto añadido!");
@@ -156,10 +156,10 @@ public class View {
         } else {
             System.out.println("El producto ya está añadido, prueba otro id\n ");
         }
+
     }
 
     public void addPack() {
-        // TODO addPerson
         String idProduct;
         String idPack;
         // String name;
@@ -179,9 +179,9 @@ public class View {
 
         // Variable del menú
         String menuOption;
-
+        System.out.println("\n");
         do {
-            System.out.println("\nElige una opción:");
+            System.out.println("Elige una opción:");
             System.out.println("[0] Volver");
             System.out.println("[1] Añadir un pack");
             System.out.println("[2] Añadir un producto a un pack");
@@ -189,94 +189,36 @@ public class View {
             menuOption = keyboard.nextLine();
 
             if ("1".equals(menuOption)) {
-                System.out.println("\nIntroduce las propiedades del pack:");
-
-                // Pedir un ID de un producto que exista
-                do {
-                    id = getInt("ID del producto: ", false);
-                    prod = DAOProduct.get(id);
-                    if (prod != null) {
-                        exists = false;
-                        deleteLine();
-                        deleteLine();
-                        System.out.println("Ya existe un producto con ese ID!");
-                    } else {
-                        exists = true;
-                    }
-                } while (!exists);
-
-                name = getString("Nombre: ", false);
-                price = getInt("Precio: ", false);
-                stock = getInt("Stock: ", false);
-                discount = getInt("Descuento (0-100): ", false);
-
-                // lista de productos
-                ArrayList<Integer> idProdList = new ArrayList<>();
-
-                // TODO descuento formato
-                pack = new Pack(idProdList, discount, id, name, price);
-
-                if (DAOProduct.add(pack) != null) {
-                    System.out.println("\nPack añadido!");
-                    System.out.println(pack.toString() + "\n");
-                } else {
-                    System.out.println("\nYa existe un pack con ese ID\n");
-                }
-
+                addProduct(true);
             } else if ("2".equals(menuOption)) {
                 // Bucle para añadir más productos
                 System.out.println("");
                 System.out.println("");
                 // Obtener el producto que añadir
+                // TODO ! pack exists
                 do {
-                    id = getInt("ID del producto que añadir al pack: ", false);
-                    obj = DAOProduct.get(id);
-                    if (obj == null) {
-                        inputIncorrect = true;
-                        deleteLine();
-                        deleteLine();
-                        System.out.println("No existe!");
-                    } else if (obj instanceof Pack) {
-                        inputIncorrect = true;
-                        deleteLine();
-                        deleteLine();
-                        System.out.println("No es un producto!");
-                    } else {
-                        inputIncorrect = false;
-                    }
-                } while (inputIncorrect);
+                    id = getExistingId(DAOProduct, "ID del producto que añadir al pack: ");
+                } while (DAOProduct.get(id) instanceof Pack);
 
                 prod = DAOProduct.get(id);
 
                 System.out.println("");
-                System.out.println("");
                 // Obtener el pack que añadir al producto
+                // TODO ! !prod exists
                 do {
-                    id = getInt("ID del pack al que añadir el producto:", false);
-                    // TODO poner el get en la creacion
-                    obj = DAOProduct.get(id);
-                    if (obj == null) {
-                        inputIncorrect = true;
-                        deleteLine();
-                        deleteLine();
-                        System.out.println("No existe!");
-                    } else if (!(obj instanceof Pack)) {
-                        inputIncorrect = true;
-                        deleteLine();
-                        deleteLine();
-                        System.out.println("No es un pack!");
-                    } else {
-                        inputIncorrect = false;
-                    }
-                } while (inputIncorrect);
+                    id = getExistingId(DAOProduct, "ID del pack al que añadir el producto:");
+                } while (!(DAOProduct.get(id) instanceof Pack));
 
                 pack = (Pack) DAOProduct.get(id);
 
                 if (pack.addProduct(prod.getId())) {
-                    System.out.println("Producto añadido al pack!");
+                    System.out.println("\nProducto añadido al pack!");
                 } else {
                     System.out.println("No se ha podido añadir el producto al pack");
                 }
+            } else if (!"0".equals(menuOption)) {
+                deleteLine(6);
+                System.out.println("Introduce una opción correcta!");
             }
         } while (!"0".equals(menuOption));
     }
@@ -285,7 +227,7 @@ public class View {
         Product prod;
         int id;
 
-        id = getInt("ID: ", false);
+        id = getInteger("ID: ", false);
         prod = DAOProduct.get(id);
         if (prod != null) {
             System.out.println(prod.toString() + "\n");
@@ -308,18 +250,8 @@ public class View {
         System.out.println("");
         System.out.println("");
         // Pedir un ID de un producto que exista
-        do {
-            id = getInt("ID del producto: ", false);
-            prod = DAOProduct.get(id);
-            if (prod == null) {
-                exists = false;
-                deleteLine();
-                deleteLine();
-                System.out.println("No existe!");
-            } else {
-                exists = true;
-            }
-        } while (!exists);
+        // TODO ! prod exists
+        id = getExistingId(DAOProduct, "\nID del producto que añadir al pack: ");
 
         prod = DAOProduct.get(id);
 
@@ -327,21 +259,22 @@ public class View {
         if (!name.equals("")) {
             prod.setName(name);
         }
-        price = getInt("Precio [" + prod.getPrice() + "]: ", true);
-        if (price == null) {
+
+        price = getInteger("Precio [" + prod.getPrice() + "]: ", true);
+        if (price != null) {
             prod.setPrice(price);
         }
 
         if (prod instanceof Pack pack) {
-            discount = getInt("Descuento (0-100)[" + pack.getDiscount() + "]: ", true);
-            if (discount == null) {
+            discount = getDiscount("Descuento (0-100)[" + pack.getDiscount() + "]: ", true);
+            if (discount != null) {
                 pack.setDiscount(discount);
             }
 
             DAOProduct.modify(pack);
         } else {
-            stock = getInt("Stock [" + prod.getStock() + "]: ", true);
-            if (stock == null) {
+            stock = getInteger("Stock [" + prod.getStock() + "]: ", true);
+            if (stock != null) {
                 prod.setStock(stock);
             }
             DAOProduct.modify(prod);
@@ -356,7 +289,7 @@ public class View {
 
         System.out.println("Introduce el id del producto que quieres borrar:");
         // Pedir un ID de un producto que exista
-        id = getInt("ID del producto: ", false);
+        id = getInteger("ID del producto: ", false);
         if (DAOProduct.get(id) != null) {
             DAOProduct.delete(DAOProduct.get(id));
             System.out.println("Producto borrado!\n");
@@ -368,7 +301,7 @@ public class View {
     /*--------------------------------------PERSONAS------------------------------------------*/
     public void menuCliente() {
         String option;
-
+        System.out.println("\n");
         do {
             System.out.println("Elige una opción:");
             System.out.println("[0] Volver");
@@ -397,13 +330,20 @@ public class View {
             case "5":
                 printClassObjects(DAOClient);
                 break;
+            case "0":
+                System.out.println("\n");
+                break;
+            default:
+                deleteLine(9);
+                System.out.println("Introduce una opción correcta!");
+                break;
             }
         } while (!"0".equals(option));
     }
 
     public void menuSupplier() {
         String option;
-
+        System.out.println("\n");
         do {
             System.out.println("Elige una opción:");
             System.out.println("[0] Volver");
@@ -432,6 +372,13 @@ public class View {
             case "5":
                 printClassObjects(DAOSupplier);
                 break;
+            case "0":
+                System.out.println("\n");
+                break;
+            default:
+                deleteLine(9);
+                System.out.println("Introduce una opción correcta!");
+                break;
             }
         } while (!"0".equals(option));
     }
@@ -447,27 +394,17 @@ public class View {
         boolean exists;
 
         // Pedir un ID de un producto que exista
-        do {
-            id = getInt("ID: ");
-            if (isClient) {
-                person = DAOClient.get(id);
-            } else {
-                person = DAOSupplier.get(id);
-            }
-            if (person != null) {
-                exists = false;
-                deleteLine();
-                deleteLine();
-                System.out.println("Ya existe una persona con ese ID!");
-            } else {
-                exists = true;
-            }
-        } while (!exists);
+        // TODO ! clie exists
+        if (isClient) {
+            id = getFreeId(DAOClient, "ID: ");
+        } else {
+            id = getFreeId(DAOSupplier, "ID: ");
+        }
 
         // TODO dni
-        dni = getString("DNI: ");
-        name = getString("Nombre: ");
-        surname = getString("Apellido: ");
+        dni = getString("DNI: ", false);
+        name = getString("Nombre: ", false);
+        surname = getString("Apellido: ", false);
 
         Address address = askAddress();
 
@@ -501,14 +438,14 @@ public class View {
 
         System.out.println("Introduce los datos de la dirección:");
         do {
-            locality = getString("Localidad: ");
+            locality = getString("Localidad: ", false);
 
-            province = getString("Provincia: ");
+            province = getString("Provincia: ", false);
 
             // TODO bucle CP
-            zipCode = getString("Código Postal (número de 5 cifras): ");
+            zipCode = getString("Código Postal (número de 5 cifras): ", false);
 
-            address = getString("Dirección: ");
+            address = getString("Dirección: ", false);
 
             if (!zipCode.matches(zipRegex)) {
                 System.out.println("El Código Postal tiene que ser un número de 5 cifras! Vuelve intentarlo\n");
@@ -521,7 +458,7 @@ public class View {
     private void searchPerson(boolean isClient) {
         int id;
 
-        id = getInt("ID: ");
+        id = getInteger("ID: ", false);
 
         // Según si es cliente o no busca en una clase u otra
         if (isClient) {
@@ -550,43 +487,66 @@ public class View {
         boolean exists;
 
         // Pedir un ID de un producto que exista
-        do {
-            id = getInt("ID : ");
-            if (isClient) {
-                person = DAOClient.get(id);
-            } else {
-                person = DAOSupplier.get(id);
-            }
-            if (person == null) {
-                exists = false;
-                deleteLine();
-                deleteLine();
-                System.out.println("No existe!");
-            } else {
-                exists = true;
-            }
-        } while (!exists);
-        dni = optionalString("String", "DNI [" + person.getDni() + "]: ");
-        name = optionalString("String", "Nombre [" + person.getName() + "]: ");
-        surname = optionalString("String", "Apellidos [" + person.getSurname() + "]: ");
-
-        Address address = askAddress();
-
-        if (DAOClient.exists(id) || DAOSupplier.exists(id)) {
-            // Según si es cliente o no modifica los datos en clase correspondiente
-            if (isClient) {
-                Client c = new Client(id, dni, name, surname, address);
-                DAOClient.modify(c);
-                System.out.println("Datos actualizados:");
-                System.out.println(c.toString() + "\n");
-            } else {
-                Supplier s = new Supplier(id, dni, name, surname, address);
-                DAOSupplier.modify(s);
-                System.out.println("Datos actualizados:");
-                System.out.println(s.toString() + "\n");
-            }
+        if (isClient) {
+            person = DAOClient.get(getExistingId(DAOClient, "ID: "));
         } else {
-            System.out.println("El cliente no existe");
+            person = DAOSupplier.get(getExistingId(DAOSupplier, "ID: "));
+        }
+        // TODO ! clie exists
+        dni = getString("DNI [" + person.getDni() + "]: ", true);
+        if (!dni.equals("")) {
+            person.setDni(dni);
+        }
+        name = getString("Nombre [" + person.getName() + "]: ", true);
+        if (!name.equals("")) {
+            person.setName(name);
+        }
+        surname = getString("Apellidos [" + person.getSurname() + "]: ", true);
+        if (!surname.equals("")) {
+            person.setSurname(surname);
+        }
+
+        String zipRegex = "\\d{5}";
+
+        String locality;
+        String province;
+        String zipCode;
+        String address;
+        Address add;
+        add = person.getFullAddress();
+
+        System.out.println("Introduce los datos de la dirección:");
+        locality = getString("Localidad [" + add.getLocality() + "]: ", true);
+        if (!locality.equals("")) {
+            add.setLocality(locality);
+        }
+
+        province = getString("Provincia [" + add.getProvince() + "]: ", true);
+        if (!province.equals("")) {
+            add.setProvince(province);
+        }
+
+        // TODO bucle CP
+        zipCode = getString("Código Postal [" + add.getZipCode() + "]: ", true);
+        if (!zipCode.equals("")) {
+            add.setZipCode(zipCode);
+        }
+
+        address = getString("Dirección [" + add.getAddress() + "]: ", true);
+        if (!address.equals("")) {
+            add.setAddress(address);
+        }
+
+        person.setFullAddress(add);
+
+        if (isClient) {
+            DAOClient.modify((Client) person);
+            System.out.println("Datos actualizados:");
+            System.out.println(person.toString() + "\n");
+        } else {
+            DAOSupplier.modify((Supplier) person);
+            System.out.println("Datos actualizados:");
+            System.out.println(person.toString() + "\n");
         }
     }
 
@@ -598,27 +558,12 @@ public class View {
         System.out.println("Introduce el id del cliente");
 
         // Pedir un ID de un producto que exista
-        do {
-            id = getInt("ID: ");
-            if (isClient) {
-                person = DAOClient.get(id);
-            } else {
-                person = DAOSupplier.get(id);
-            }
-            if (person != null) {
-                exists = false;
-                deleteLine();
-                deleteLine();
-                System.out.println("Ya existe una persona con ese ID!");
-            } else {
-                exists = true;
-            }
-        } while (!exists);
+        id = getInteger("ID: ", false);
 
         if (isClient) {
             DAOClient.delete(DAOClient.get(id));
         } else {
-            DAOSupplier.delete(DAOClient.get(id));
+            DAOSupplier.delete(DAOSupplier.get(id));
         }
         System.out.println("bORRADO1");
     }
@@ -630,26 +575,25 @@ public class View {
         }
     }
 
-    // TODO numero de lineas
-    public void deleteLine() {
-        int count = 1;
+    public void deleteLine(int num) {
+        int count = num;
         System.out.print(String.format("\033[%dA", count)); // Move up
         System.out.print("\033[2K"); // Erase line content
     }
 
-    public Integer getInt(String question, boolean returnEmpty) {
+    public Integer getInteger(String question, boolean returnNull) {
         String num;
         do {
             System.out.print(question);
             num = keyboard.nextLine();
-            if (returnEmpty && num.equals("")) {
+            if (returnNull && num.equals("")) {
                 return null;
             } else {
-                if (!isInt(num)) {
-                    deleteLine();
+                if (!isNumber(num)) {
+                    deleteLine(1);
                 }
             }
-        } while (!isInt(num));
+        } while (!isNumber(num));
 
         return Integer.parseInt(num);
     }
@@ -663,33 +607,78 @@ public class View {
                 return "";
             } else {
                 if (string.equals("")) {
-                    deleteLine();
+                    deleteLine(1);
                 }
             }
         } while (string.equals(""));
         return string;
     }
 
-    public boolean isInt(String num) {
+    public boolean isNumber(String num) {
         return num.matches(numberRegex);
     }
 
-    // TODO mejor nombre
-    public String optionalString(String type, String question) {
-        String result = "";
-        if (type.equals("int")) {
-            do {
-                System.out.print(question);
-                result = keyboard.nextLine();
-                if (!isInt(result) && !result.equals("")) {
-                    deleteLine();
-                }
-            } while (!isInt(result) && !result.equals(""));
-        } else if (type.equals("String")) {
-            System.out.print(question);
-            result = keyboard.nextLine();
-        }
-
-        return result;
+    public Integer getDiscount(String question, boolean returnEmpty) {
+        Integer num;
+        do {
+            num = getInteger(question, returnEmpty);
+        } while ((num > 100) && !returnEmpty);
+        return num;
     }
+
+    public int getFreeId(DAO dao, String question) {
+        int id;
+        Object obj;
+        boolean exists;
+        do {
+            id = getInteger(question, false);
+            obj = dao.get(id);
+            if (obj != null) {
+                exists = true;
+                deleteLine(2);
+                System.out.println("Ya existe ese ID!");
+            } else {
+                exists = false;
+            }
+        } while (exists);
+
+        return id;
+    }
+
+    public int getExistingId(DAO dao, String question) {
+        int id;
+        Object obj;
+        boolean exists;
+        do {
+            id = getInteger(question, false);
+            obj = dao.get(id);
+            if (obj != null) {
+                exists = true;
+            } else {
+                exists = false;
+                deleteLine(2);
+                System.out.println("No existe ese ID!");
+            }
+        } while (!exists);
+
+        return id;
+    }
+    // TODO mejor nombre
+    // public String optionalString(String type, String question) {
+    // String result = "";
+    // if (type.equals("int")) {
+    // do {
+    // System.out.print(question);
+    // result = keyboard.nextLine();
+    // if (!isInt(result) && !result.equals("")) {
+    // deleteLine();
+    // }
+    // } while (!isInt(result) && !result.equals(""));
+    // } else if (type.equals("String")) {
+    // System.out.print(question);
+    // result = keyboard.nextLine();
+    // }
+
+    // return result;
+    // }
 }

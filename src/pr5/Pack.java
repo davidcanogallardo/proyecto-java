@@ -51,9 +51,9 @@ public final class Pack extends Product {
 
     @Override
     public String toString() {
-        String str = super.toString() + "\n [\n";
+        String str = super.toString() + "\nProducts [\n";
         for (Integer i : this.idProdList) {
-            str += "   " + i + ",\n";
+            str += " " + i + ",\n";
         }
         str += "]";
         return str;
