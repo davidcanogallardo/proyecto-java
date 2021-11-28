@@ -1,6 +1,5 @@
 package pr5;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -24,8 +23,6 @@ public class View {
     private Person person;
 
     public void run() {
-        System.out.println(getNumberInRange("mail", false, 0, 100));
-        // System.out.println(getDouble("", false));
         String option;
 
         ArrayList<Integer> idProdList = new ArrayList<>();
@@ -348,13 +345,6 @@ public class View {
     }
 
     private void addPerson(boolean isClient) {
-        String answer;
-        String phone;
-        String email;
-        LocalDate birthdate;
-        int year;
-        int month;
-        int day;
         System.out.println("\nIntroduce los datos de la persona:");
         // Pedir un ID de un producto que exista
         if (isClient) {
@@ -368,19 +358,6 @@ public class View {
         surname = getString("Apellido: ", false);
 
         Address address = askAddress();
-
-        System.out.println("Quieres añadir los campos opcionales (si/NO)");
-        answer = keyboard.nextLine();
-
-        if (answer.equalsIgnoreCase("si") || answer.equalsIgnoreCase("sí")) {
-            phone = getPhone("Número de teléfono: ", false);
-            email = getEmail("Email: ", false);
-            System.out.println("Fecha de nacimiento:");
-            day = getNumberInRange("Día: ", false, 1, 31);
-            month = getNumberInRange("Mes: ", false, 1, 12);
-            year = getNumberInRange("Año: ", false, 1920, LocalDate.now().getYear());
-
-        }
 
         // Según si es cliente o no se llama a una clase diferente
         if (isClient) {
@@ -427,14 +404,14 @@ public class View {
 
         // Según si es cliente o no busca en una clase u otra
         if (isClient) {
-            Client client = (Client) daoClient.get(id);
+            Client client = daoClient.get(id);
             if (client != null) {
                 System.out.println("\n"+client.toString() + "\n");
             } else {
                 System.out.println("\nNo existe el cliente\n");
             }
         } else {
-            Supplier supplier = (Supplier) daoSupplier.get(id);
+            Supplier supplier = daoSupplier.get(id);
             if (supplier != null) {
                 System.out.println("\n"+supplier.toString() + "\n");
             } else {
@@ -509,12 +486,22 @@ public class View {
         // Pedir un ID de un producto que exista
         id = getInteger("ID del cliente que borrar: ", false);
 
+        
         if (isClient) {
-            daoClient.delete(daoClient.get(id));
+            if (daoClient.get(id) == null) {
+                System.out.println("Ese id no corresponde a ningún cliente");
+            } else {
+                daoClient.delete(daoClient.get(id));
+                System.out.println("\nCliente borrado!\n");
+            }
         } else {
-            daoSupplier.delete(daoSupplier.get(id));
+            if (daoSupplier.get(id) == null) {
+                System.out.println("Ese id no corresponde a ningún proveedor");
+            } else {
+                daoSupplier.delete(daoSupplier.get(id));
+                System.out.println("\nCliente borrado!\n");
+            }
         }
-        System.out.println("\nCliente borrado!\n");
     }
 
     private void printDaoObject(DAO p) {
@@ -565,7 +552,7 @@ public class View {
                 value = Double.parseDouble(doubleStr);
             } catch (Exception InputMismatchException) {
                 deleteLine(2);
-                System.out.println("presio invalido");
+                System.out.println("Precio incorrecto");
                 invalidDouble = true;
             }
         } while (invalidDouble);
@@ -679,59 +666,11 @@ public class View {
                 return "";
             }
             if (!zipCode.matches(zipRegex)) {
-                deleteLine(2);
+                deleteLine(3);
                 System.out.println("El código postal es un número de 5 cifras");
             }
         } while (!zipCode.matches(zipRegex));
 
         return zipCode;
-    }
-
-    public String getEmail(String question, boolean returnEmpty) {
-        String mailRegex = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
-        String email;
-        System.out.println("");
-        do {
-            email = getString(question, returnEmpty);
-            if (email.equals("") && returnEmpty) {
-                return "";
-            }
-            if (!email.matches(mailRegex)) {
-                deleteLine(2);
-                System.out.println("Introduce un email correcto");
-            }
-        } while (!email.matches(mailRegex));
-
-        return email;
-    }
-    
-    public String getPhone(String question, boolean returnEmpty) {
-        String phoneRegex = "\\d{9}";
-        String phone;
-        System.out.println("eeee");
-        do {
-            phone = getString(question, returnEmpty).replaceAll("\\s+","");
-            if (phone.equals("") && returnEmpty) {
-                return "";
-            }
-            if (!phone.matches(phoneRegex)) {
-                deleteLine(2);
-                System.out.println("Introduce un teléfono correcto");
-            }
-        } while (!phone.matches(phoneRegex));
-
-        return phone;
-    }
-
-    public Integer getNumberInRange(String question, boolean returnEmpty, int start, int end) {
-        Integer num;
-        do {
-            num = getInteger(question, returnEmpty);
-            if ((num > end) || (num < start) &&  !returnEmpty) {
-                deleteLine(2);
-                System.out.println("Introduce un número correcto");
-            }
-        } while ((num > end) || (num < start) &&  !returnEmpty);
-        return num;
     }
 }
