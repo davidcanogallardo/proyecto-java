@@ -28,14 +28,9 @@ public abstract class Person implements Identificable {
     protected Person(Integer idPersona, String dni, String name, String surname, LocalDate birthdate, String email,
             String phoneNumber, Address fullAddress) {
         this(idPersona, dni, name, surname, fullAddress);
-        this.idPersona = idPersona;
-        this.dni = dni;
-        this.name = name;
-        this.surname = surname;
         this.birthdate = birthdate;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.fullAddress = fullAddress;
     }
 
     @Override
@@ -44,13 +39,6 @@ public abstract class Person implements Identificable {
                 + ", birthdate=" + birthdate + ", email=" + email + ", phoneNumber=" + phoneNumber + ", fullAddress="
                 + fullAddress + ']';
     }
-
-    /*
-     * public boolean isValid() { if (this.idPersona == null || this.DNI.isNull() ||
-     * this.name.isNull() || this.surname.isNull()) { return true; } else { return
-     * false; } }
-     */
-    // TODO
 
     public Integer getAge() {
         return (int) ChronoUnit.YEARS.between(this.getBirthdate(), LocalDate.now());

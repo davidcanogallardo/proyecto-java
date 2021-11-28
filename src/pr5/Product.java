@@ -5,16 +5,16 @@ import java.util.Objects;
 public class Product implements Identificable{
     private Integer idProduct;
     private String name;
-    private Integer price;
+    private double price;
     private Integer stock;
     
-    public Product(Integer idProduct, String name, Integer price) {
+    public Product(Integer idProduct, String name, double price) {
         this.idProduct = idProduct;
         this.name = name;
         this.price = price;
     }
     
-    public Product(Integer idProduct, String name, Integer price, Integer stock) {
+    public Product(Integer idProduct, String name, double price, Integer stock) {
         this(idProduct, name, price);
         this.stock = stock;
     }
@@ -49,7 +49,7 @@ public class Product implements Identificable{
         return name;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
@@ -66,7 +66,7 @@ public class Product implements Identificable{
         this.name = name;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 

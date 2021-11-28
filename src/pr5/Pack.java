@@ -3,22 +3,21 @@ package pr5;
 import java.util.ArrayList;
 
 public final class Pack extends Product {
-
-    private ArrayList<Integer> idProdList;
+    private ArrayList<Integer> productList;
     private int discount;
 
-    public Pack(ArrayList<Integer> idProdList, int discount, Integer idProduct, String name, Integer price) {
+    public Pack(ArrayList<Integer> idProdList, int discount, Integer idProduct, String name, double price) {
         super(idProduct, name, price);
-        this.idProdList = idProdList;
+        this.productList = idProdList;
         this.discount = discount;
     }
 
     public ArrayList<Integer> getIdProdList() {
-        return idProdList;
+        return productList;
     }
 
     public void setIdProdList(ArrayList<Integer> idProdList) {
-        this.idProdList = idProdList;
+        this.productList = idProdList;
     }
 
     public int getDiscount() {
@@ -30,9 +29,9 @@ public final class Pack extends Product {
     }
     
     public boolean deleteProduct(Integer id) {
-        for (Integer i : this.idProdList) {
+        for (Integer i : this.productList) {
             if (i == id) {
-                this.idProdList.remove(id);
+                this.productList.remove(id);
                 return true;
             }
         }
@@ -40,19 +39,19 @@ public final class Pack extends Product {
     }
     
     public boolean addProduct(Integer id) {
-        for (Integer i : this.idProdList) {
+        for (Integer i : this.productList) {
             if (i == id) {
                 return false;
             }
         }
-        this.idProdList.add(id);
+        this.productList.add(id);
         return true;
     }
 
     @Override
     public String toString() {
         String str = super.toString() + "\nProducts [\n";
-        for (Integer i : this.idProdList) {
+        for (Integer i : this.productList) {
             str += " " + i + ",\n";
         }
         str += "]";
@@ -62,7 +61,7 @@ public final class Pack extends Product {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Pack pack) {
-            return this.idProdList.equals(pack.getIdProdList());
+            return this.productList.equals(pack.getIdProdList());
         } else {
             return false;
         }
