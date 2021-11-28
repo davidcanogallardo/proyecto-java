@@ -11,10 +11,8 @@ public class View {
     private DAO<Supplier> DAOSupplier = new DAO<>();
     private DAO<Product> DAOProduct = new DAO<>();
 
-    //TODO static
     //precio como loquesea
 
-    private String option;
     Product prod;
     Pack pack;
     int id;
@@ -27,6 +25,8 @@ public class View {
     Person person;
 
     public void run() {
+        String option;
+
         ArrayList<Integer> idProdList = new ArrayList<>();
         Product pr = new Product(1, "prod1", 12, 12);
         Product pr2 = new Product(2, "prod2", 1, 2);
@@ -70,6 +70,7 @@ public class View {
     /*--------------------------------------PRODUCTOS------------------------------------------*/
     public void menuProduct() {
         String answer;
+        String option;
         System.out.println("\n");
         do {
             System.out.println("Elige una opción:");
@@ -97,7 +98,7 @@ public class View {
                 if (answer.equalsIgnoreCase("producto")) {
                     addProduct(false);
                 } else if (answer.equalsIgnoreCase("pack")) {
-                    packMenu();
+                    menuPack();
                 }
                 break;
             // Search
@@ -125,9 +126,11 @@ public class View {
                 break;
             }
         } while (!"0".equals(option));
+        // option = "";
     }
 
-    public void packMenu() {
+    public void menuPack() {
+        String option;
         System.out.println("\n");
         do {
             System.out.println("Elige una opción:");
@@ -264,6 +267,7 @@ public class View {
 
     /*--------------------------------------PERSONAS------------------------------------------*/
     public void menuCliente() {
+        String option;
         System.out.println("\n");
         do {
             System.out.println("Elige una opción:");
@@ -305,6 +309,7 @@ public class View {
     }
 
     public void menuSupplier() {
+        String option;
         System.out.println("\n");
         do {
             System.out.println("Elige una opción:");
@@ -443,37 +448,34 @@ public class View {
             person.setSurname(surname);
         }
 
-        String zipRegex = "\\d{5}";
-
         String locality;
         String province;
         String zipCode;
         String address;
-        Address add;
-        add = person.getFullAddress();
+        Address addr = person.getFullAddress();
 
         System.out.println("Introduce los datos de la dirección:");
-        locality = getString("Localidad [" + add.getLocality() + "]: ", true);
+        locality = getString("Localidad [" + addr.getLocality() + "]: ", true);
         if (!locality.equals("")) {
-            add.setLocality(locality);
+            addr.setLocality(locality);
         }
 
-        province = getString("Provincia [" + add.getProvince() + "]: ", true);
+        province = getString("Provincia [" + addr.getProvince() + "]: ", true);
         if (!province.equals("")) {
-            add.setProvince(province);
+            addr.setProvince(province);
         }
 
-        zipCode = getZIPCode("Código Postal [" + add.getZipCode() + "]: ", true);
+        zipCode = getZIPCode("Código Postal [" + addr.getZipCode() + "]: ", true);
         if (!zipCode.equals("")) {
-            add.setZipCode(zipCode);
+            addr.setZipCode(zipCode);
         }
 
-        address = getString("Dirección [" + add.getAddress() + "]: ", true);
+        address = getString("Dirección [" + addr.getAddress() + "]: ", true);
         if (!address.equals("")) {
-            add.setAddress(address);
+            addr.setAddress(address);
         }
 
-        person.setFullAddress(add);
+        person.setFullAddress(addr);
 
         if (isClient) {
             DAOClient.modify((Client) person);
@@ -498,7 +500,7 @@ public class View {
         }
         System.out.println("\nCliente borrado!\n");
     }
-    /******************************** UTILS **************************************/
+
     private void printClassObjects(DAO p) {
         System.out.println("");
         HashMap<Integer, Object> hashMap = p.getMap();
@@ -507,12 +509,29 @@ public class View {
         }
     }
 
+    /******************************** UTILS **************************************/
     public void deleteLine(int linesToDelete) {
         System.out.print(String.format("\033[%dA", linesToDelete)); // Move up
         System.out.print("\033[2K"); // Erase line content
     }
 
     public Integer getInteger(String question, boolean returnNull) {
+        String num;
+        do {
+            System.out.print(question);
+            num = keyboard.nextLine();
+            if (returnNull && num.equals("")) {
+                return null;
+            } else {
+                if (!isNumber(num)) {
+                    deleteLine(1);
+                }
+            }
+        } while (!isNumber(num));
+
+        return Integer.parseInt(num);
+    }
+    public Integer getDouble(String question, boolean returnNull) {
         String num;
         do {
             System.out.print(question);
@@ -593,34 +612,25 @@ public class View {
 
         return id;
     }
-    // TODO mejor nombre
-    // public String optionalString(String type, String question) {
-    // String result = "";
-    // if (type.equals("int")) {
-    // do {
-    // System.out.print(question);
-    // result = keyboard.nextLine();
-    // if (!isInt(result) && !result.equals("")) {
-    // deleteLine();
-    // }
-    // } while (!isInt(result) && !result.equals(""));
-    // } else if (type.equals("String")) {
-    // System.out.print(question);
-    // result = keyboard.nextLine();
-    // }
-
-    // return result;
-    // }
 
     public String getValidDNI(String question, boolean returnEmpty) {
         String dniRegex = "\\d{8}[a-zA-Z]{1}";
+        System.out.println("");
         do {
             do {
                 dni = getString(question, returnEmpty);
                 if (dni.equals("") && returnEmpty) {
                     return "";
                 }
+                if (!dni.matches(dniRegex)) {
+                    deleteLine(2);
+                    System.out.println("Introduce un DNI con 7 números y una letra");
+                }
             } while (!dni.matches(dniRegex));
+            if (!checkDNILetter(dni.substring(8),Integer.parseInt(dni.substring(0,8)))) {
+                deleteLine(2);
+                System.out.println("Introduce un DNI correcto");
+            }
         } while (!checkDNILetter(dni.substring(8),Integer.parseInt(dni.substring(0,8))));
 
         return dni;
@@ -637,14 +647,18 @@ public class View {
     public String getZIPCode(String question, boolean returnEmpty) {
         String zipRegex = "\\d{5}";
         String zipCode;
+        System.out.println("");
         do {
             zipCode = getString(question, returnEmpty);
             if (zipCode.equals("") && returnEmpty) {
                 return "";
             }
+            if (!zipCode.matches(zipRegex)) {
+                deleteLine(2);
+                System.out.println("El código postal es un número de 5 cifras");
+            }
         } while (!zipCode.matches(zipRegex));
 
         return zipCode;
     }
-
 }

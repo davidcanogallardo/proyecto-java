@@ -38,8 +38,4 @@ public class DAO<T extends Identificable> {
     public void modify(T obj) {
         hashMap.replace(obj.getId(), get(obj.getId()), obj);
     }
-
-    public boolean exists(int id) {
-        return hashMap.containsKey(id);
-    }
 }
