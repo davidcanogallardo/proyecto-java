@@ -5,4 +5,5 @@ public class main {
         View v = new View();
         v.run();
     }
+    //TODO bucles infinitos
 }
