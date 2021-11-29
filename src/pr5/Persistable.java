@@ -7,5 +7,4 @@ public interface Persistable <T> {
     public abstract T delete(T id);
     public abstract T get(int id);
     public abstract HashMap<Integer, T> getMap();
-    //TODO collection
 }
