@@ -485,6 +485,7 @@ public class View {
         // Pedir un ID de un producto que exista
         id = getInteger("ID del cliente que borrar: ", false);
 
+        
         if (isClient) {
             if (daoClient.get(id) == null) {
                 System.out.println("Ese id no corresponde a ningún cliente");
@@ -538,7 +539,6 @@ public class View {
         double value = 0;
         String doubleStr;
         System.out.println("");
-
         do {
             System.out.print(question);
             doubleStr = keyboard.nextLine();
