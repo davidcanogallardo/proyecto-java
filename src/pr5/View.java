@@ -1,5 +1,10 @@
 package pr5;
 
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -22,7 +27,24 @@ public class View {
     private String dni;
     private Person person;
 
-    public void run() {
+    private Logger logger = Logger.getLogger(View.class.getName());
+
+    
+    public void run() throws SecurityException, IOException {
+        FileHandler fh = new FileHandler("log.txt", true);
+        fh.setFormatter(new SimpleFormatter());
+        logger.addHandler(fh);
+        logger.setLevel(Level.ALL);
+        
+        String[] array = new String[1];
+        
+        try {
+            array[2] = "IndexOutOfBounds";
+        } catch (Exception ArrayIndexOutOfBoundsException) {
+            logger.warning("Array index out of bounds");
+        }
+        
+
         String option;
 
         do {
@@ -549,6 +571,7 @@ public class View {
                 }
                 value = Double.parseDouble(doubleStr);
             } catch (Exception InputMismatchException) {
+                logger.warning("Input error");
                 deleteLine(2);
                 System.out.println("Precio incorrecto");
                 invalidDouble = true;
