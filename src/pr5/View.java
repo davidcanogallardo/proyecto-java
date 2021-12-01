@@ -1,9 +1,6 @@
 package pr5;
 
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,24 +24,9 @@ public class View {
     private String dni;
     private Person person;
 
-    private Logger logger = Logger.getLogger(View.class.getName());
-
+    private static Logger logger = Logger.getLogger(View.class.getName());
     
     public void run() throws SecurityException, IOException {
-        FileHandler fh = new FileHandler("log.txt", true);
-        fh.setFormatter(new SimpleFormatter());
-        logger.addHandler(fh);
-        logger.setLevel(Level.ALL);
-        
-        String[] array = new String[1];
-        
-        try {
-            array[2] = "IndexOutOfBounds";
-        } catch (Exception ArrayIndexOutOfBoundsException) {
-            logger.warning("Array index out of bounds");
-        }
-        
-
         String option;
 
         do {
@@ -89,7 +71,8 @@ public class View {
             System.out.println("[2] Buscar producto");
             System.out.println("[3] Modificar producto");
             System.out.println("[4] Borrar producto");
-            System.out.println("[5] Mostrar todos los productos");
+            System.out.println("[5] Gestionar stock producto");
+            System.out.println("[6] Mostrar todos los productos");
             System.out.print("Opción: ");
             option = keyboard.nextLine();
 
@@ -98,7 +81,7 @@ public class View {
                 case "1":
                     System.out.println("");
                     do {
-                        option = getString("Qué quieres añadir? (PRODUCTO/pack)", true);
+                        option = getString("Qué quieres añadir? (producto/pack) [producto]", true);
                         if (option.equals("")) {
                             answer = "producto";
                         } else {
@@ -124,8 +107,12 @@ public class View {
                 case "4":
                     deleteProduct();
                     break;
-                // List all
+                // Stock
                 case "5":
+                    stockGestor();
+                    break;
+                // List all
+                case "6":
                     printObjects(daoProduct);
                     break;
                 case "0":
@@ -278,6 +265,46 @@ public class View {
         } else {
             System.out.println("\nNo existe el producto\n");
         }
+    }
+
+    private void stockGestor() {
+        String option;
+        System.out.println("\n");
+        do {
+            System.out.println("Elige una opción:");
+            System.out.println("[0] Volver");
+            System.out.println("[1] Añadir stock a un producto");
+            System.out.println("[2] Quitar stock a un producto");
+            System.out.print("Opción: ");
+            option = keyboard.nextLine();
+
+            switch (option) {
+                case "1":
+                    id = getExistingId(daoProduct, "ID de un producto: ");
+                    stock = getInteger("Stock que añadir: ", false);
+                    prod = daoProduct.get(id);
+                    prod.putStock(stock);
+                    break;
+                case "2":
+                    id = getExistingId(daoProduct, "ID de un producto: ");
+                    stock = getInteger("Stock que quitar: ", false);
+                    try {
+                        prod.takeStock(stock);
+                    } catch (StockInsuficientException e) {
+                        System.out.println("No puedes quitar tanto stock al producto!");
+                        // e.printStackTrace();
+                    }
+                    System.out.println("");
+                    break;
+                case "0":
+                    System.out.println("\n");
+                    break;
+                default:
+                    deleteLine(6);
+                    System.out.println("Introduce una opción correcta!");
+                    break;
+            }
+        } while (!"0".equals(option));
     }
 
     /*--------------------------------------PERSONAS------------------------------------------*/
@@ -560,7 +587,7 @@ public class View {
         boolean invalidDouble = true;
         double value = 0;
         String doubleStr;
-        System.out.println("");
+        System.out.println("\n");
         do {
             System.out.print(question);
             doubleStr = keyboard.nextLine();
@@ -571,9 +598,9 @@ public class View {
                 }
                 value = Double.parseDouble(doubleStr);
             } catch (Exception InputMismatchException) {
+                deleteLine(3);
                 logger.warning("Input error");
-                deleteLine(2);
-                System.out.println("Precio incorrecto");
+                // System.out.println("Precio incorrecto");
                 invalidDouble = true;
             }
         } while (invalidDouble);

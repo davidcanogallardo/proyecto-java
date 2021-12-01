@@ -40,6 +40,17 @@ public class Product implements Identificable{
         return "Product [" + "idProduct=" + idProduct + ", name=" + name + ", price=" + price + ", stock=" + stock + ']';
     }
     
+    public void putStock(int num) {
+        this.stock += num;
+    }
+    public void takeStock(int num) throws StockInsuficientException {
+        if (num > this.stock) {
+            throw new StockInsuficientException();
+        } else {
+            this.stock -= num;
+        }
+    }
+
     //Getters
     public Integer getId() {
         return idProduct;
