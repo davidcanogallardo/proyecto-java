@@ -1,6 +1,8 @@
 package pr5;
 
 import java.util.logging.Logger;
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -28,16 +30,9 @@ public class View {
     private Person person;
 
     private static Logger logger = Logger.getLogger(View.class.getName());
-    
-    public void run() throws SecurityException, IOException, ClassNotFoundException, FileNotFoundException {
-        FileInputStream fis = new FileInputStream("comanda_rebuda.txt");
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        Product prod2 = (Product) ois.readObject();
-        
-        prod2.getId();
 
-        ois.close();
-
+    public void run() throws IOException {
+        daoProduct.openFile("uwu.dat");
         String option;
         do {
             System.out.println("Elige una opción:");
@@ -70,7 +65,7 @@ public class View {
     }
 
     /*--------------------------------------PRODUCTOS------------------------------------------*/
-    private void menuProduct() {
+    private void menuProduct() throws IOException {
         String answer;
         String option;
         System.out.println("\n");
@@ -136,7 +131,7 @@ public class View {
         } while (!"0".equals(option));
     }
 
-    private void menuPack() {
+    private void menuPack() throws IOException {
         String option;
         System.out.println("\n");
         do {
@@ -187,14 +182,14 @@ public class View {
         } while (!"0".equals(option));
     }
 
-    private void addProduct(boolean isPack) {
+    private void addProduct(boolean isPack) throws IOException {
         System.out.println("Introduce las propiedades del producto:\n");
         // Pedir un ID de un producto que exista
         id = getFreeId(daoProduct, "ID del producto: ");
 
         name = getString("Nombre: ", false);
         price = getDouble("Precio: ", false);
-        //Según si quiere añadir un pack o producto pide diferentes propiedades
+        // Según si quiere añadir un pack o producto pide diferentes propiedades
         if (!isPack) {
             stock = getInteger("Stock: ", false);
             prod = new Product(id, name, price, stock);
@@ -212,7 +207,7 @@ public class View {
         } else {
             System.out.println("El producto ya está añadido, prueba otro id\n ");
         }
-
+        daoProduct.saveToFile("uwu.dat");
     }
 
     private void searchProduct() {
@@ -233,8 +228,8 @@ public class View {
 
         prod = daoProduct.get(id);
 
-        //Reemplaza las propiedades del producto 
-        //si el usuario introduce algo 
+        // Reemplaza las propiedades del producto
+        // si el usuario introduce algo
         name = getString("Nombre [" + prod.getName() + "]: ", true);
         if (!name.equals("")) {
             prod.setName(name);
@@ -279,6 +274,7 @@ public class View {
 
     private void stockGestor() {
         String option;
+        String file;
         System.out.println("\n");
         do {
             System.out.println("Elige una opción:");
@@ -290,11 +286,13 @@ public class View {
 
             switch (option) {
                 case "1":
-                    System.out.println("Elige una opción:");
+                    System.out.println("\nElige una opción:");
                     System.out.println("[0] Volver");
                     System.out.println("[1] Añadir stock manualmente");
-                    System.out.println("[2] Añadir stock mediante albarán");
+                    System.out.println("[2] Añadir stock de una archivo de comandas");
+                    System.out.print("Opción: ");
                     option = keyboard.nextLine();
+                    // TODO default case
                     switch (option) {
                         case "1":
                             id = getExistingId(daoProduct, "ID de un producto: ");
@@ -303,7 +301,15 @@ public class View {
                             prod.putStock(stock);
                             break;
                         case "2":
-
+                            try {
+                                putStockFromFile(getString("Archivo: ", false));
+                            } catch (FileNotFoundException e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
+                            } catch (IOException e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
+                            }
                             break;
                     }
                     break;
@@ -327,6 +333,30 @@ public class View {
                     break;
             }
         } while (!"0".equals(option));
+    }
+
+    private void putStockFromFile(String filePathString) throws FileNotFoundException, IOException {
+        String id;
+        Integer idInt;
+        int quantity;
+        try (DataInputStream dis = new DataInputStream(
+                new BufferedInputStream(new FileInputStream(filePathString)))) {
+            while (dis.available() > 0) {
+                id = dis.readUTF();
+                quantity = dis.readInt();
+                if (!id.equals("0")) {
+                    // System.out.println(id + " " + quantity);
+                    idInt = Integer.parseInt(id);
+                    prod = daoProduct.get(idInt);
+                    if (prod != null) {
+                        prod.putStock(quantity);
+                    } else {
+                        // System.out.println("producto id: "+ id + "no existe");
+                    }
+                }
+            }
+        }
+        System.out.println("");
     }
 
     /*--------------------------------------PERSONAS------------------------------------------*/
@@ -556,7 +586,6 @@ public class View {
         // Pedir un ID de un producto que exista
         id = getInteger("ID del cliente que borrar: ", false);
 
-        
         if (isClient) {
             if (daoClient.get(id) == null) {
                 System.out.println("Ese id no corresponde a ningún cliente");

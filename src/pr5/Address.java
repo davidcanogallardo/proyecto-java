@@ -1,6 +1,8 @@
 package pr5;
 
-public class Address {
+import java.io.Serializable;
+
+public class Address implements Serializable {
     private String locality;
     private String province;
     private String zipCode;

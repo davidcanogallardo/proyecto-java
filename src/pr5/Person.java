@@ -1,10 +1,12 @@
 package pr5;
 
 import static java.lang.Math.abs;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public abstract class Person implements Identificable {
+public abstract class Person implements Identificable, Serializable {
     private Integer idPersona;
     private String dni;
     private String name;

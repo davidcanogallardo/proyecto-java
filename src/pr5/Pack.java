@@ -1,8 +1,9 @@
 package pr5;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public final class Pack extends Product {
+public final class Pack extends Product implements Serializable {
     private ArrayList<Integer> productList;
     private int discount;
 
