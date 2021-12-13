@@ -1,8 +1,9 @@
 package pr5;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Product implements Identificable{
+public class Product implements Identificable, Serializable{
     private Integer idProduct;
     private String name;
     private double price;

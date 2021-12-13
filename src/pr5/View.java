@@ -1,7 +1,10 @@
 package pr5;
 
 import java.util.logging.Logger;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -26,9 +29,16 @@ public class View {
 
     private static Logger logger = Logger.getLogger(View.class.getName());
     
-    public void run() throws SecurityException, IOException {
-        String option;
+    public void run() throws SecurityException, IOException, ClassNotFoundException, FileNotFoundException {
+        FileInputStream fis = new FileInputStream("comanda_rebuda.txt");
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        Product prod2 = (Product) ois.readObject();
+        
+        prod2.getId();
 
+        ois.close();
+
+        String option;
         do {
             System.out.println("Elige una opción:");
             System.out.println("[0] Salir");
@@ -280,10 +290,22 @@ public class View {
 
             switch (option) {
                 case "1":
-                    id = getExistingId(daoProduct, "ID de un producto: ");
-                    stock = getInteger("Stock que añadir: ", false);
-                    prod = daoProduct.get(id);
-                    prod.putStock(stock);
+                    System.out.println("Elige una opción:");
+                    System.out.println("[0] Volver");
+                    System.out.println("[1] Añadir stock manualmente");
+                    System.out.println("[2] Añadir stock mediante albarán");
+                    option = keyboard.nextLine();
+                    switch (option) {
+                        case "1":
+                            id = getExistingId(daoProduct, "ID de un producto: ");
+                            stock = getInteger("Stock que añadir: ", false);
+                            prod = daoProduct.get(id);
+                            prod.putStock(stock);
+                            break;
+                        case "2":
+
+                            break;
+                    }
                     break;
                 case "2":
                     id = getExistingId(daoProduct, "ID de un producto: ");

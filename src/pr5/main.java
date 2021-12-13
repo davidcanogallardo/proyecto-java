@@ -7,7 +7,7 @@ import java.util.logging.SimpleFormatter;
 import java.io.IOException;
 
 public class main {
-    public static void main(String[] args) throws SecurityException, IOException {
+    public static void main(String[] args) throws SecurityException, IOException, ClassNotFoundException {
 
         String LogPath = "log.txt";
         try {
