@@ -22,5 +22,5 @@ public class main {
             System.out.println("Could not find file " + logPath);
         }
     }
-    // TODO controlar bucles infinitos
+    // TODO controlar bucles infinitos\\ cuando no hay productos etc
 }

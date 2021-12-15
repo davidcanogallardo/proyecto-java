@@ -3,10 +3,10 @@ package pr5;
 import java.util.logging.Logger;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -31,8 +31,8 @@ public class View {
 
     private static Logger logger = Logger.getLogger(View.class.getName());
 
-    public void run() throws IOException {
-        daoProduct.openFile("uwu.dat");
+    public void run()  throws IOException {
+        loadFiles();
         String option;
         do {
             System.out.println("Elige una opción:");
@@ -40,6 +40,7 @@ public class View {
             System.out.println("[1] Productos");
             System.out.println("[2] Clientes");
             System.out.println("[3] Proveedores");
+            // System.out.println("[4] ");
             System.out.print("Opción: ");
             option = keyboard.nextLine();
 
@@ -56,6 +57,9 @@ public class View {
                 case "3":
                     menuSupplier();
                     break;
+                case "0":
+                    daoProduct.saveToFile("uwu.dat");
+                    break;
                 default:
                     deleteLine(7);
                     System.out.println("Introduce una opción correcta!");
@@ -64,8 +68,20 @@ public class View {
         } while (!"0".equals(option));
     }
 
+    public void loadFiles() throws IOException {
+        File file = new File("uwu.data");
+        if (file.exists()) {
+            daoProduct.openFile("uwu.dat");
+        } else {
+            if(!file.createNewFile()) {
+                //TODO añadir al logger
+                System.out.println("No se ha podido crear el archivo");
+            };
+        }
+    }
+
     /*--------------------------------------PRODUCTOS------------------------------------------*/
-    private void menuProduct() throws IOException {
+    private void menuProduct() {
         String answer;
         String option;
         System.out.println("\n");
@@ -131,7 +147,7 @@ public class View {
         } while (!"0".equals(option));
     }
 
-    private void menuPack() throws IOException {
+    private void menuPack() {
         String option;
         System.out.println("\n");
         do {
@@ -182,7 +198,7 @@ public class View {
         } while (!"0".equals(option));
     }
 
-    private void addProduct(boolean isPack) throws IOException {
+    private void addProduct(boolean isPack) {
         System.out.println("Introduce las propiedades del producto:\n");
         // Pedir un ID de un producto que exista
         id = getFreeId(daoProduct, "ID del producto: ");
@@ -207,7 +223,6 @@ public class View {
         } else {
             System.out.println("El producto ya está añadido, prueba otro id\n ");
         }
-        daoProduct.saveToFile("uwu.dat");
     }
 
     private void searchProduct() {
@@ -335,6 +350,7 @@ public class View {
         } while (!"0".equals(option));
     }
 
+    //TODO elegir archivo que exista
     private void putStockFromFile(String filePathString) throws FileNotFoundException, IOException {
         String id;
         Integer idInt;
