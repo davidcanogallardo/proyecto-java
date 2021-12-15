@@ -1,4 +1,4 @@
-package pr5;
+package project.Models;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -46,22 +46,27 @@ public class DAO<T extends Identificable> implements Serializable {
         hashMap.replace(obj.getId(), get(obj.getId()), obj);
     }
 
-    public void saveToFile(String file) throws IOException {
+    public void save(String file) throws IOException {
         FileOutputStream fos = new FileOutputStream(file);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(this.hashMap);
         oos.close();
     }
 
-    public void openFile(String file) throws IOException {
+    public void load(String file) throws IOException {
         FileInputStream fis = new FileInputStream(file);
-        ObjectInputStream ois = new ObjectInputStream(fis);
         try {
-            this.hashMap = (HashMap<Integer, T>) ois.readObject();
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            try {
+                this.hashMap = (HashMap<Integer, T>) ois.readObject();
+            } catch (ClassNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            ois.close();
+        } catch (Exception EOFException) {
+            //TODO: handle exception
         }
-        ois.close();
+
     }
 }

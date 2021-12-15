@@ -1,4 +1,4 @@
-package pr5;
+package project.Exceptions;
 
 public class StockInsuficientException extends Exception {
     public StockInsuficientException() {

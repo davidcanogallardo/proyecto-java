@@ -1,4 +1,4 @@
-package pr5;
+package project.Models;
 
 import static java.lang.Math.abs;
 

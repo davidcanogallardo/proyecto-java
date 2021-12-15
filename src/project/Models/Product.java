@@ -1,7 +1,9 @@
-package pr5;
+package project.Models;
 
 import java.io.Serializable;
 import java.util.Objects;
+
+import project.Exceptions.StockInsuficientException;
 
 public class Product implements Identificable, Serializable{
     private Integer idProduct;

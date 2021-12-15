@@ -1,17 +1,30 @@
-package pr5;
+package project;
 
 import java.util.logging.Logger;
+
+import project.Exceptions.StockInsuficientException;
+import project.Models.Address;
+import project.Models.Client;
+import project.Models.DAO;
+import project.Models.Pack;
+import project.Models.Person;
+import project.Models.Product;
+import project.Models.Supplier;
+
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class View {
+public class ViewController {
     private Scanner keyboard = new Scanner(System.in);
 
     private DAO<Client> daoClient = new DAO<>();
@@ -28,11 +41,62 @@ public class View {
     private String surname;
     private String dni;
     private Person person;
+    private static final String PRODUCT_PATH = "products.dat";
+    private static final String SUPPLIER_PATH = "suppliers.dat";
+    private static final String CLIENT_PATH = "clients.dat";
 
-    private static Logger logger = Logger.getLogger(View.class.getName());
+    private static Logger logger = Logger.getLogger(ViewController.class.getName());
 
     public void run()  throws IOException {
-        loadFiles();
+        loadDAO();
+        try {
+            mainMenu();
+        } catch (Exception e) {
+            //Caza cualquier excepción y guarda todos los DAOs
+            saveDAO();
+        }
+    }
+
+    public void loadDAO() throws IOException {
+        File productFile = new File(PRODUCT_PATH);
+        File supplierFile = new File(SUPPLIER_PATH);
+        File clientFile = new File(CLIENT_PATH);
+        
+        if (!productFile.exists()) {
+            if(!productFile.createNewFile()) {
+                //TODO añadir al logger
+                System.out.println("No se ha podido crear el archivo");
+            };
+        } else {
+            daoProduct.load(PRODUCT_PATH);
+        }
+
+        if (!supplierFile.exists()) {
+            if(!supplierFile.createNewFile()) {
+                //TODO añadir al logger
+                System.out.println("No se ha podido crear el archivo");
+            };
+        } else {
+            daoSupplier.load(SUPPLIER_PATH);
+        }
+
+        if (!clientFile.exists()) {
+            if(!clientFile.createNewFile()) {
+                //TODO añadir al logger
+                System.out.println("No se ha podido crear el archivo");
+            };
+        } else {
+            daoClient.load(CLIENT_PATH);
+        }
+    }
+
+    public void saveDAO() throws IOException {
+        daoProduct.save(PRODUCT_PATH);
+        daoSupplier.save(SUPPLIER_PATH);
+        daoClient.save(SUPPLIER_PATH);
+    }
+
+    public void mainMenu() throws IOException {
         String option;
         do {
             System.out.println("Elige una opción:");
@@ -58,7 +122,7 @@ public class View {
                     menuSupplier();
                     break;
                 case "0":
-                    daoProduct.saveToFile("uwu.dat");
+                    saveDAO();
                     break;
                 default:
                     deleteLine(7);
@@ -67,19 +131,7 @@ public class View {
             }
         } while (!"0".equals(option));
     }
-
-    public void loadFiles() throws IOException {
-        File file = new File("uwu.data");
-        if (file.exists()) {
-            daoProduct.openFile("uwu.dat");
-        } else {
-            if(!file.createNewFile()) {
-                //TODO añadir al logger
-                System.out.println("No se ha podido crear el archivo");
-            };
-        }
-    }
-
+    
     /*--------------------------------------PRODUCTOS------------------------------------------*/
     private void menuProduct() {
         String answer;
@@ -130,7 +182,15 @@ public class View {
                     break;
                 // Stock
                 case "5":
-                    stockGestor();
+                    try {
+                        stockGestor();
+                    } catch (FileNotFoundException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                     break;
                 // List all
                 case "6":
@@ -287,9 +347,8 @@ public class View {
         }
     }
 
-    private void stockGestor() {
+    private void stockGestor() throws FileNotFoundException, IOException {
         String option;
-        String file;
         System.out.println("\n");
         do {
             System.out.println("Elige una opción:");
@@ -316,17 +375,13 @@ public class View {
                             prod.putStock(stock);
                             break;
                         case "2":
-                            try {
-                                putStockFromFile(getString("Archivo: ", false));
-                            } catch (FileNotFoundException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            } catch (IOException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
+                            if (fileIsValid("comanda_rebuda.txt")) {
+                                putStockFromFile("comanda_rebuda.txt");
+                                System.out.println("Stock añadido");
                             }
                             break;
-                    }
+                        }
+                        System.out.println("");
                     break;
                 case "2":
                     id = getExistingId(daoProduct, "ID de un producto: ");
@@ -350,7 +405,6 @@ public class View {
         } while (!"0".equals(option));
     }
 
-    //TODO elegir archivo que exista
     private void putStockFromFile(String filePathString) throws FileNotFoundException, IOException {
         String id;
         Integer idInt;
@@ -428,7 +482,7 @@ public class View {
             System.out.println("[2] Buscar proveedor");
             System.out.println("[3] Modificar proveedor");
             System.out.println("[4] Borrar proveedor");
-            System.out.println("[5] Mostrar todos los proveedor");
+            System.out.println("[5] Mostrar todos los proveedores");
             System.out.print("Opción: ");
 
             option = keyboard.nextLine();
@@ -628,6 +682,27 @@ public class View {
     }
 
     /******************************** UTILS **************************************/
+
+    private boolean fileIsValid(String filePath) {
+        File file;
+        Path p = Paths.get(filePath);
+
+        file = new File(filePath);
+        if (Files.notExists(p)) {
+            System.out.println("\nEl archivo no existe!");
+            return false;
+        }
+        if (!file.isFile()) {
+            System.out.println("\nNo es un archivo");
+            return false;
+        }
+        if (!Files.isReadable(p)) {
+            System.out.println("\nEl archivo no tiene permisos de lectura");
+            return false;
+        }
+        return true;
+    }
+
     private void deleteLine(int linesToDelete) {
         System.out.print(String.format("\033[%dA", linesToDelete)); // Move up
         System.out.print("\033[2K"); // Erase line content

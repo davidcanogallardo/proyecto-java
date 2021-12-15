@@ -1,4 +1,4 @@
-package pr5;
+package project.Models;
 
 import java.io.Serializable;
 import java.util.ArrayList;

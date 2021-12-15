@@ -1,4 +1,4 @@
-package pr5;
+package project;
 
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -10,12 +10,13 @@ public class main {
     public static void main(String[] args) throws SecurityException, IOException, ClassNotFoundException {
         String logPath = "log.txt";
         try {
-            Logger logger = Logger.getLogger(View.class.getName());
+            Logger logger = Logger.getLogger(ViewController.class.getName());
             FileHandler fh = new FileHandler(logPath, true);
             fh.setFormatter(new SimpleFormatter());
             logger.addHandler(fh);
             logger.setLevel(Level.ALL);
-            View v = new View();
+            
+            ViewController v = new ViewController();
             v.run();
         } catch (IOException ex) {
             System.out.println(ex.toString());
