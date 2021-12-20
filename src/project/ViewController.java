@@ -12,10 +12,13 @@ import project.Models.Product;
 import project.Models.Supplier;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,7 +50,15 @@ public class ViewController {
 
     private static Logger logger = Logger.getLogger(ViewController.class.getName());
 
-    public void run()  throws IOException {
+    public void run() throws IOException, SecurityException {
+
+        // try (DataInputStream dis = new DataInputStream(
+        //         new BufferedInputStream(new FileInputStream("a.txt")))) {
+        //     while (dis.available() > 0) {
+        //         System.out.println(dis.readInt());
+        //         System.out.println(dis.readInt());
+        //     }
+        // }
         loadDAO();
         try {
             mainMenu();
@@ -145,7 +156,8 @@ public class ViewController {
             System.out.println("[3] Modificar producto");
             System.out.println("[4] Borrar producto");
             System.out.println("[5] Gestionar stock producto");
-            System.out.println("[6] Mostrar todos los productos");
+            System.out.println("[6] dios mio adnan eres tontisimo");
+            System.out.println("[7] Mostrar todos los productos");
             System.out.print("Opción: ");
             option = keyboard.nextLine();
 
@@ -192,8 +204,16 @@ public class ViewController {
                         e.printStackTrace();
                     }
                     break;
-                // List all
                 case "6":
+                    try {
+                        saveOrderFile();
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    break;                    
+                // List all
+                case "7":
                     printObjects(daoProduct);
                     break;
                 case "0":
@@ -367,6 +387,7 @@ public class ViewController {
                     System.out.print("Opción: ");
                     option = keyboard.nextLine();
                     // TODO default case
+                    //TODO el menu bien
                     switch (option) {
                         case "1":
                             id = getExistingId(daoProduct, "ID de un producto: ");
@@ -375,8 +396,10 @@ public class ViewController {
                             prod.putStock(stock);
                             break;
                         case "2":
-                            if (fileIsValid("comanda_rebuda.txt")) {
-                                putStockFromFile("comanda_rebuda.txt");
+                            String filePath = getString("Nombre del archivo donde leer la comanda: ", false);
+                            System.out.println(filePath);
+                            if (fileIsValid(filePath)) {
+                                putStockFromFile(filePath);
                                 System.out.println("Stock añadido");
                             }
                             break;
@@ -406,18 +429,16 @@ public class ViewController {
     }
 
     private void putStockFromFile(String filePathString) throws FileNotFoundException, IOException {
-        String id;
-        Integer idInt;
+        int id;
         int quantity;
         try (DataInputStream dis = new DataInputStream(
                 new BufferedInputStream(new FileInputStream(filePathString)))) {
             while (dis.available() > 0) {
-                id = dis.readUTF();
+                id = dis.readInt();
                 quantity = dis.readInt();
-                if (!id.equals("0")) {
+                if (id != 0) {
                     // System.out.println(id + " " + quantity);
-                    idInt = Integer.parseInt(id);
-                    prod = daoProduct.get(idInt);
+                    prod = daoProduct.get(id);
                     if (prod != null) {
                         prod.putStock(quantity);
                     } else {
@@ -429,6 +450,57 @@ public class ViewController {
         System.out.println("");
     }
 
+    private void saveOrderFile() throws IOException {
+        String id = "";
+        String stock = "";
+        String filePath = getString("Nombre del archivo donde guardar la comanda: ", false);
+        Path p = Paths.get(filePath);
+        if (Files.notExists(p)) {
+            ArrayList<Integer> products = new ArrayList<Integer>();
+            System.out.print("\n");
+            do {
+                //ID
+                do {
+                    System.out.print("ID: ");
+                    id = keyboard.nextLine();
+                    if (id.equals("")) {
+                        deleteLine(1);
+                    }
+                } while (id.equals(""));
+
+                if (!id.equalsIgnoreCase("q")) {
+                    //STOCK
+                    do {
+                        System.out.print("Stock: ");
+                        stock = keyboard.nextLine();
+                        if (stock.equals("")) {
+                            deleteLine(1);
+                        }
+                    } while (stock.equals(""));
+    
+                    if (!stock.equalsIgnoreCase("q")) {
+                        if (isNumber(stock) && isNumber(id) && !stock.equals("0")) {
+                            products.add(Integer.parseInt(id));
+                            products.add(Integer.parseInt(stock));
+                            System.out.println("");
+                        } else {
+                            deleteLine(3);
+                            System.out.println("El id y el stock deben ser números y el stock no puede ser 0");
+                        }
+                    }
+                }
+            } while (!id.equalsIgnoreCase("q") && !stock.equalsIgnoreCase("q"));
+            DataOutputStream dos = new DataOutputStream(new FileOutputStream(filePath));
+            for (int i = 0; i < products.size(); i++) {
+                // System.out.println(products.get(i));
+                dos.writeInt(products.get(i));
+            }
+            dos.close();
+        } else {
+            System.out.println("\nEl archivo ya existe, elige otro\n");
+        }
+    }
+    
     /*--------------------------------------PERSONAS------------------------------------------*/
     private void menuCliente() {
         String option;
