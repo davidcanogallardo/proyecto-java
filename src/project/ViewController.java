@@ -104,7 +104,7 @@ public class ViewController {
     public void saveDAO() throws IOException {
         daoProduct.save(PRODUCT_PATH);
         daoSupplier.save(SUPPLIER_PATH);
-        daoClient.save(SUPPLIER_PATH);
+        daoClient.save(CLIENT_PATH);
     }
 
     public void mainMenu() throws IOException {
@@ -156,7 +156,7 @@ public class ViewController {
             System.out.println("[3] Modificar producto");
             System.out.println("[4] Borrar producto");
             System.out.println("[5] Gestionar stock producto");
-            System.out.println("[6] dios mio adnan eres tontisimo");
+            System.out.println("[6] Crear comanda");
             System.out.println("[7] Mostrar todos los productos");
             System.out.print("Opción: ");
             option = keyboard.nextLine();
