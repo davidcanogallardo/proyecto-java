@@ -26,6 +26,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class ViewController {
     private Scanner keyboard = new Scanner(System.in);
@@ -64,6 +66,7 @@ public class ViewController {
             mainMenu();
         } catch (Exception e) {
             //Caza cualquier excepción y guarda todos los DAOs
+            //TODO  no guarda todos los daos
             saveDAO();
         }
     }
@@ -102,6 +105,7 @@ public class ViewController {
     }
 
     public void saveDAO() throws IOException {
+        System.out.println("aa");
         daoProduct.save(PRODUCT_PATH);
         daoSupplier.save(SUPPLIER_PATH);
         daoClient.save(CLIENT_PATH);
@@ -241,6 +245,7 @@ public class ViewController {
             if ("1".equals(option)) {
                 addProduct(true);
             } else if ("2".equals(option)) {
+                //TODO bucle para añadir multiples productos
                 System.out.println("");
                 System.out.println("");
                 // Obtener el producto que añadir
@@ -271,6 +276,7 @@ public class ViewController {
                 } else {
                     System.out.println("No se ha podido añadir el producto al pack");
                 }
+                System.out.println(pack);
             } else if (!"0".equals(option)) {
                 deleteLine(6);
                 System.out.println("Introduce una opción correcta!");
@@ -292,7 +298,8 @@ public class ViewController {
         } else {
             discount = getDiscount("Descuento (0-100): ", false);
             // lista de productos de un pack (vacía por defecto)
-            ArrayList<Integer> productList = new ArrayList<>();
+            TreeSet<Integer> productList = new TreeSet<>();
+            //TODO que te pregunte si quiere añadir ahora o mas tarde productos al pack
 
             prod = new Pack(productList, discount, id, name, price);
         }
@@ -747,7 +754,8 @@ public class ViewController {
 
     private void printObjects(DAO p) {
         System.out.println("");
-        HashMap<Integer, Object> hashMap = p.getMap();
+        // System.out.println(p.getMap());
+        TreeMap<Integer, Object> hashMap = p.getMap();
         for (Object values : hashMap.values()) {
             System.out.println(values.toString() + "\n");
         }

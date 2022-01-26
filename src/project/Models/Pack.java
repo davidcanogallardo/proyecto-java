@@ -2,23 +2,24 @@ package project.Models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 public final class Pack extends Product implements Serializable {
-    private ArrayList<Integer> productList;
+    private TreeSet<Integer> productList;
     private int discount;
 
-    public Pack(ArrayList<Integer> idProdList, int discount, Integer idProduct, String name, double price) {
+    public Pack(TreeSet<Integer> productList, int discount, Integer idProduct, String name, double price) {
         super(idProduct, name, price);
-        this.productList = idProdList;
+        this.productList = productList;
         this.discount = discount;
     }
 
-    public ArrayList<Integer> getIdProdList() {
+    public TreeSet<Integer> getIdProdList() {
         return productList;
     }
 
-    public void setIdProdList(ArrayList<Integer> idProdList) {
-        this.productList = idProdList;
+    public void setIdProdList(TreeSet<Integer> productList) {
+        this.productList = productList;
     }
 
     public int getDiscount() {

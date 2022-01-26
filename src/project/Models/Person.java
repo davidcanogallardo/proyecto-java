@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 public abstract class Person implements Identificable, Serializable {
-    private Integer idPersona;
+    private Integer id;
     private String dni;
     private String name;
     private String surname;
@@ -18,7 +18,7 @@ public abstract class Person implements Identificable, Serializable {
     private static int totalPeople;
 
     protected Person(Integer idPersona, String dni, String name, String surname, Address fullAddress) {
-        this.idPersona = idPersona;
+        this.id = idPersona;
         this.dni = dni;
         this.name = name;
         this.surname = surname;
@@ -37,7 +37,7 @@ public abstract class Person implements Identificable, Serializable {
 
     @Override
     public String toString() {
-        return "Person [" + "idPersona=" + idPersona + ", dni=" + dni + ", name=" + name + ", surname=" + surname
+        return "Person [" + "idPersona=" + id + ", dni=" + dni + ", name=" + name + ", surname=" + surname
                 + ", birthdate=" + birthdate + ", email=" + email + ", phoneNumber=" + phoneNumber + ", fullAddress="
                 + fullAddress + ']';
     }
@@ -51,7 +51,7 @@ public abstract class Person implements Identificable, Serializable {
     }
 
     public void setIdPersona(Integer idPersona) {
-        this.idPersona = idPersona;
+        this.id = idPersona;
     }
 
     public void setDni(String dni) {
@@ -87,7 +87,7 @@ public abstract class Person implements Identificable, Serializable {
     }
 
     public Integer getId() {
-        return idPersona;
+        return id;
     }
 
     public String getDni() {
