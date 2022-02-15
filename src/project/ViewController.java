@@ -26,8 +26,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 public class ViewController {
     private Scanner keyboard = new Scanner(System.in);
@@ -105,7 +103,6 @@ public class ViewController {
     }
 
     public void saveDAO() throws IOException {
-        System.out.println("aa");
         daoProduct.save(PRODUCT_PATH);
         daoSupplier.save(SUPPLIER_PATH);
         daoClient.save(CLIENT_PATH);
@@ -298,8 +295,9 @@ public class ViewController {
         } else {
             discount = getDiscount("Descuento (0-100): ", false);
             // lista de productos de un pack (vacía por defecto)
-            TreeSet<Integer> productList = new TreeSet<>();
+            ArrayList<Integer> productList = new ArrayList<>();
             //TODO que te pregunte si quiere añadir ahora o mas tarde productos al pack
+
 
             prod = new Pack(productList, discount, id, name, price);
         }
@@ -754,8 +752,7 @@ public class ViewController {
 
     private void printObjects(DAO p) {
         System.out.println("");
-        // System.out.println(p.getMap());
-        TreeMap<Integer, Object> hashMap = p.getMap();
+        HashMap<Integer, Object> hashMap = p.getMap();
         for (Object values : hashMap.values()) {
             System.out.println(values.toString() + "\n");
         }

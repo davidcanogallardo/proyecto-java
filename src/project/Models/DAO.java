@@ -7,13 +7,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.TreeMap;
 
 public class DAO<T extends Identificable> implements Serializable {
-    // private HashMap<Integer, T> hashMap = new HashMap<>();
-    private TreeMap<Integer, T> hashMap =  new TreeMap<>(Comparator.naturalOrder());
+    private HashMap<Integer, T> hashMap = new HashMap<>();
 
     public T add(T obj) {
         if (hashMap.containsKey(obj.getId())) {
@@ -41,11 +38,8 @@ public class DAO<T extends Identificable> implements Serializable {
         }
     }
 
-    // public HashMap<Integer, T> getMap() {
-    //     return new HashMap<>(hashMap);
-    // }
-    public TreeMap<Integer, T> getMap() {
-        return new TreeMap<>(this.hashMap);
+    public HashMap<Integer, T> getMap() {
+        return new HashMap<>(hashMap);
     }
 
     public void modify(T obj) {
@@ -53,7 +47,7 @@ public class DAO<T extends Identificable> implements Serializable {
     }
 
     public void save(String file) throws IOException {
-        System.out.println("guardand0...");
+        System.out.println("guardando...");
         FileOutputStream fos = new FileOutputStream(file);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(this.hashMap);
@@ -66,7 +60,7 @@ public class DAO<T extends Identificable> implements Serializable {
         try {
             ObjectInputStream ois = new ObjectInputStream(fis);
             try {
-                this.hashMap = (TreeMap<Integer, T>) ois.readObject();
+                this.hashMap = (HashMap<Integer, T>) ois.readObject();
             } catch (ClassNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
