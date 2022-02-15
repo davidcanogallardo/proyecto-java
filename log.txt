@@ -1,2 +1,0 @@
-ene 10, 2022 11:17:27 A. M. project.ViewController getDouble
-WARNING: Input error

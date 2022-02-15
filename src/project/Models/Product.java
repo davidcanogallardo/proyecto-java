@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import project.Exceptions.StockInsuficientException;
 
-public class Product implements Identificable, Serializable{
+public class Product implements Identificable, Serializable, Comparable<Product>{
     private Integer idProduct;
     private String name;
     private double price;
@@ -86,5 +86,11 @@ public class Product implements Identificable, Serializable{
 
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+
+    @Override
+    public int compareTo(Product o) {
+        // TODO Auto-generated method stub
+        return 0;
     }
 }

@@ -2,22 +2,26 @@ package project.Models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.TreeSet;
 
 public final class Pack extends Product implements Serializable {
-    private ArrayList<Integer> productList;
+    // private ArrayList<Integer> productList;
+    private TreeSet<Product> productList;
     private int discount;
 
-    public Pack(ArrayList<Integer> idProdList, int discount, Integer idProduct, String name, double price) {
+    // public Pack(ArrayList<Integer> idProdList, int discount, Integer idProduct, String name, double price) {
+    public Pack(TreeSet<Product> productList, int discount, Integer idProduct, String name, double price) {
         super(idProduct, name, price);
-        this.productList = idProdList;
+        this.productList = productList;
         this.discount = discount;
     }
 
-    public ArrayList<Integer> getIdProdList() {
+    public TreeSet<Product> getIdProdList() {
         return productList;
     }
 
-    public void setIdProdList(ArrayList<Integer> idProdList) {
+    public void setIdProdList(TreeSet<Product> idProdList) {
         this.productList = idProdList;
     }
 
@@ -29,8 +33,8 @@ public final class Pack extends Product implements Serializable {
         this.discount = discount;
     }
     
-    public boolean deleteProduct(Integer id) {
-        for (Integer i : this.productList) {
+    public boolean deleteProduct(Product id) {
+        for (Product i : this.productList) {
             if (i == id) {
                 this.productList.remove(id);
                 return true;
@@ -39,8 +43,8 @@ public final class Pack extends Product implements Serializable {
         return false;
     }
     
-    public boolean addProduct(Integer id) {
-        for (Integer i : this.productList) {
+    public boolean addProduct(Product id) {
+        for (Product i : this.productList) {
             if (i == id) {
                 return false;
             }
@@ -52,7 +56,7 @@ public final class Pack extends Product implements Serializable {
     @Override
     public String toString() {
         String str = super.toString() + "\nProducts [\n";
-        for (Integer i : this.productList) {
+        for (Product i : this.productList) {
             str += " " + i + ",\n";
         }
         str += "]";

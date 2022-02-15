@@ -26,6 +26,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.TreeSet;
 
 public class ViewController {
     private Scanner keyboard = new Scanner(System.in);
@@ -60,9 +61,12 @@ public class ViewController {
         //     }
         // }
         loadDAO();
+        mainMenu();
+
         try {
             mainMenu();
         } catch (Exception e) {
+            System.out.println(e);
             //Caza cualquier excepción y guarda todos los DAOs
             //TODO  no guarda todos los daos
             saveDAO();
@@ -254,7 +258,7 @@ public class ViewController {
                     }
                 } while (daoProduct.get(id) instanceof Pack);
 
-                prod = daoProduct.get(id);
+                prod = (Product) daoProduct.get(id);
 
                 System.out.println("");
                 // Obtener el pack que añadir al producto
@@ -268,7 +272,7 @@ public class ViewController {
 
                 pack = (Pack) daoProduct.get(id);
 
-                if (pack.addProduct(prod.getId())) {
+                if (pack.addProduct(prod)) {
                     System.out.println("\nProducto añadido al pack!");
                 } else {
                     System.out.println("No se ha podido añadir el producto al pack");
@@ -295,7 +299,8 @@ public class ViewController {
         } else {
             discount = getDiscount("Descuento (0-100): ", false);
             // lista de productos de un pack (vacía por defecto)
-            ArrayList<Integer> productList = new ArrayList<>();
+            // ArrayList<Integer> productList = new ArrayList<>();
+            TreeSet<Product> productList = new TreeSet<>();
             //TODO que te pregunte si quiere añadir ahora o mas tarde productos al pack
 
 
@@ -852,8 +857,12 @@ public class ViewController {
         Integer num;
         do {
             num = getInteger(question, returnEmpty);
-            if ((num > 100) && !returnEmpty) {
-                deleteLine(1);
+            if (!returnEmpty) {
+                if (num > 100) {
+                    deleteLine(1);
+                }
+            } else {
+                num = 0;
             }
         } while ((num > 100) && !returnEmpty);
         return num;
