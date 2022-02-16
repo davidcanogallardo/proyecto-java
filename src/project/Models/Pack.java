@@ -43,13 +43,13 @@ public final class Pack extends Product implements Serializable {
         return false;
     }
     
-    public boolean addProduct(Product id) {
+    public boolean addProduct(Product product) {
         for (Product i : this.productList) {
-            if (i == id) {
+            if (i == product) {
                 return false;
             }
         }
-        this.productList.add(id);
+        this.productList.add(product);
         return true;
     }
 

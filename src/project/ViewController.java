@@ -61,7 +61,7 @@ public class ViewController {
         //     }
         // }
         loadDAO();
-        mainMenu();
+        // System.out.println(daoProduct.get(2).equals(daoProduct.get(3)));
 
         try {
             mainMenu();
@@ -139,6 +139,7 @@ public class ViewController {
                     break;
                 case "0":
                     saveDAO();
+                    System.out.println("hola");
                     break;
                 default:
                     deleteLine(7);
