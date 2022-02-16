@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Scanner;
 import java.util.TreeSet;
 
@@ -61,7 +62,16 @@ public class ViewController {
         //     }
         // }
         loadDAO();
-        // System.out.println(daoProduct.get(2).equals(daoProduct.get(3)));
+        TreeSet<Integer> tree = new TreeSet();
+        // LinkedHashSet<Product> pl2 = new LinkedHashSet();
+
+        
+        tree.add(1);
+        tree.add(3);
+        tree.add(7);
+        tree.add(4);
+        tree.pollLast();
+        System.out.println(tree.toString());
 
         try {
             mainMenu();
@@ -272,12 +282,25 @@ public class ViewController {
                 } while (!(daoProduct.get(id) instanceof Pack));
 
                 pack = (Pack) daoProduct.get(id);
+                Pack packCopy = (Pack) daoProduct.get(id);
+                packCopy.addProduct(prod);
 
-                if (pack.addProduct(prod)) {
-                    System.out.println("\nProducto añadido al pack!");
-                } else {
-                    System.out.println("No se ha podido añadir el producto al pack");
+                System.out.println("compruebo q sean iguales");
+                HashMap<Integer, Product> hm = daoProduct.getMap();
+
+                for (Product prod2 : hm.values()) {
+                    if (prod2 instanceof Pack) {
+                        if (prod2.equals(packCopy)) {
+                            break;
+                        }
+                    }
                 }
+
+                // if (pack.addProduct(prod)) {
+                //     System.out.println("\nProducto añadido al pack!");
+                // } else {
+                //     System.out.println("No se ha podido añadir el producto al pack");
+                // }
                 System.out.println(pack);
             } else if (!"0".equals(option)) {
                 deleteLine(6);
@@ -346,7 +369,7 @@ public class ViewController {
             prod.setPrice(price);
         }
 
-        if (prod instanceof Pack pack) {
+        if (prod instanceof Pack) {
             discount = getDiscount("Descuento (0-100)[" + pack.getDiscount() + "]: ", true);
             if (discount != null) {
                 pack.setDiscount(discount);

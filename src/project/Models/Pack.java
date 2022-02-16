@@ -17,11 +17,11 @@ public final class Pack extends Product implements Serializable {
         this.discount = discount;
     }
 
-    public TreeSet<Product> getIdProdList() {
+    public TreeSet<Product> getProdList() {
         return productList;
     }
 
-    public void setIdProdList(TreeSet<Product> idProdList) {
+    public void setProdList(TreeSet<Product> idProdList) {
         this.productList = idProdList;
     }
 
@@ -66,7 +66,7 @@ public final class Pack extends Product implements Serializable {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Pack pack) {
-            return this.productList.equals(pack.getIdProdList());
+            return this.productList.equals(pack.getProdList());
         } else {
             return false;
         }

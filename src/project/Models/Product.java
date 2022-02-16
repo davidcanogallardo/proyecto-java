@@ -6,13 +6,13 @@ import java.util.Objects;
 import project.Exceptions.StockInsuficientException;
 
 public class Product implements Identificable, Serializable, Comparable<Product>{
-    private Integer idProduct;
+    private Integer id;
     private String name;
     private double price;
     private Integer stock;
     
-    public Product(Integer idProduct, String name, double price) {
-        this.idProduct = idProduct;
+    public Product(Integer id, String name, double price) {
+        this.id = id;
         this.name = name;
         this.price = price;
     }
@@ -40,7 +40,7 @@ public class Product implements Identificable, Serializable, Comparable<Product>
 
     @Override
     public String toString() {
-        return "Product [" + "idProduct=" + idProduct + ", name=" + name + ", price=" + price + ", stock=" + stock + ']';
+        return "Product [" + "id=" + id + ", name=" + name + ", price=" + price + ", stock=" + stock + ']';
     }
     
     public void putStock(int num) {
@@ -56,7 +56,7 @@ public class Product implements Identificable, Serializable, Comparable<Product>
 
     //Getters
     public Integer getId() {
-        return idProduct;
+        return id;
     }
 
     public String getName() {
@@ -73,7 +73,7 @@ public class Product implements Identificable, Serializable, Comparable<Product>
 
     //Setters
     public void setId(Integer idProduct) {
-        this.idProduct = idProduct;
+        this.id = idProduct;
     }
 
     public void setName(String name) {
@@ -90,7 +90,14 @@ public class Product implements Identificable, Serializable, Comparable<Product>
 
     @Override
     public int compareTo(Product o) {
-        // TODO Auto-generated method stub
-        return 0;
+        if (this.id > o.id) {
+            return 1;
+        }
+        else if (this.id < o.id) {
+            return -1;
+        }
+        else {
+            return 0;
+        }
     }
 }
