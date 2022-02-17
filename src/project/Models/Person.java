@@ -5,20 +5,21 @@ import static java.lang.Math.abs;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.LinkedHashSet;
 
 public abstract class Person implements Identificable, Serializable {
-    private Integer idPersona;
+    private Integer id;
     private String dni;
     private String name;
     private String surname;
     private LocalDate birthdate;
     private String email;
-    private String phoneNumber;
+    private LinkedHashSet<String> phoneNumber;
     private Address fullAddress;
     private static int totalPeople;
 
-    protected Person(Integer idPersona, String dni, String name, String surname, Address fullAddress) {
-        this.idPersona = idPersona;
+    protected Person(Integer id, String dni, String name, String surname, Address fullAddress) {
+        this.id = id;
         this.dni = dni;
         this.name = name;
         this.surname = surname;
@@ -27,9 +28,20 @@ public abstract class Person implements Identificable, Serializable {
         totalPeople++;
     }
 
-    protected Person(Integer idPersona, String dni, String name, String surname, LocalDate birthdate, String email,
-            String phoneNumber, Address fullAddress) {
-        this(idPersona, dni, name, surname, fullAddress);
+    protected Person(Integer id, String dni, String name, String surname, Address fullAddress, LinkedHashSet<String> phoneNumber) {
+        this.id = id;
+        this.dni = dni;
+        this.name = name;
+        this.surname = surname;
+        this.fullAddress = fullAddress;
+        this.phoneNumber = phoneNumber;
+
+        totalPeople++;
+    }
+
+    protected Person(Integer id, String dni, String name, String surname, LocalDate birthdate, String email,
+    LinkedHashSet<String> phoneNumber, Address fullAddress) {
+        this(id, dni, name, surname, fullAddress);
         this.birthdate = birthdate;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -37,7 +49,7 @@ public abstract class Person implements Identificable, Serializable {
 
     @Override
     public String toString() {
-        return "Person [" + "idPersona=" + idPersona + ", dni=" + dni + ", name=" + name + ", surname=" + surname
+        return "Person [" + "id=" + id + ", dni=" + dni + ", name=" + name + ", surname=" + surname
                 + ", birthdate=" + birthdate + ", email=" + email + ", phoneNumber=" + phoneNumber + ", fullAddress="
                 + fullAddress + ']';
     }
@@ -50,8 +62,8 @@ public abstract class Person implements Identificable, Serializable {
         return abs(p1.getAge() - p2.getAge());
     }
 
-    public void setIdPersona(Integer idPersona) {
-        this.idPersona = idPersona;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public void setDni(String dni) {
@@ -74,7 +86,7 @@ public abstract class Person implements Identificable, Serializable {
         this.email = email;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(LinkedHashSet<String> phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -87,7 +99,7 @@ public abstract class Person implements Identificable, Serializable {
     }
 
     public Integer getId() {
-        return idPersona;
+        return id;
     }
 
     public String getDni() {
@@ -110,7 +122,7 @@ public abstract class Person implements Identificable, Serializable {
         return email;
     }
 
-    public String getPhoneNumber() {
+    public LinkedHashSet<String> getPhoneNumber() {
         return phoneNumber;
     }
 

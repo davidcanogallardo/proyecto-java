@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import project.Exceptions.StockInsuficientException;
 
-public class Product implements Identificable, Serializable, Comparable<Product>{
+public class Product implements Identificable, Serializable, Comparable<Product>, Cloneable{
     private Integer id;
     private String name;
     private double price;
@@ -98,6 +98,14 @@ public class Product implements Identificable, Serializable, Comparable<Product>
         }
         else {
             return 0;
+        }
+    }
+
+    public Object clone() {
+        try {
+            return (Product) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return new Product(this.id, this.name, this.price, this.stock);
         }
     }
 }

@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Scanner;
 import java.util.TreeSet;
@@ -61,17 +62,41 @@ public class ViewController {
         //         System.out.println(dis.readInt());
         //     }
         // }
-        loadDAO();
-        TreeSet<Integer> tree = new TreeSet();
-        // LinkedHashSet<Product> pl2 = new LinkedHashSet();
 
+        // LinkedHashSet<Integer> nums = new LinkedHashSet();
+        // LinkedHashSet<Integer> nums2 = new LinkedHashSet();
+        // nums.add(3);
+        // nums.add(2);
+        // nums.add(1);
         
-        tree.add(1);
-        tree.add(3);
-        tree.add(7);
-        tree.add(4);
-        tree.pollLast();
-        System.out.println(tree.toString());
+        // nums2.add(4);
+        // nums2.add(5);
+        // nums.addAll(nums2);
+
+
+
+        // System.out.println(nums.contains(1)+ " 1");
+        // System.out.println(nums.contains(112)+ " 112");
+
+        // System.out.println(nums);
+
+        // System.out.println("----------------------------------------------");
+
+        // TreeSet<Integer> tree = new TreeSet<>();
+        // tree.add(8);
+        // tree.add(9);
+        // tree.add(3);
+        // tree.add(2);
+        // tree.add(1);
+        // tree.add(1);
+        // tree.add(8);
+
+        // System.out.println(tree.contains(1)+ " 1");
+        // System.out.println(tree.contains(112)+ " 112");
+
+        // System.out.println(tree);
+
+        loadDAO();
 
         try {
             mainMenu();
@@ -92,7 +117,7 @@ public class ViewController {
             if(!productFile.createNewFile()) {
                 //TODO añadir al logger
                 System.out.println("No se ha podido crear el archivo");
-            };
+            }
         } else {
             daoProduct.load(PRODUCT_PATH);
         }
@@ -101,7 +126,7 @@ public class ViewController {
             if(!supplierFile.createNewFile()) {
                 //TODO añadir al logger
                 System.out.println("No se ha podido crear el archivo");
-            };
+            }
         } else {
             daoSupplier.load(SUPPLIER_PATH);
         }
@@ -110,7 +135,7 @@ public class ViewController {
             if(!clientFile.createNewFile()) {
                 //TODO añadir al logger
                 System.out.println("No se ha podido crear el archivo");
-            };
+            }
         } else {
             daoClient.load(CLIENT_PATH);
         }
@@ -149,7 +174,6 @@ public class ViewController {
                     break;
                 case "0":
                     saveDAO();
-                    System.out.println("hola");
                     break;
                 default:
                     deleteLine(7);
@@ -182,7 +206,7 @@ public class ViewController {
                 case "1":
                     System.out.println("");
                     do {
-                        option = getString("Qué quieres añadir? (producto/pack) [producto]", true);
+                        option = getString("Qué quieres añadir? (producto/pack) [producto] ", true);
                         if (option.equals("")) {
                             answer = "producto";
                         } else {
@@ -258,20 +282,12 @@ public class ViewController {
                 addProduct(true);
             } else if ("2".equals(option)) {
                 //TODO bucle para añadir multiples productos
+                boolean isPackRepeated = false;
+                boolean keepAddingProds = true;
+                Pack packCopy;
                 System.out.println("");
                 System.out.println("");
-                // Obtener el producto que añadir
-                do {
-                    id = getExistingId(daoProduct, "ID del producto que añadir al pack: ");
-                    if (daoProduct.get(id) instanceof Pack) {
-                        deleteLine(2);
-                        System.out.println("El producto no puede ser un pack");
-                    }
-                } while (daoProduct.get(id) instanceof Pack);
 
-                prod = (Product) daoProduct.get(id);
-
-                System.out.println("");
                 // Obtener el pack que añadir al producto
                 do {
                     id = getExistingId(daoProduct, "ID del pack al que añadir el producto: ");
@@ -280,28 +296,60 @@ public class ViewController {
                         System.out.println("Elige un pack");
                     }
                 } while (!(daoProduct.get(id) instanceof Pack));
-
                 pack = (Pack) daoProduct.get(id);
-                Pack packCopy = (Pack) daoProduct.get(id);
-                packCopy.addProduct(prod);
 
-                System.out.println("compruebo q sean iguales");
+                packCopy = new Pack((TreeSet<Product>) pack.getProdList().clone(), pack.getDiscount(), pack.getId(), pack.getName(), pack.getPrice());
+
+                System.out.println("");
+
+                do {
+                    // Obtener el producto que añadir
+                    // TODO añadir aviso prod repetido
+                    do {
+                        id = getExistingId(daoProduct, "ID del producto que añadir al pack: ");
+                        if (daoProduct.get(id) instanceof Pack) {
+                            deleteLine(2);
+                            System.out.println("El producto no puede ser un pack");
+                        }
+                    } while (daoProduct.get(id) instanceof Pack);
+    
+                    prod = (Product) daoProduct.get(id);
+    
+                    packCopy.addProduct(prod);
+
+                    System.out.print("Quieres añadir otro producto? s/[n]: ");
+                    String opt = keyboard.nextLine();
+                    if (opt.equals("")) {
+                        keepAddingProds=true;
+                    } else if (opt.equals("s")) {
+                        keepAddingProds=false;
+                    } else {
+                        keepAddingProds=true;
+                    }
+                } while (!keepAddingProds);
+       
+                System.out.println("Comprobando si el pack es repetido...");
                 HashMap<Integer, Product> hm = daoProduct.getMap();
-
                 for (Product prod2 : hm.values()) {
                     if (prod2 instanceof Pack) {
                         if (prod2.equals(packCopy)) {
+                            isPackRepeated = true;
                             break;
                         }
                     }
                 }
 
-                // if (pack.addProduct(prod)) {
-                //     System.out.println("\nProducto añadido al pack!");
-                // } else {
-                //     System.out.println("No se ha podido añadir el producto al pack");
-                // }
-                System.out.println(pack);
+                if (!isPackRepeated) {
+                    pack.setProdList(packCopy.getProdList());
+                    System.out.println("\nProducto añadido al pack!");
+                    System.out.println(pack);
+                    // if (pack.addProduct(prod)) {
+                    // } else {
+                    //     System.out.println("No se ha podido añadir el producto al pack");
+                    // }
+                } else {
+                    System.out.println("Pack repetido");
+                }
             } else if (!"0".equals(option)) {
                 deleteLine(6);
                 System.out.println("Introduce una opción correcta!");
@@ -629,16 +677,16 @@ public class ViewController {
             id = getFreeId(daoSupplier, "ID: ");
         }
 
+        //Pedir datos del cliente/proveedor
         dni = getValidDni("DNI: ", false);
         name = getString("Nombre: ", false);
         surname = getString("Apellido: ", false);
-
         Address address = askAddress();
+        LinkedHashSet<String> phoneNumber = askPhoneNumber();
 
         // Según si es cliente o no se llama a una clase diferente
         if (isClient) {
-            Client client = new Client(id, dni, name, surname, address);
-
+            Client client = new Client(id, dni, name, surname, address, phoneNumber);
             if (daoClient.add(client) != null) {
                 System.out.println("\nCliente añadido!\n");
                 System.out.println(client.toString() + "\n");
@@ -646,8 +694,7 @@ public class ViewController {
                 System.out.println("El cliente ya existe, prueba otro id\n");
             }
         } else {
-            Supplier supplier = new Supplier(id, dni, name, surname, address);
-
+            Supplier supplier = new Supplier(id, dni, name, surname, address, phoneNumber);
             if (daoSupplier.add(supplier) != null) {
                 System.out.println("\nProveedor añadido!\n");
                 System.out.println(supplier.toString() + "\n");
@@ -673,6 +720,34 @@ public class ViewController {
         address = getString("Dirección: ", false);
 
         return new Address(locality, province, zipCode, address);
+    }
+
+    private LinkedHashSet<String> askPhoneNumber() {
+        LinkedHashSet<String> phoneNumber = new LinkedHashSet();
+        boolean keepAddPhones = false;
+        String opt;
+        String phone;
+
+        do {
+            phone = getPhoneNumber("Número de teléfono: ");
+            if (phoneNumber.contains(phone)) {
+                System.out.println("Número de teléfono repetido");                
+            } else {
+                phoneNumber.add(phone);
+            }
+
+            System.out.print("Quieres añadir otro número? s/[n]: \n");
+            opt = keyboard.nextLine();
+            if (opt.equals("")) {
+                keepAddPhones=true;
+            } else if (opt.equals("s")) {
+                keepAddPhones=false;
+            } else {
+                keepAddPhones=true;
+            }
+        } while (!keepAddPhones);
+
+        return phoneNumber;
     }
 
     private void searchPerson(boolean isClient) {
@@ -704,6 +779,7 @@ public class ViewController {
             person = daoSupplier.get(getExistingId(daoSupplier, "ID: "));
         }
 
+        //dni, nombre, apellidos
         dni = getValidDni("DNI [" + person.getDni() + "]: ", true);
         if (!dni.equals("")) {
             person.setDni(dni);
@@ -717,6 +793,7 @@ public class ViewController {
             person.setSurname(surname);
         }
 
+        //Dirección
         String locality;
         String province;
         String zipCode;
@@ -745,7 +822,31 @@ public class ViewController {
         }
 
         person.setFullAddress(addr);
+        
+        //Números de teléfono
+        System.out.print("Quieres añadir nuevos números de teléfono? s/[n]: ");
+        String opt = keyboard.nextLine();
+        boolean addNewNumbers = false;
+        if (opt.equalsIgnoreCase("s")) {
+            addNewNumbers = true;
+        }
+        
+        if (addNewNumbers) {
+            LinkedHashSet<String> oldPhones = person.getPhoneNumber();
 
+            System.out.println("Números de teléfono: ");
+            System.out.println(oldPhones);
+            System.out.println("Introduce los nuevos números: ");
+            LinkedHashSet<String> newPhones = askPhoneNumber();
+    
+            if (oldPhones.addAll(newPhones)) {
+                person.setPhoneNumber(oldPhones);
+            } else {
+                System.out.println("No se han podido actualizar los números");
+            }
+        }
+
+        //Modificar
         if (isClient) {
             daoClient.modify((Client) person);
             System.out.println("Datos actualizados:");
@@ -812,6 +913,26 @@ public class ViewController {
     private void deleteLine(int linesToDelete) {
         System.out.print(String.format("\033[%dA", linesToDelete)); // Move up
         System.out.print("\033[2K"); // Erase line content
+    }
+
+    private String getPhoneNumber(String question) {
+        String phone;
+        boolean isPhoneNumber = true;
+        String phoneRegex = "\\d{9}";
+        do {
+            System.out.println("");
+            System.out.print(question);
+            phone = keyboard.nextLine();
+            if (phone.equals("")) {
+                isPhoneNumber = false;
+            } else if (phone.matches(phoneRegex)) {
+                isPhoneNumber = true;
+            } else {
+                isPhoneNumber = false;
+            }
+        } while (!isPhoneNumber);
+
+        return phone;
     }
 
     private Integer getInteger(String question, boolean returnNull) {
