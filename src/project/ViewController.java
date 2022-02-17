@@ -60,24 +60,22 @@ public class ViewController {
     public void run() throws IOException, SecurityException {
 
         // try (DataInputStream dis = new DataInputStream(
-        //         new BufferedInputStream(new FileInputStream("a.txt")))) {
-        //     while (dis.available() > 0) {
-        //         System.out.println(dis.readInt());
-        //         System.out.println(dis.readInt());
-        //     }
+        // new BufferedInputStream(new FileInputStream("a.txt")))) {
+        // while (dis.available() > 0) {
+        // System.out.println(dis.readInt());
+        // System.out.println(dis.readInt());
+        // }
         // }
 
-        LinkedHashSet<Integer> nums = new LinkedHashSet();
+        // LinkedHashSet<Integer> nums = new LinkedHashSet();
         // LinkedHashSet<Integer> nums2 = new LinkedHashSet();
         // nums.add(3);
         // nums.add(2);
         // nums.add(1);
-        
+
         // nums2.add(4);
         // nums2.add(5);
         // nums.addAll(nums2);
-
-
 
         // System.out.println(nums.contains(1)+ " 1");
         // System.out.println(nums.contains(112)+ " 112");
@@ -85,7 +83,7 @@ public class ViewController {
         // System.out.println(nums);
 
         // System.out.println("----------------------------------------------");
-        
+
         // TreeSet<Integer> tree = new TreeSet<>();
         // tree.add(8);
         // tree.add(9);
@@ -97,9 +95,9 @@ public class ViewController {
 
         // System.out.println(tree.contains(1)+ " 1");
         // System.out.println(tree.contains(112)+ " 112");
-        
+
         // System.out.println(tree);
-        
+
         // System.out.println("----------------------------------------------");
 
         // HashMap<Integer, String> hm = new HashMap<>();
@@ -108,15 +106,13 @@ public class ViewController {
         // hm.put(3, "juan");
         // hm.put(4, "adnan");
 
-        
         // List<String> list = new ArrayList<String>(hm.values());
         // System.out.println(list);
-        
+
         // // Collections.sort(list);
         // Collections.sort(list, (m1, m2) -> m1.compareTo(m2));
 
         // System.out.println(list);
-
 
         loadDAO();
 
@@ -124,8 +120,8 @@ public class ViewController {
             mainMenu();
         } catch (Exception e) {
             System.out.println(e);
-            //Caza cualquier excepción y guarda todos los DAOs
-            //TODO  no guarda todos los daos
+            // Caza cualquier excepción y guarda todos los DAOs
+            // TODO no guarda todos los daos
             saveDAO();
         }
     }
@@ -134,10 +130,10 @@ public class ViewController {
         File productFile = new File(PRODUCT_PATH);
         File supplierFile = new File(SUPPLIER_PATH);
         File clientFile = new File(CLIENT_PATH);
-        
+
         if (!productFile.exists()) {
-            if(!productFile.createNewFile()) {
-                //TODO añadir al logger
+            if (!productFile.createNewFile()) {
+                // TODO añadir al logger
                 System.out.println("No se ha podido crear el archivo");
             }
         } else {
@@ -145,8 +141,8 @@ public class ViewController {
         }
 
         if (!supplierFile.exists()) {
-            if(!supplierFile.createNewFile()) {
-                //TODO añadir al logger
+            if (!supplierFile.createNewFile()) {
+                // TODO añadir al logger
                 System.out.println("No se ha podido crear el archivo");
             }
         } else {
@@ -154,8 +150,8 @@ public class ViewController {
         }
 
         if (!clientFile.exists()) {
-            if(!clientFile.createNewFile()) {
-                //TODO añadir al logger
+            if (!clientFile.createNewFile()) {
+                // TODO añadir al logger
                 System.out.println("No se ha podido crear el archivo");
             }
         } else {
@@ -194,17 +190,6 @@ public class ViewController {
                 case "3":
                     menuSupplier();
                     break;
-                case "4":
-                    List<Product> list = new ArrayList<Product>(daoProduct.getMap().values());
-                    System.out.println("sin ordenar");
-                    System.out.println(list);
-                    
-                    // Collections.sort(list);
-                    System.out.println("");
-                    System.out.println("ordenado por nombre");
-
-            
-                    break;
                 case "0":
                     saveDAO();
                     break;
@@ -215,7 +200,7 @@ public class ViewController {
             }
         } while (!"0".equals(option));
     }
-    
+
     /*--------------------------------------PRODUCTOS------------------------------------------*/
     private void menuProduct() {
         String answer;
@@ -284,11 +269,11 @@ public class ViewController {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
-                    break;                    
+                    break;
                 // List all
                 case "7":
                     listProducts();
-                    
+
                     break;
                 case "0":
                     System.out.println("\n");
@@ -315,7 +300,7 @@ public class ViewController {
             if ("1".equals(option)) {
                 addProduct(true);
             } else if ("2".equals(option)) {
-                //TODO bucle para añadir multiples productos
+                // TODO bucle para añadir multiples productos
                 boolean isPackRepeated = false;
                 boolean keepAddingProds = true;
                 Pack packCopy;
@@ -332,7 +317,8 @@ public class ViewController {
                 } while (!(daoProduct.get(id) instanceof Pack));
                 pack = (Pack) daoProduct.get(id);
 
-                packCopy = new Pack((TreeSet<Product>) pack.getProdList().clone(), pack.getDiscount(), pack.getId(), pack.getName(), pack.getPrice());
+                packCopy = new Pack((TreeSet<Product>) pack.getProdList().clone(), pack.getDiscount(), pack.getId(),
+                        pack.getName(), pack.getPrice());
 
                 System.out.println("");
 
@@ -346,22 +332,22 @@ public class ViewController {
                             System.out.println("El producto no puede ser un pack");
                         }
                     } while (daoProduct.get(id) instanceof Pack);
-    
+
                     prod = (Product) daoProduct.get(id);
-    
+
                     packCopy.addProduct(prod);
 
                     System.out.print("Quieres añadir otro producto? s/[n]: ");
                     String opt = keyboard.nextLine();
                     if (opt.equals("")) {
-                        keepAddingProds=true;
+                        keepAddingProds = true;
                     } else if (opt.equals("s")) {
-                        keepAddingProds=false;
+                        keepAddingProds = false;
                     } else {
-                        keepAddingProds=true;
+                        keepAddingProds = true;
                     }
                 } while (!keepAddingProds);
-       
+
                 System.out.println("Comprobando si el pack es repetido...");
                 HashMap<Integer, Product> hm = daoProduct.getMap();
                 for (Product prod2 : hm.values()) {
@@ -379,7 +365,7 @@ public class ViewController {
                     System.out.println(pack);
                     // if (pack.addProduct(prod)) {
                     // } else {
-                    //     System.out.println("No se ha podido añadir el producto al pack");
+                    // System.out.println("No se ha podido añadir el producto al pack");
                     // }
                 } else {
                     System.out.println("Pack repetido");
@@ -390,7 +376,6 @@ public class ViewController {
             }
         } while (!"0".equals(option));
     }
-
 
     private void listProducts() {
         String option;
@@ -413,11 +398,11 @@ public class ViewController {
                 printList(list);
                 break;
             case "3":
-                Collections.sort(list, (m1, m2) -> ((Double)m1.getPrice()).compareTo((Double)m2.getPrice()));
+                Collections.sort(list, (m1, m2) -> ((Double) m1.getPrice()).compareTo((Double) m2.getPrice()));
                 printList(list);
                 break;
             case "4":
-                Collections.sort(list, (m1, m2) -> ((Integer)m1.getStock()).compareTo((Integer)m2.getStock()));
+                Collections.sort(list, (m1, m2) -> ((Integer) m1.getStock()).compareTo((Integer) m2.getStock()));
                 printList(list);
                 break;
             default:
@@ -429,10 +414,9 @@ public class ViewController {
     private void printList(List<Product> list) {
         System.out.println("");
         for (Product product : list) {
-            System.out.println(product.toString()+"\n");
+            System.out.println(product.toString() + "\n");
         }
     }
-
 
     private void addProduct(boolean isPack) {
         System.out.println("Introduce las propiedades del producto:\n");
@@ -450,8 +434,7 @@ public class ViewController {
             // lista de productos de un pack (vacía por defecto)
             // ArrayList<Integer> productList = new ArrayList<>();
             TreeSet<Product> productList = new TreeSet<>();
-            //TODO que te pregunte si quiere añadir ahora o mas tarde productos al pack
-
+            // TODO que te pregunte si quiere añadir ahora o mas tarde productos al pack
 
             prod = new Pack(productList, discount, id, name, price);
         }
@@ -546,7 +529,7 @@ public class ViewController {
                     System.out.print("Opción: ");
                     option = keyboard.nextLine();
                     // TODO default case
-                    //TODO el menu bien
+                    // TODO el menu bien
                     switch (option) {
                         case "1":
                             id = getExistingId(daoProduct, "ID de un producto: ");
@@ -562,8 +545,8 @@ public class ViewController {
                                 System.out.println("Stock añadido");
                             }
                             break;
-                        }
-                        System.out.println("");
+                    }
+                    System.out.println("");
                     break;
                 case "2":
                     id = getExistingId(daoProduct, "ID de un producto: ");
@@ -618,7 +601,7 @@ public class ViewController {
             ArrayList<Integer> products = new ArrayList<Integer>();
             System.out.print("\n");
             do {
-                //ID
+                // ID
                 do {
                     System.out.print("ID: ");
                     id = keyboard.nextLine();
@@ -628,7 +611,7 @@ public class ViewController {
                 } while (id.equals(""));
 
                 if (!id.equalsIgnoreCase("q")) {
-                    //STOCK
+                    // STOCK
                     do {
                         System.out.print("Stock: ");
                         stock = keyboard.nextLine();
@@ -636,7 +619,7 @@ public class ViewController {
                             deleteLine(1);
                         }
                     } while (stock.equals(""));
-    
+
                     if (!stock.equalsIgnoreCase("q")) {
                         if (isNumber(stock) && isNumber(id) && !stock.equals("0")) {
                             products.add(Integer.parseInt(id));
@@ -659,7 +642,7 @@ public class ViewController {
             System.out.println("\nEl archivo ya existe, elige otro\n");
         }
     }
-    
+
     /*--------------------------------------PERSONAS------------------------------------------*/
     private void menuCliente() {
         String option;
@@ -754,7 +737,7 @@ public class ViewController {
             id = getFreeId(daoSupplier, "ID: ");
         }
 
-        //Pedir datos del cliente/proveedor
+        // Pedir datos del cliente/proveedor
         dni = getValidDni("DNI: ", false);
         name = getString("Nombre: ", false);
         surname = getString("Apellido: ", false);
@@ -808,7 +791,7 @@ public class ViewController {
         do {
             phone = getPhoneNumber("Número de teléfono: ");
             if (phoneNumber.contains(phone)) {
-                System.out.println("Número de teléfono repetido");                
+                System.out.println("Número de teléfono repetido");
             } else {
                 phoneNumber.add(phone);
             }
@@ -816,11 +799,11 @@ public class ViewController {
             System.out.print("Quieres añadir otro número? s/[n]: \n");
             opt = keyboard.nextLine();
             if (opt.equals("")) {
-                keepAddPhones=true;
+                keepAddPhones = true;
             } else if (opt.equals("s")) {
-                keepAddPhones=false;
+                keepAddPhones = false;
             } else {
-                keepAddPhones=true;
+                keepAddPhones = true;
             }
         } while (!keepAddPhones);
 
@@ -856,7 +839,7 @@ public class ViewController {
             person = daoSupplier.get(getExistingId(daoSupplier, "ID: "));
         }
 
-        //dni, nombre, apellidos
+        // dni, nombre, apellidos
         dni = getValidDni("DNI [" + person.getDni() + "]: ", true);
         if (!dni.equals("")) {
             person.setDni(dni);
@@ -870,7 +853,7 @@ public class ViewController {
             person.setSurname(surname);
         }
 
-        //Dirección
+        // Dirección
         String locality;
         String province;
         String zipCode;
@@ -899,15 +882,15 @@ public class ViewController {
         }
 
         person.setFullAddress(addr);
-        
-        //Números de teléfono
+
+        // Números de teléfono
         System.out.print("Quieres añadir nuevos números de teléfono? s/[n]: ");
         String opt = keyboard.nextLine();
         boolean addNewNumbers = false;
         if (opt.equalsIgnoreCase("s")) {
             addNewNumbers = true;
         }
-        
+
         if (addNewNumbers) {
             LinkedHashSet<String> oldPhones = person.getPhoneNumber();
 
@@ -915,7 +898,7 @@ public class ViewController {
             System.out.println(oldPhones);
             System.out.println("Introduce los nuevos números: ");
             LinkedHashSet<String> newPhones = askPhoneNumber();
-    
+
             if (oldPhones.addAll(newPhones)) {
                 person.setPhoneNumber(oldPhones);
             } else {
@@ -923,7 +906,7 @@ public class ViewController {
             }
         }
 
-        //Modificar
+        // Modificar
         if (isClient) {
             daoClient.modify((Client) person);
             System.out.println("Datos actualizados:");
