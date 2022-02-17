@@ -24,9 +24,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Scanner;
 import java.util.TreeSet;
 
@@ -81,7 +83,7 @@ public class ViewController {
         // System.out.println(nums);
 
         // System.out.println("----------------------------------------------");
-
+        
         // TreeSet<Integer> tree = new TreeSet<>();
         // tree.add(8);
         // tree.add(9);
@@ -93,8 +95,21 @@ public class ViewController {
 
         // System.out.println(tree.contains(1)+ " 1");
         // System.out.println(tree.contains(112)+ " 112");
-
+        
         // System.out.println(tree);
+        
+        // System.out.println("----------------------------------------------");
+
+        // HashMap<Integer, String> hm = new HashMap<>();
+        // hm.put(1, "1");
+        // hm.put(2, "2");
+        // hm.put(3, "3");
+        // hm.put(4, "4");
+
+        
+        // List<String> list = new ArrayList<String>(hm.values());
+
+
 
         loadDAO();
 
@@ -923,6 +938,8 @@ public class ViewController {
             System.out.println("");
             System.out.print(question);
             phone = keyboard.nextLine();
+            // TODO trim
+            // https://www.geeksforgeeks.org/java-string-trim-method-example/
             if (phone.equals("")) {
                 isPhoneNumber = false;
             } else if (phone.matches(phoneRegex)) {
