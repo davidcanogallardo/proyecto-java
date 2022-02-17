@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import project.Exceptions.StockInsuficientException;
 import project.Models.Address;
 import project.Models.Client;
+import project.Models.Comparator;
 import project.Models.DAO;
 import project.Models.Pack;
 import project.Models.Person;
@@ -25,6 +26,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -65,7 +67,7 @@ public class ViewController {
         //     }
         // }
 
-        // LinkedHashSet<Integer> nums = new LinkedHashSet();
+        LinkedHashSet<Integer> nums = new LinkedHashSet();
         // LinkedHashSet<Integer> nums2 = new LinkedHashSet();
         // nums.add(3);
         // nums.add(2);
@@ -101,14 +103,19 @@ public class ViewController {
         // System.out.println("----------------------------------------------");
 
         // HashMap<Integer, String> hm = new HashMap<>();
-        // hm.put(1, "1");
-        // hm.put(2, "2");
-        // hm.put(3, "3");
-        // hm.put(4, "4");
+        // hm.put(1, "owo");
+        // hm.put(2, "david");
+        // hm.put(3, "juan");
+        // hm.put(4, "adnan");
 
         
         // List<String> list = new ArrayList<String>(hm.values());
+        // System.out.println(list);
+        
+        // // Collections.sort(list);
+        // Collections.sort(list, (m1, m2) -> m1.compareTo(m2));
 
+        // System.out.println(list);
 
 
         loadDAO();
@@ -186,6 +193,17 @@ public class ViewController {
                 // Proveedores
                 case "3":
                     menuSupplier();
+                    break;
+                case "4":
+                    List<Product> list = new ArrayList<Product>(daoProduct.getMap().values());
+                    System.out.println("sin ordenar");
+                    System.out.println(list);
+                    
+                    // Collections.sort(list);
+                    System.out.println("");
+                    System.out.println("ordenado por nombre");
+
+            
                     break;
                 case "0":
                     saveDAO();
@@ -269,7 +287,8 @@ public class ViewController {
                     break;                    
                 // List all
                 case "7":
-                    printObjects(daoProduct);
+                    listProducts();
+                    
                     break;
                 case "0":
                     System.out.println("\n");
@@ -371,6 +390,49 @@ public class ViewController {
             }
         } while (!"0".equals(option));
     }
+
+
+    private void listProducts() {
+        String option;
+        List<Product> list = new ArrayList<Product>(daoProduct.getMap().values());
+
+        System.out.println("Elige un método de ordenación: ");
+        System.out.println("[1] Sin orden");
+        System.out.println("[2] Ordenado por nombre");
+        System.out.println("[3] Ordenado por precio");
+        System.out.println("[4] Ordenado por stock");
+        System.out.print("Opción: ");
+        option = keyboard.nextLine();
+
+        switch (option) {
+            case "1":
+                printObjects(daoProduct);
+                break;
+            case "2":
+                Collections.sort(list, (m1, m2) -> (m1.getName()).compareTo(m2.getName()));
+                printList(list);
+                break;
+            case "3":
+                Collections.sort(list, (m1, m2) -> ((Double)m1.getPrice()).compareTo((Double)m2.getPrice()));
+                printList(list);
+                break;
+            case "4":
+                Collections.sort(list, (m1, m2) -> ((Integer)m1.getStock()).compareTo((Integer)m2.getStock()));
+                printList(list);
+                break;
+            default:
+                System.out.println("\nTe has equivocado, vuelve a intentarlo.");
+                break;
+        }
+    }
+
+    private void printList(List<Product> list) {
+        System.out.println("");
+        for (Product product : list) {
+            System.out.println(product.toString()+"\n");
+        }
+    }
+
 
     private void addProduct(boolean isPack) {
         System.out.println("Introduce las propiedades del producto:\n");
