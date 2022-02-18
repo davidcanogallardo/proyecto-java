@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 import project.Exceptions.StockInsuficientException;
 import project.Models.Address;
 import project.Models.Client;
-import project.Models.Comparator;
 import project.Models.DAO;
 import project.Models.Pack;
 import project.Models.Person;
@@ -24,6 +23,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -51,6 +55,8 @@ public class ViewController {
     private String surname;
     private String dni;
     private Person person;
+    private LocalDate startCatalog;
+    private LocalDate endCatalog;
     private static final String PRODUCT_PATH = "products.dat";
     private static final String SUPPLIER_PATH = "suppliers.dat";
     private static final String CLIENT_PATH = "clients.dat";
@@ -67,64 +73,24 @@ public class ViewController {
         // }
         // }
 
-        // LinkedHashSet<Integer> nums = new LinkedHashSet();
-        // LinkedHashSet<Integer> nums2 = new LinkedHashSet();
-        // nums.add(3);
-        // nums.add(2);
-        // nums.add(1);
-
-        // nums2.add(4);
-        // nums2.add(5);
-        // nums.addAll(nums2);
-
-        // System.out.println(nums.contains(1)+ " 1");
-        // System.out.println(nums.contains(112)+ " 112");
-
-        // System.out.println(nums);
-
-        // System.out.println("----------------------------------------------");
-
-        // TreeSet<Integer> tree = new TreeSet<>();
-        // tree.add(8);
-        // tree.add(9);
-        // tree.add(3);
-        // tree.add(2);
-        // tree.add(1);
-        // tree.add(1);
-        // tree.add(8);
-
-        // System.out.println(tree.contains(1)+ " 1");
-        // System.out.println(tree.contains(112)+ " 112");
-
-        // System.out.println(tree);
-
-        // System.out.println("----------------------------------------------");
-
-        // HashMap<Integer, String> hm = new HashMap<>();
-        // hm.put(1, "owo");
-        // hm.put(2, "david");
-        // hm.put(3, "juan");
-        // hm.put(4, "adnan");
-
-        // List<String> list = new ArrayList<String>(hm.values());
-        // System.out.println(list);
-
-        // // Collections.sort(list);
-        // Collections.sort(list, (m1, m2) -> m1.compareTo(m2));
-
-        // System.out.println(list);
+        // DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        // LocalDate date = LocalDate.of(2022,02,18);
+        // System.out.println(dtf.parse("22/05/2000"));
+        // System.out.println(dtf.parse("dsfdsfvsd"));
 
         loadDAO();
 
         try {
             mainMenu();
-        } catch (Exception e) {
+        } catch (DateTimeParseException e) {
             System.out.println(e);
             // Caza cualquier excepción y guarda todos los DAOs
             // TODO no guarda todos los daos
             saveDAO();
         }
     }
+
+
 
     public void loadDAO() throws IOException {
         File productFile = new File(PRODUCT_PATH);
@@ -216,6 +182,7 @@ public class ViewController {
             System.out.println("[5] Gestionar stock producto");
             System.out.println("[6] Crear comanda");
             System.out.println("[7] Mostrar todos los productos");
+            System.out.println("[8] Mostrar productos descatalogados");
             System.out.print("Opción: ");
             option = keyboard.nextLine();
 
@@ -273,6 +240,10 @@ public class ViewController {
                 // List all
                 case "7":
                     listProducts();
+
+                    break;
+                case "8":
+                    listDiscontinuedProducts(LocalDate.of(2000,6,01));
 
                     break;
                 case "0":
@@ -377,6 +348,17 @@ public class ViewController {
         } while (!"0".equals(option));
     }
 
+    private void listDiscontinuedProducts(LocalDate date) {
+        HashMap<Integer, Product> hm = daoProduct.getMap();
+        for (Product product : hm.values()) {    
+            if (product.getEndCatalog().isBefore(date)) {
+                System.out.print("Días de diferencia: ");
+                System.out.println(ChronoUnit.DAYS.between(product.getEndCatalog(), date));
+                System.out.println(product.toString());
+            }
+        }
+    }
+
     private void listProducts() {
         String option;
         List<Product> list = new ArrayList<Product>(daoProduct.getMap().values());
@@ -425,10 +407,13 @@ public class ViewController {
 
         name = getString("Nombre: ", false);
         price = getDouble("Precio: ", false);
+        startCatalog = getDate();
+        endCatalog = getDate();
+
         // Según si quiere añadir un pack o producto pide diferentes propiedades
         if (!isPack) {
             stock = getInteger("Stock: ", false);
-            prod = new Product(id, name, price, stock);
+            prod = new Product(id, name, price, stock, startCatalog, endCatalog);
         } else {
             discount = getDiscount("Descuento (0-100): ", false);
             // lista de productos de un pack (vacía por defecto)
@@ -459,6 +444,7 @@ public class ViewController {
     }
 
     private void modifyProduct() {
+        // TODO modificar fecha catalogo
         System.out.println("");
         // Pedir un ID de un producto que exista
         id = getExistingId(daoProduct, "ID del producto que quieres modificar: ");
@@ -1158,5 +1144,26 @@ public class ViewController {
         } while (!zipCode.matches(zipRegex));
 
         return zipCode;
+    }
+
+    private LocalDate getDate() {
+        boolean dateValid = true;
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate inputDate = null;
+
+        do {
+            System.out.print("fecha: ");
+            String date = keyboard.nextLine();
+            try {
+                inputDate = LocalDate.parse(date, dtf);
+                dateValid = true;
+            } catch (Exception e) {
+                System.out.println("Introduce una fecha correcta: ");
+                dateValid = false;
+                //TODO: handle exception
+            }
+        } while (!dateValid);
+
+        return inputDate;
     }
 }
