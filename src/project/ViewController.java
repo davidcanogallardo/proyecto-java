@@ -57,6 +57,8 @@ public class ViewController {
     private Person person;
     private LocalDate startCatalog;
     private LocalDate endCatalog;
+    private LocalDate date;
+    private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final String PRODUCT_PATH = "products.dat";
     private static final String SUPPLIER_PATH = "suppliers.dat";
     private static final String CLIENT_PATH = "clients.dat";
@@ -77,6 +79,8 @@ public class ViewController {
         // LocalDate date = LocalDate.of(2022,02,18);
         // System.out.println(dtf.parse("22/05/2000"));
         // System.out.println(dtf.parse("dsfdsfvsd"));
+        // getDate(false);
+
 
         loadDAO();
 
@@ -89,8 +93,6 @@ public class ViewController {
             saveDAO();
         }
     }
-
-
 
     public void loadDAO() throws IOException {
         File productFile = new File(PRODUCT_PATH);
@@ -243,7 +245,13 @@ public class ViewController {
 
                     break;
                 case "8":
-                    listDiscontinuedProducts(LocalDate.of(2000,6,01));
+                    String today = LocalDate.now().format(dtf);
+                    date = getDate("Introduce una fecha ["+today+"]", true);
+                    if (date!=null) {
+                        listDiscontinuedProducts(date);
+                    } else {
+                        listDiscontinuedProducts(LocalDate.parse(today, dtf));
+                    }
 
                     break;
                 case "0":
@@ -349,12 +357,13 @@ public class ViewController {
     }
 
     private void listDiscontinuedProducts(LocalDate date) {
+        System.out.println("\nProductos descatalogados a partir de: "+ date.toString()+"\n");
         HashMap<Integer, Product> hm = daoProduct.getMap();
-        for (Product product : hm.values()) {    
+        for (Product product : hm.values()) {
             if (product.getEndCatalog().isBefore(date)) {
                 System.out.print("Días de diferencia: ");
                 System.out.println(ChronoUnit.DAYS.between(product.getEndCatalog(), date));
-                System.out.println(product.toString());
+                System.out.println(product.toString()+"\n");
             }
         }
     }
@@ -407,8 +416,8 @@ public class ViewController {
 
         name = getString("Nombre: ", false);
         price = getDouble("Precio: ", false);
-        startCatalog = getDate();
-        endCatalog = getDate();
+        startCatalog = getDate("Introduce la fecha de inicio del catálogo (dd/MM/yyyy)", false);
+        endCatalog = getDate("Introduce la fecha de fin del catálogo (dd/MM/yyyy)", false);
 
         // Según si quiere añadir un pack o producto pide diferentes propiedades
         if (!isPack) {
@@ -421,7 +430,7 @@ public class ViewController {
             TreeSet<Product> productList = new TreeSet<>();
             // TODO que te pregunte si quiere añadir ahora o mas tarde productos al pack
 
-            prod = new Pack(productList, discount, id, name, price);
+            prod = new Pack(productList, discount, id, name, price, startCatalog, endCatalog);
         }
 
         if (daoProduct.add(prod) != null) {
@@ -1146,23 +1155,25 @@ public class ViewController {
         return zipCode;
     }
 
-    private LocalDate getDate() {
+    private LocalDate getDate(String question, boolean returnEmpty) {
         boolean dateValid = true;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate inputDate = null;
 
         do {
-            System.out.print("fecha: ");
+            System.out.print(question);
             String date = keyboard.nextLine();
             try {
                 inputDate = LocalDate.parse(date, dtf);
                 dateValid = true;
             } catch (Exception e) {
-                System.out.println("Introduce una fecha correcta: ");
+                if (!returnEmpty) {
+                    System.out.println("Introduce una fecha correcta: ");
+                }
                 dateValid = false;
-                //TODO: handle exception
+                // TODO: handle exception
             }
-        } while (!dateValid);
+        } while (!dateValid && !returnEmpty);
 
         return inputDate;
     }

@@ -1,6 +1,7 @@
 package project.Models;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.TreeSet;
@@ -10,9 +11,11 @@ public final class Pack extends Product implements Serializable {
     private TreeSet<Product> productList;
     private int discount;
 
-    // public Pack(ArrayList<Integer> idProdList, int discount, Integer idProduct, String name, double price) {
-    public Pack(TreeSet<Product> productList, int discount, Integer idProduct, String name, double price) {
-        super(idProduct, name, price);
+    // public Pack(ArrayList<Integer> idProdList, int discount, Integer idProduct,
+    // String name, double price) {
+    public Pack(TreeSet<Product> productList, int discount, Integer id, String name, double price,
+            LocalDate startCatalog, LocalDate endCatalog) {
+        super(id, name, price, startCatalog, endCatalog);
         this.productList = productList;
         this.discount = discount;
     }
@@ -32,7 +35,7 @@ public final class Pack extends Product implements Serializable {
     public void setDiscount(int discount) {
         this.discount = discount;
     }
-    
+
     public boolean deleteProduct(Product id) {
         for (Product i : this.productList) {
             if (i == id) {
@@ -42,7 +45,7 @@ public final class Pack extends Product implements Serializable {
         }
         return false;
     }
-    
+
     public boolean addProduct(Product product) {
         for (Product i : this.productList) {
             if (i == product) {
@@ -71,5 +74,5 @@ public final class Pack extends Product implements Serializable {
             return false;
         }
 
-    } 
+    }
 }

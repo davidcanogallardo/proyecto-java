@@ -12,6 +12,23 @@ public class Product implements Identificable, Serializable, Comparable<Product>
     private double price;
     private Integer stock;
     private LocalDate startCatalog;
+    private LocalDate endCatalog;
+
+    public Product(Integer id, String name, double price, LocalDate startCatalog,
+            LocalDate endCatalog) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+    }
+
+    public Product(Integer id, String name, double price, Integer stock, LocalDate startCatalog,
+            LocalDate endCatalog) {
+        this(id, name, price, startCatalog, endCatalog);
+        this.stock = stock;
+        this.startCatalog = startCatalog;
+        this.endCatalog = endCatalog;
+    }
+
     public LocalDate getStartCatalog() {
         return startCatalog;
     }
@@ -25,22 +42,6 @@ public class Product implements Identificable, Serializable, Comparable<Product>
     }
 
     public void setEndCatalog(LocalDate endCatalog) {
-        this.endCatalog = endCatalog;
-    }
-
-    private LocalDate endCatalog;
-
-    public Product(Integer id, String name, double price) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-    }
-
-    public Product(Integer id, String name, double price, Integer stock, LocalDate startCatalog,
-            LocalDate endCatalog) {
-        this(id, name, price);
-        this.stock = stock;
-        this.startCatalog = startCatalog;
         this.endCatalog = endCatalog;
     }
 
