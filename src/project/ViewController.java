@@ -75,12 +75,14 @@ public class ViewController {
         // }
         // }
 
-        // DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate owo = LocalDate.parse("22/05/2000", dtf);
+        System.out.println((owo.format(dtf)));
+
         // LocalDate date = LocalDate.of(2022,02,18);
         // System.out.println(dtf.parse("22/05/2000"));
         // System.out.println(dtf.parse("dsfdsfvsd"));
         // getDate(false);
-
 
         loadDAO();
 
@@ -246,8 +248,8 @@ public class ViewController {
                     break;
                 case "8":
                     String today = LocalDate.now().format(dtf);
-                    date = getDate("Introduce una fecha ["+today+"]", true);
-                    if (date!=null) {
+                    date = getDate("Introduce una fecha [" + today + "]: ", true);
+                    if (date != null) {
                         listDiscontinuedProducts(date);
                     } else {
                         listDiscontinuedProducts(LocalDate.parse(today, dtf));
@@ -297,7 +299,7 @@ public class ViewController {
                 pack = (Pack) daoProduct.get(id);
 
                 packCopy = new Pack((TreeSet<Product>) pack.getProdList().clone(), pack.getDiscount(), pack.getId(),
-                        pack.getName(), pack.getPrice());
+                        pack.getName(), pack.getPrice(), pack.getStartCatalog(), pack.getEndCatalog());
 
                 System.out.println("");
 
@@ -357,13 +359,13 @@ public class ViewController {
     }
 
     private void listDiscontinuedProducts(LocalDate date) {
-        System.out.println("\nProductos descatalogados a partir de: "+ date.toString()+"\n");
+        System.out.println("\nProductos descatalogados a partir de: " + date.toString() + "\n");
         HashMap<Integer, Product> hm = daoProduct.getMap();
         for (Product product : hm.values()) {
             if (product.getEndCatalog().isBefore(date)) {
                 System.out.print("Días de diferencia: ");
                 System.out.println(ChronoUnit.DAYS.between(product.getEndCatalog(), date));
-                System.out.println(product.toString()+"\n");
+                System.out.println(product.toString() + "\n");
             }
         }
     }
@@ -416,8 +418,8 @@ public class ViewController {
 
         name = getString("Nombre: ", false);
         price = getDouble("Precio: ", false);
-        startCatalog = getDate("Introduce la fecha de inicio del catálogo (dd/MM/yyyy)", false);
-        endCatalog = getDate("Introduce la fecha de fin del catálogo (dd/MM/yyyy)", false);
+        startCatalog = getDate("Introduce la fecha de inicio del catálogo (dd/MM/yyyy): ", false);
+        endCatalog = getDate("Introduce la fecha de fin del catálogo (dd/MM/yyyy): ", false);
 
         // Según si quiere añadir un pack o producto pide diferentes propiedades
         if (!isPack) {
@@ -472,8 +474,18 @@ public class ViewController {
             prod.setPrice(price);
         }
 
-        if (prod instanceof Pack) {
-            discount = getDiscount("Descuento (0-100)[" + pack.getDiscount() + "]: ", true);
+        startCatalog = getDate("Inicio catálogo [" + prod.getStartCatalog().format(dtf) + "]: ", true);
+        if (startCatalog != null) {
+            prod.setStartCatalog(startCatalog);
+        }
+
+        endCatalog = getDate("Fin catálogo [" + prod.getEndCatalog().format(dtf) + "]: ", true);
+        if (endCatalog != null) {
+            prod.setEndCatalog(endCatalog);
+        }
+
+        if (prod instanceof Pack pack) {
+            discount = getDiscount("Descuento (0-100) [" + pack.getDiscount() + "]: ", true);
             if (discount != null) {
                 pack.setDiscount(discount);
             }

@@ -19,14 +19,15 @@ public class Product implements Identificable, Serializable, Comparable<Product>
         this.id = id;
         this.name = name;
         this.price = price;
+        this.startCatalog = startCatalog;
+        this.endCatalog = endCatalog;
     }
 
     public Product(Integer id, String name, double price, Integer stock, LocalDate startCatalog,
             LocalDate endCatalog) {
         this(id, name, price, startCatalog, endCatalog);
         this.stock = stock;
-        this.startCatalog = startCatalog;
-        this.endCatalog = endCatalog;
+
     }
 
     public LocalDate getStartCatalog() {

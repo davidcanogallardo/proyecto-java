@@ -29,7 +29,7 @@ public final class Pack extends Product implements Serializable {
     }
 
     public int getDiscount() {
-        return discount;
+        return this.discount;
     }
 
     public void setDiscount(int discount) {
