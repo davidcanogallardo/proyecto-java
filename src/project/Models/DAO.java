@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class DAO<T extends Identificable> implements Serializable {
+public class DAO<T extends Identificable> implements Persistable<T>, Serializable {
     private HashMap<Integer, T> hashMap = new HashMap<>();
 
     public T add(T obj) {
