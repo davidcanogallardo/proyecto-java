@@ -8,6 +8,8 @@ import project.Models.Client;
 import project.Models.DAO;
 import project.Models.Pack;
 import project.Models.Person;
+import project.Models.Presence;
+import project.Models.PresenceRegisterDAO;
 import project.Models.Product;
 import project.Models.Supplier;
 
@@ -24,6 +26,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -35,6 +39,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.TreeSet;
 
@@ -75,9 +80,17 @@ public class ViewController {
         // }
         // }
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate owo = LocalDate.parse("22/05/2000", dtf);
-        System.out.println((owo.format(dtf)));
+        // DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        // LocalDate owo = LocalDate.parse("22/05/2000", dtf);
+        // System.out.println((owo.format(dtf)));
+
+        // DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("HH:mm:ss");
+        // LocalTime now = LocalTime.now();  
+        // System.out.println(dtf2.format(now));  
+
+        // LocalDate today = LocalDate.now();
+        // System.out.println(today);
+
 
         // LocalDate date = LocalDate.of(2022,02,18);
         // System.out.println(dtf.parse("22/05/2000"));
@@ -85,6 +98,7 @@ public class ViewController {
         // getDate(false);
 
         loadDAO();
+ 
 
         try {
             mainMenu();
@@ -160,6 +174,9 @@ public class ViewController {
                 case "3":
                     menuSupplier();
                     break;
+                case "4":
+                    fichar();
+                    break;
                 case "0":
                     saveDAO();
                     break;
@@ -169,6 +186,45 @@ public class ViewController {
                     break;
             }
         } while (!"0".equals(option));
+    }
+
+    private void fichar() {
+        int id = 1;
+        String option;
+        do {
+            PresenceRegisterDAO prd = new PresenceRegisterDAO();
+            System.out.println("Elige una opción:");
+            System.out.println("[0] Salir");
+            System.out.println("[1] Entrada");
+            System.out.println("[2] Salida");
+            System.out.println("[3] Consultar");
+            System.out.print("Opción: ");
+            option = keyboard.nextLine();
+    
+            LocalDate today = LocalDate.now();
+    
+            switch (option) {
+                case "1":
+                    LocalTime now = LocalTime.now();  
+                    Presence p = new Presence(1, today, now);
+                    prd.add(p);
+                    System.out.println(prd.hashSet);
+                    break;
+                case "2":
+                    prd.addLeaveTime(1);
+                    break;
+                case "3":
+                    prd.list();
+                    break;
+                case "0":
+                    break;
+                default:
+                    deleteLine(7);
+                    System.out.println("Introduce una opción correcta!");
+                    break;
+            } 
+        } while (!"0".equals(option));
+
     }
 
     /*--------------------------------------PRODUCTOS------------------------------------------*/
