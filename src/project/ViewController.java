@@ -49,6 +49,7 @@ public class ViewController {
     private DAO<Client> daoClient = new DAO<>();
     private DAO<Supplier> daoSupplier = new DAO<>();
     private DAO<Product> daoProduct = new DAO<>();
+    private PresenceRegisterDAO prd = new PresenceRegisterDAO();
 
     private Product prod;
     private Pack pack;
@@ -91,11 +92,17 @@ public class ViewController {
         // LocalDate today = LocalDate.now();
         // System.out.println(today);
 
+        // LocalDateTime ldt = LocalDateTime.of(LocalDate.now(), LocalTime.now());
+        // LocalDateTime ldt2 = LocalDateTime.of(LocalDate.now(), LocalTime.now().plusHours(1));
+        // System.out.println(ldt.compareTo(ldt2));
+
 
         // LocalDate date = LocalDate.of(2022,02,18);
         // System.out.println(dtf.parse("22/05/2000"));
         // System.out.println(dtf.parse("dsfdsfvsd"));
         // getDate(false);
+
+
 
         loadDAO();
  
@@ -175,7 +182,7 @@ public class ViewController {
                     menuSupplier();
                     break;
                 case "4":
-                    fichar();
+                    clockInOutMenu();
                     break;
                 case "0":
                     saveDAO();
@@ -188,11 +195,13 @@ public class ViewController {
         } while (!"0".equals(option));
     }
 
-    private void fichar() {
+    private void clockInOutMenu() {
         int id = 1;
         String option;
+        DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+        
         do {
-            PresenceRegisterDAO prd = new PresenceRegisterDAO();
             System.out.println("Elige una opción:");
             System.out.println("[0] Salir");
             System.out.println("[1] Entrada");
@@ -206,12 +215,14 @@ public class ViewController {
             switch (option) {
                 case "1":
                     LocalTime now = LocalTime.now();  
+                    
                     Presence p = new Presence(1, today, now);
                     prd.add(p);
-                    System.out.println(prd.hashSet);
+                    prd.list();
                     break;
                 case "2":
                     prd.addLeaveTime(1);
+                    prd.list();
                     break;
                 case "3":
                     prd.list();

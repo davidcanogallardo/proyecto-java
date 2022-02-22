@@ -1,9 +1,10 @@
 package project.Models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class Presence {
+public class Presence implements Comparable<Presence> {
     private Integer id;
     private LocalDate date;
     private LocalTime enterTime;
@@ -56,12 +57,24 @@ public class Presence {
 
     @Override
     public String toString() {
-        return "Presence [date=" + date + ", enterTime=" + enterTime + ", id=" + id + ", leaveTime=" + leaveTime + "]";
+        return "Presence [id=" + id + ", date=" + date + ", enterTime=" + enterTime + ", leaveTime=" + leaveTime + "]";
     }
 
     @Override
     public boolean equals(Object obj) {
         Presence obj2 = (Presence) obj;
-        return this.id == obj2.id && this.date.equals(obj2.date);
+        return this.id == obj2.id && this.date.equals(obj2.date) && this.leaveTime == null;
+    }
+
+    @Override
+    public int compareTo(Presence o) {
+        if (this.id != o.id) {
+            return this.id.compareTo(o.id);
+        } else {
+            LocalDateTime ldt = LocalDateTime.of(this.date, this.enterTime);
+            LocalDateTime ldt2 = LocalDateTime.of(o.date, o.enterTime);
+    
+            return ldt.compareTo(ldt2);
+        }
     }
 }
