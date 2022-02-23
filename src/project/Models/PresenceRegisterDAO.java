@@ -12,32 +12,23 @@ public class PresenceRegisterDAO {
     public Presence add(Presence obj) {
         for (Presence presence : hashSet) {
             if (presence.equals(obj)) {
-                System.out.println("no añadido");
                 return null;
             }
         }
-        // if (this.hashSet.contains(obj)) {
-        // System.out.println("no añadido");
-        // return null;
-        // } else {
-        // System.out.println("añadido");
-        // this.hashSet.add(obj);
-        // System.out.println(this.hashSet);
-        // return obj;
-        // }
-        System.out.println("añadido");
         this.hashSet.add(obj);
         return obj;
     }
 
-    public void addLeaveTime(int id) {
+    public boolean addLeaveTime(int id) {
         LocalDate today = LocalDate.now();
         for (Presence presence : this.hashSet) {
             if (presence.getId() == id && presence.getDate().compareTo(today) == 0 && presence.getLeaveTime() == null) {
                 LocalTime now = LocalTime.now();
                 presence.setLeaveTime(now);
+                return true;
             }
         }
+        return false;
     }
 
     public void list() {

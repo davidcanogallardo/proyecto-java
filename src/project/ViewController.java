@@ -164,6 +164,7 @@ public class ViewController {
             System.out.println("[1] Productos");
             System.out.println("[2] Clientes");
             System.out.println("[3] Proveedores");
+            System.out.println("[4] Fichar");
             // System.out.println("[4] ");
             System.out.print("Opción: ");
             option = keyboard.nextLine();
@@ -200,13 +201,14 @@ public class ViewController {
         String option;
         DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-        
         do {
             System.out.println("Elige una opción:");
             System.out.println("[0] Salir");
             System.out.println("[1] Entrada");
             System.out.println("[2] Salida");
             System.out.println("[3] Consultar");
+            System.out.println("[4] Cambiar id trabajador");
+            System.out.println("El id de trabajador actual es: "+id);
             System.out.print("Opción: ");
             option = keyboard.nextLine();
     
@@ -216,16 +218,25 @@ public class ViewController {
                 case "1":
                     LocalTime now = LocalTime.now();  
                     
-                    Presence p = new Presence(1, today, now);
-                    prd.add(p);
-                    prd.list();
+                    Presence p = new Presence(id, today, now);
+                    if (prd.add(p) != null) {
+                        System.out.println("Has fichado de entrada");
+                    } else {
+                        System.out.println("No has podido fichar, para volver a fichar de entrada tiene que fichar de salida");
+                    }
                     break;
                 case "2":
-                    prd.addLeaveTime(1);
-                    prd.list();
+                    if (prd.addLeaveTime(id)) {
+                        System.out.println("Has fichado de salida");
+                    } else {
+                        System.out.println("Ficha de entrada antes");
+                    }
                     break;
                 case "3":
                     prd.list();
+                    break;
+                case "4":
+                    id = getInteger("Introduce id: ", false);
                     break;
                 case "0":
                     break;
