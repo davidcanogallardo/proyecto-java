@@ -1,4 +1,5 @@
 package project;
+
 import java.util.Scanner;
 import project.Models.Client;
 import project.Models.DAO;
@@ -11,10 +12,12 @@ import project.Models.Address;
 import project.Models.Client;
 import project.Models.DAO;
 import project.Models.Pack;
+import project.Models.Persistable;
 import project.Models.Person;
 import project.Models.Presence;
 import project.Models.PresenceRegisterDAO;
 import project.Models.Product;
+import project.Models.ProductsDAO;
 import project.Models.Supplier;
 
 import java.io.BufferedInputStream;
@@ -28,6 +31,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -53,7 +57,7 @@ public class ViewController {
 
     private DAO<Client> daoClient = new DAO<>();
     private DAO<Supplier> daoSupplier = new DAO<>();
-    private DAO<Product> daoProduct = new DAO<>();
+    private ProductsDAO daoProduct = new ProductsDAO<>();
     private PresenceRegisterDAO prd = new PresenceRegisterDAO();
 
     private Product prod;
@@ -74,9 +78,16 @@ public class ViewController {
     private static final String SUPPLIER_PATH = "suppliers.dat";
     private static final String CLIENT_PATH = "clients.dat";
 
+    // Internacionalizacion
+    private Locale lDefault = Locale.getDefault(Category.DISPLAY);
+    private Locale lFormat = Locale.getDefault(Category.FORMAT);
+    private ResourceBundle text;
+    NumberFormat nFormatter;
+    NumberFormat cFormatter;
+
     private static Logger logger = Logger.getLogger(ViewController.class.getName());
 
-    public void run() throws IOException, SecurityException {
+    public void run() throws IOException {
 
         // try (DataInputStream dis = new DataInputStream(
         // new BufferedInputStream(new FileInputStream("a.txt")))) {
@@ -91,30 +102,34 @@ public class ViewController {
         // System.out.println((owo.format(dtf)));
 
         // DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("HH:mm:ss");
-        // LocalTime now = LocalTime.now();  
-        // System.out.println(dtf2.format(now));  
+        // LocalTime now = LocalTime.now();
+        // System.out.println(dtf2.format(now));
 
         // LocalDate today = LocalDate.now();
         // System.out.println(today);
 
         // LocalDateTime ldt = LocalDateTime.of(LocalDate.now(), LocalTime.now());
-        // LocalDateTime ldt2 = LocalDateTime.of(LocalDate.now(), LocalTime.now().plusHours(1));
+        // LocalDateTime ldt2 = LocalDateTime.of(LocalDate.now(),
+        // LocalTime.now().plusHours(1));
         // System.out.println(ldt.compareTo(ldt2));
-
 
         // LocalDate date = LocalDate.of(2022,02,18);
         // System.out.println(dtf.parse("22/05/2000"));
         // System.out.println(dtf.parse("dsfdsfvsd"));
         // getDate(false);
-		Locale lDisplay = Locale.getDefault(Category.DISPLAY);  
-		System.out.println(lDisplay);
-        lDisplay = new Locale("es", "ES");
 
-        ResourceBundle text = ResourceBundle.getBundle("Texts", lDisplay);
-        System.out.println(text.getString("001"));
+        System.out.println(lDefault.toLanguageTag());
+        // ProductsDAO dd = new ProductsDAO<>();
+        // File productFile = new File(PRODUCT_PATH);
+
+        // dd.load(PRODUCT_PATH);
+
+        // System.out.println(dd.getMap().toString());
 
         loadDAO();
- 
+        // System.out.println(lFormat.equals(new Locale("en", "US")));
+        setLocale();
+        System.out.println(cFormatter.format(43));
 
         try {
             mainMenu();
@@ -124,6 +139,23 @@ public class ViewController {
             // TODO no guarda todos los daos
             saveDAO();
         }
+    }
+
+    private void setLocale() {
+        if (!lDefault.equals(new Locale("es", "ES")) && !lDefault.equals(new Locale("ca", "ES"))) {
+            System.out.println("1");
+            lDefault = new Locale("es", "ES");
+            System.out.println(lDefault);
+        }
+        if (!lFormat.equals(new Locale("es", "ES")) && !lFormat.equals(new Locale("ca", "ES"))) {
+            System.out.println("2");
+            lFormat = new Locale("es", "ES");
+            System.out.println(lFormat);
+        }
+		nFormatter = NumberFormat.getNumberInstance(lFormat);
+		cFormatter = NumberFormat.getCurrencyInstance(lFormat);
+		
+        text = ResourceBundle.getBundle("Texts", lDefault);
     }
 
     public void loadDAO() throws IOException {
@@ -168,13 +200,13 @@ public class ViewController {
     public void mainMenu() throws IOException {
         String option;
         do {
-            System.out.println("Elige una opción:");
-            System.out.println("[0] Salir");
-            System.out.println("[1] Productos");
-            System.out.println("[2] Clientes");
-            System.out.println("[3] Proveedores");
-            System.out.println("[4] Fichar");
-            System.out.print("Opción: ");
+            System.out.println(text.getString("000")+":");
+            System.out.println("[0] " + text.getString("001"));
+            System.out.println("[1] " + text.getString("002"));
+            System.out.println("[2] " + text.getString("003"));
+            System.out.println("[3] " + text.getString("004"));
+            System.out.println("[4] " + text.getString("005"));
+            System.out.print(text.getString("006")+": ");
             option = keyboard.nextLine();
 
             switch (option) {
@@ -215,22 +247,23 @@ public class ViewController {
             System.out.println("[1] Entrada");
             System.out.println("[2] Salida");
             System.out.println("[3] Consultar");
-            System.out.println("El id de trabajador actual es: "+id);
+            System.out.println("El id de trabajador actual es: " + id);
             System.out.print("Opción: ");
             option = keyboard.nextLine();
-    
+
             LocalDate today = LocalDate.now();
-    
+
             switch (option) {
                 case "1":
                     id = getInteger("Id con el que quieres fichar: ", false);
-                    LocalTime now = LocalTime.now();  
-                    
+                    LocalTime now = LocalTime.now();
+
                     Presence p = new Presence(id, today, now);
                     if (prd.add(p) != null) {
                         System.out.println("Has fichado de entrada");
                     } else {
-                        System.out.println("No has podido fichar, para volver a fichar de entrada tiene que fichar de salida");
+                        System.out.println(
+                                "No has podido fichar, para volver a fichar de entrada tiene que fichar de salida");
                     }
                     break;
                 case "2":
@@ -250,7 +283,7 @@ public class ViewController {
                     deleteLine(7);
                     System.out.println("Introduce una opción correcta!");
                     break;
-            } 
+            }
         } while (!"0".equals(option));
 
     }
@@ -1036,6 +1069,8 @@ public class ViewController {
         HashMap<Integer, Object> hashMap = p.getMap();
         for (Object values : hashMap.values()) {
             System.out.println(values.toString() + "\n");
+            // System.out.println(cFormatter.format(values.toString()) + "\n");
+
         }
     }
 
@@ -1184,7 +1219,7 @@ public class ViewController {
         return id;
     }
 
-    private int getExistingId(DAO dao, String question) {
+    private int getExistingId(Persistable dao, String question) {
         Object obj;
         boolean exists;
         do {

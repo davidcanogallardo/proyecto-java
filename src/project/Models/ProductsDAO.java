@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ProductsDAO<T extends Identificable> implements Persistable<T>, Serializable {
-    private HashMap<Integer, T> hashMap = new HashMap<>();
+public class ProductsDAO<Product extends Identificable> implements Persistable<Product>, Serializable {
+    private HashMap<Integer, Product> hashMap = new HashMap<>();
 
-    public T add(T obj) {
+    public Product add(Product obj) {
         if (hashMap.containsKey(obj.getId())) {
             return null;
         } else {
@@ -24,7 +24,7 @@ public class ProductsDAO<T extends Identificable> implements Persistable<T>, Ser
         }
     }
 
-    public T delete(T obj) {
+    public Product delete(Product obj) {
         if (hashMap.containsKey(obj.getId())) {
             hashMap.remove(obj.getId());
             return obj;
@@ -33,7 +33,7 @@ public class ProductsDAO<T extends Identificable> implements Persistable<T>, Ser
         }
     }
 
-    public T get(Integer id) {
+    public Product get(Integer id) {
         if (hashMap.containsKey(id)) {
             return hashMap.get(id);
         } else {
@@ -41,11 +41,11 @@ public class ProductsDAO<T extends Identificable> implements Persistable<T>, Ser
         }
     }
 
-    public HashMap<Integer, T> getMap() {
+    public HashMap<Integer, Product> getMap() {
         return new HashMap<>(hashMap);
     }
 
-    public void modify(T obj) {
+    public void modify(Product obj) {
         hashMap.replace(obj.getId(), get(obj.getId()), obj);
     }
 
@@ -63,7 +63,7 @@ public class ProductsDAO<T extends Identificable> implements Persistable<T>, Ser
         try {
             ObjectInputStream ois = new ObjectInputStream(fis);
             try {
-                this.hashMap = (HashMap<Integer, T>) ois.readObject();
+                this.hashMap = (HashMap<Integer, Product>) ois.readObject();
             } catch (ClassNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -74,5 +74,6 @@ public class ProductsDAO<T extends Identificable> implements Persistable<T>, Ser
         }
 
     }
+
 
 }
