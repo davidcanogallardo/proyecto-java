@@ -1,4 +1,8 @@
 package project;
+import java.util.Scanner;
+import project.Models.Client;
+import project.Models.DAO;
+import project.Models.PresenceRegisterDAO;
 
 import java.util.logging.Logger;
 
@@ -14,7 +18,6 @@ import project.Models.Product;
 import project.Models.Supplier;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -165,7 +168,6 @@ public class ViewController {
             System.out.println("[2] Clientes");
             System.out.println("[3] Proveedores");
             System.out.println("[4] Fichar");
-            // System.out.println("[4] ");
             System.out.print("Opción: ");
             option = keyboard.nextLine();
 

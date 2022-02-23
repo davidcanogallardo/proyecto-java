@@ -60,12 +60,15 @@ public class Presence implements Comparable<Presence> {
         return "Presence [id=" + id + ", date=" + date + ", enterTime=" + enterTime + ", leaveTime=" + leaveTime + "]";
     }
 
+    // Defino que dos Presence son iguales cuando tienen el mismo id y fecha
+    // y no tengan fecha de salida
     @Override
     public boolean equals(Object obj) {
         Presence obj2 = (Presence) obj;
         return this.id == obj2.id && this.date.equals(obj2.date) && this.leaveTime == null;
     }
 
+    // Ordeno numericamente por el id y si tienen id ordeno por fecha y hora de entrada
     @Override
     public int compareTo(Presence o) {
         if (this.id != o.id) {
