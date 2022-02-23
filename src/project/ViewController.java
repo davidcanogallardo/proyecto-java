@@ -43,8 +43,10 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.TreeSet;
+import java.util.Locale.Category;
 
 public class ViewController {
     private Scanner keyboard = new Scanner(System.in);
@@ -104,8 +106,12 @@ public class ViewController {
         // System.out.println(dtf.parse("22/05/2000"));
         // System.out.println(dtf.parse("dsfdsfvsd"));
         // getDate(false);
+		Locale lDisplay = Locale.getDefault(Category.DISPLAY);  
+		System.out.println(lDisplay);
+        lDisplay = new Locale("es", "ES");
 
-
+        ResourceBundle text = ResourceBundle.getBundle("Texts", lDisplay);
+        System.out.println(text.getString("001"));
 
         loadDAO();
  
@@ -209,7 +215,6 @@ public class ViewController {
             System.out.println("[1] Entrada");
             System.out.println("[2] Salida");
             System.out.println("[3] Consultar");
-            System.out.println("[4] Cambiar id trabajador");
             System.out.println("El id de trabajador actual es: "+id);
             System.out.print("Opción: ");
             option = keyboard.nextLine();
@@ -218,6 +223,7 @@ public class ViewController {
     
             switch (option) {
                 case "1":
+                    id = getInteger("Id con el que quieres fichar: ", false);
                     LocalTime now = LocalTime.now();  
                     
                     Presence p = new Presence(id, today, now);
@@ -228,6 +234,7 @@ public class ViewController {
                     }
                     break;
                 case "2":
+                    id = getInteger("Id con el que quieres fichar: ", false);
                     if (prd.addLeaveTime(id)) {
                         System.out.println("Has fichado de salida");
                     } else {
@@ -236,9 +243,6 @@ public class ViewController {
                     break;
                 case "3":
                     prd.list();
-                    break;
-                case "4":
-                    id = getInteger("Introduce id: ", false);
                     break;
                 case "0":
                     break;
