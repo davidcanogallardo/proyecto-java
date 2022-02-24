@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ProductsDAO<Product extends Identificable> implements Persistable<Product>, Serializable {
-    private HashMap<Integer, Product> hashMap = new HashMap<>();
+public class SupplierDAO<Supplier extends Identificable> implements Persistable<Supplier>, Serializable {
+    private HashMap<Integer, Supplier> hashMap = new HashMap<>();
 
-    public Product add(Product obj) {
+    public Supplier add(Supplier obj) {
         if (hashMap.containsKey(obj.getId())) {
             return null;
         } else {
@@ -24,7 +24,7 @@ public class ProductsDAO<Product extends Identificable> implements Persistable<P
         }
     }
 
-    public Product delete(Product obj) {
+    public Supplier delete(Supplier obj) {
         if (hashMap.containsKey(obj.getId())) {
             hashMap.remove(obj.getId());
             return obj;
@@ -33,19 +33,19 @@ public class ProductsDAO<Product extends Identificable> implements Persistable<P
         }
     }
 
-    public Product get(Integer id) {
+    public Supplier get(Integer id) {
         if (hashMap.containsKey(id)) {
-            return (Product) hashMap.get(id);
+            return (Supplier) hashMap.get(id);
         } else {
             return null;
         }
     }
 
-    public HashMap<Integer, Product> getMap() {
+    public HashMap<Integer, Supplier> getMap() {
         return new HashMap<>(hashMap);
     }
 
-    public void modify(Product obj) {
+    public void modify(Supplier obj) {
         hashMap.replace(obj.getId(), get(obj.getId()), obj);
     }
 
@@ -63,7 +63,7 @@ public class ProductsDAO<Product extends Identificable> implements Persistable<P
         try {
             ObjectInputStream ois = new ObjectInputStream(fis);
             try {
-                this.hashMap = (HashMap<Integer, Product>) ois.readObject();
+                this.hashMap = (HashMap<Integer, Supplier>) ois.readObject();
             } catch (ClassNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -75,18 +75,5 @@ public class ProductsDAO<Product extends Identificable> implements Persistable<P
 
     }
 
-    public List<Product> getDiscontinuedProducts(LocalDate date) {
-        List<Product> list = new ArrayList<Product>();
-        for (Product product : hashMap.values()) {
-            if ((Product) product.getEndCatalog().isBefore(date)) {
-                // System.out.print("Días de diferencia: ");
-                // System.out.println(ChronoUnit.DAYS.between(product.getEndCatalog(), date));
-                // System.out.println(product.toString() + "\n");
-                list.add(product);
-            }
-        }
-
-        return list;
-    }
 
 }

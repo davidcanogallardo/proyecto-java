@@ -2,6 +2,7 @@ package project;
 
 import java.util.Scanner;
 import project.Models.Client;
+import project.Models.ClientDAO;
 import project.Models.DAO;
 import project.Models.PresenceRegisterDAO;
 
@@ -19,6 +20,7 @@ import project.Models.PresenceRegisterDAO;
 import project.Models.Product;
 import project.Models.ProductsDAO;
 import project.Models.Supplier;
+import project.Models.SupplierDAO;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -55,8 +57,8 @@ import java.util.Locale.Category;
 public class ViewController {
     private Scanner keyboard = new Scanner(System.in);
 
-    private DAO<Client> daoClient = new DAO<>();
-    private DAO<Supplier> daoSupplier = new DAO<>();
+    private ClientDAO daoClient = new ClientDAO<>();
+    private SupplierDAO daoSupplier = new SupplierDAO<>();
     private ProductsDAO daoProduct = new ProductsDAO<>();
     private PresenceRegisterDAO prd = new PresenceRegisterDAO();
 
@@ -144,12 +146,12 @@ public class ViewController {
     private void setLocale() {
         if (!lDefault.equals(new Locale("es", "ES")) && !lDefault.equals(new Locale("ca", "ES"))) {
             System.out.println("1");
-            // lDefault = new Locale("es", "ES");
+            lDefault = new Locale("es", "ES");
             System.out.println(lDefault);
         }
         if (!lFormat.equals(new Locale("es", "ES")) && !lFormat.equals(new Locale("ca", "ES"))) {
             System.out.println("2");
-            // lFormat = new Locale("es", "ES");
+            lFormat = new Locale("es", "ES");
             System.out.println(lFormat);
         }
 		nFormatter = NumberFormat.getNumberInstance(lFormat);
@@ -478,13 +480,19 @@ public class ViewController {
     private void listDiscontinuedProducts(LocalDate date) {
         System.out.println("\nProductos descatalogados a partir de: " + date.toString() + "\n");
         HashMap<Integer, Product> hm = daoProduct.getMap();
-        for (Product product : hm.values()) {
-            if (product.getEndCatalog().isBefore(date)) {
-                System.out.print("Días de diferencia: ");
-                System.out.println(ChronoUnit.DAYS.between(product.getEndCatalog(), date));
-                System.out.println(product.toString() + "\n");
-            }
+        List<Product> list = new ArrayList<Product>(daoProduct.getDiscontinuedProducts(date));
+        for (Product prod : list) {
+            System.out.print("Días de diferencia: ");
+            System.out.println(ChronoUnit.DAYS.between(prod.getEndCatalog(), date));
+            System.out.println(prod.toString() + "\n");
         }
+        // for (Product product : hm.values()) {
+        //     if (product.getEndCatalog().isBefore(date)) {
+        //         System.out.print("Días de diferencia: ");
+        //         System.out.println(ChronoUnit.DAYS.between(product.getEndCatalog(), date));
+        //         System.out.println(product.toString() + "\n");
+        //     }
+        // }
     }
 
     private void listProducts() {
