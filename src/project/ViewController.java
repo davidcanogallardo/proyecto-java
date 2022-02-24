@@ -609,7 +609,8 @@ public class ViewController {
             prod.setEndCatalog(endCatalog);
         }
 
-        if (prod instanceof Pack pack) {
+        if (prod instanceof Pack) {
+            Pack pack = (Pack) prod;
             discount = getDiscount("Descuento (0-100) [" + pack.getDiscount() + "]: ", true);
             if (discount != null) {
                 pack.setDiscount(discount);
@@ -947,14 +948,14 @@ public class ViewController {
 
         // Según si es cliente o no busca en una clase u otra
         if (isClient) {
-            Client client = daoClient.get(id);
+            Client client = (Client) daoClient.get(id);
             if (client != null) {
                 System.out.println("\n" + client.toString() + "\n");
             } else {
                 System.out.println("\nNo existe el cliente\n");
             }
         } else {
-            Supplier supplier = daoSupplier.get(id);
+            Supplier supplier = (Supplier) daoSupplier.get(id);
             if (supplier != null) {
                 System.out.println("\n" + supplier.toString() + "\n");
             } else {
@@ -966,9 +967,9 @@ public class ViewController {
     private void modifyPerson(boolean isClient) {
         // Pedir un ID de un producto que exista
         if (isClient) {
-            person = daoClient.get(getExistingId(daoClient, "ID: "));
+            person = (Person) daoClient.get(getExistingId(daoClient, "ID: "));
         } else {
-            person = daoSupplier.get(getExistingId(daoSupplier, "ID: "));
+            person = (Person) daoSupplier.get(getExistingId(daoSupplier, "ID: "));
         }
 
         // dni, nombre, apellidos

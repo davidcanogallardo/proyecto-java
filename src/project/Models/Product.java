@@ -55,7 +55,8 @@ public class Product implements Identificable, Serializable, Comparable<Product>
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Product prod) {
+        if (obj instanceof Product) {
+            Product prod = (Product) obj;
             return this.name.equals(prod.getName());
         } else {
             return false;

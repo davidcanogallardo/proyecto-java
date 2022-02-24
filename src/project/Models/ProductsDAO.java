@@ -78,7 +78,8 @@ public class ProductsDAO<Product extends Identificable> implements Persistable<P
     public List<Product> getDiscontinuedProducts(LocalDate date) {
         List<Product> list = new ArrayList<Product>();
         for (Product product : hashMap.values()) {
-            System.out.println((Product) product.getClass());
+            Product prod = (Product) product;
+            System.out.println(prod);
             // if (product.getEndCatalog().isBefore(date)) {
             //     // System.out.print("Días de diferencia: ");
             //     // System.out.println(ChronoUnit.DAYS.between(product.getEndCatalog(), date));
