@@ -144,12 +144,12 @@ public class ViewController {
     private void setLocale() {
         if (!lDefault.equals(new Locale("es", "ES")) && !lDefault.equals(new Locale("ca", "ES"))) {
             System.out.println("1");
-            lDefault = new Locale("es", "ES");
+            // lDefault = new Locale("es", "ES");
             System.out.println(lDefault);
         }
         if (!lFormat.equals(new Locale("es", "ES")) && !lFormat.equals(new Locale("ca", "ES"))) {
             System.out.println("2");
-            lFormat = new Locale("es", "ES");
+            // lFormat = new Locale("es", "ES");
             System.out.println(lFormat);
         }
 		nFormatter = NumberFormat.getNumberInstance(lFormat);
@@ -563,7 +563,7 @@ public class ViewController {
     private void searchProduct() {
         System.out.println();
         id = getInteger("ID del producto: ", false);
-        prod = daoProduct.get(id);
+        prod = (Product) daoProduct.get(id);
         if (prod != null) {
             System.out.println("\n" + prod.toString() + "\n");
         } else {
@@ -577,7 +577,7 @@ public class ViewController {
         // Pedir un ID de un producto que exista
         id = getExistingId(daoProduct, "ID del producto que quieres modificar: ");
 
-        prod = daoProduct.get(id);
+        prod = (Product) daoProduct.get(id);
 
         // Reemplaza las propiedades del producto
         // si el usuario introduce algo
@@ -658,7 +658,7 @@ public class ViewController {
                         case "1":
                             id = getExistingId(daoProduct, "ID de un producto: ");
                             stock = getInteger("Stock que añadir: ", false);
-                            prod = daoProduct.get(id);
+                            prod = (Product) daoProduct.get(id);
                             prod.putStock(stock);
                             break;
                         case "2":
@@ -704,7 +704,7 @@ public class ViewController {
                 quantity = dis.readInt();
                 if (id != 0) {
                     // System.out.println(id + " " + quantity);
-                    prod = daoProduct.get(id);
+                    prod = (Product) daoProduct.get(id);
                     if (prod != null) {
                         prod.putStock(quantity);
                     } else {
@@ -1064,7 +1064,7 @@ public class ViewController {
         }
     }
 
-    private void printObjects(DAO p) {
+    private void printObjects(Persistable p) {
         System.out.println("");
         HashMap<Integer, Object> hashMap = p.getMap();
         for (Object values : hashMap.values()) {
@@ -1201,7 +1201,7 @@ public class ViewController {
         return num;
     }
 
-    private int getFreeId(DAO dao, String question) {
+    private int getFreeId(Persistable dao, String question) {
         Object obj;
         boolean exists;
         do {

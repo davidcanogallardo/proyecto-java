@@ -35,7 +35,7 @@ public class ProductsDAO<Product extends Identificable> implements Persistable<P
 
     public Product get(Integer id) {
         if (hashMap.containsKey(id)) {
-            return hashMap.get(id);
+            return (Product) hashMap.get(id);
         } else {
             return null;
         }
