@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import project.GenericFormatter;
+
 public class Presence implements Comparable<Presence> {
     private Integer id;
     private LocalDate date;
@@ -15,7 +17,7 @@ public class Presence implements Comparable<Presence> {
         this.date = date;
         this.enterTime = enterTime;
     }
-    
+
     public Presence(Integer id, LocalDate date, LocalTime enterTime, LocalTime leaveTime) {
         this.id = id;
         this.date = date;
@@ -57,7 +59,7 @@ public class Presence implements Comparable<Presence> {
 
     @Override
     public String toString() {
-        return "Presence [id=" + id + ", date=" + date + ", enterTime=" + enterTime + ", leaveTime=" + leaveTime + "]";
+        return "Presence [id=" + id + ", date=" + date + ", enterTime=" + GenericFormatter.formatTime(enterTime) + ", leaveTime=" + GenericFormatter.formatTime(leaveTime) + "]";
     }
 
     // Defino que dos Presence son iguales cuando tienen el mismo id y fecha
@@ -68,7 +70,8 @@ public class Presence implements Comparable<Presence> {
         return this.id == obj2.id && this.date.equals(obj2.date) && this.leaveTime == null;
     }
 
-    // Ordeno numericamente por el id y si tienen id ordeno por fecha y hora de entrada
+    // Ordeno numericamente por el id y si tienen id ordeno por fecha y hora de
+    // entrada
     @Override
     public int compareTo(Presence o) {
         if (this.id != o.id) {
@@ -76,7 +79,7 @@ public class Presence implements Comparable<Presence> {
         } else {
             LocalDateTime ldt = LocalDateTime.of(this.date, this.enterTime);
             LocalDateTime ldt2 = LocalDateTime.of(o.date, o.enterTime);
-    
+
             return ldt.compareTo(ldt2);
         }
     }

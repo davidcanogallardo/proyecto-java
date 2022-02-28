@@ -37,6 +37,7 @@ public class ProductsDAO<Product extends Identificable> implements Persistable<P
         if (hashMap.containsKey(id)) {
             return (Product) hashMap.get(id);
         } else {
+            System.out.println("nulo "+ id);
             return null;
         }
     }
@@ -50,7 +51,7 @@ public class ProductsDAO<Product extends Identificable> implements Persistable<P
     }
 
     public void save(String file) throws IOException {
-        System.out.println("guardando...");
+        System.out.println("guardando products dao...");
         FileOutputStream fos = new FileOutputStream(file);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(this.hashMap);

@@ -50,7 +50,7 @@ public class SupplierDAO<Supplier extends Identificable> implements Persistable<
     }
 
     public void save(String file) throws IOException {
-        System.out.println("guardando...");
+        System.out.println("guardando dao proveedor...");
         FileOutputStream fos = new FileOutputStream(file);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(this.hashMap);

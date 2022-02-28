@@ -50,7 +50,7 @@ public class ClientDAO<Client extends Identificable> implements Persistable<Clie
     }
 
     public void save(String file) throws IOException {
-        System.out.println("guardando...");
+        System.out.println("guardando dao client...");
         FileOutputStream fos = new FileOutputStream(file);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(this.hashMap);

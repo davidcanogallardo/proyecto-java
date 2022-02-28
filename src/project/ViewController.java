@@ -3,20 +3,16 @@ package project;
 import java.util.Scanner;
 import project.Models.Client;
 import project.Models.ClientDAO;
-import project.Models.DAO;
 import project.Models.PresenceRegisterDAO;
 
 import java.util.logging.Logger;
 
 import project.Exceptions.StockInsuficientException;
 import project.Models.Address;
-import project.Models.Client;
-import project.Models.DAO;
 import project.Models.Pack;
 import project.Models.Persistable;
 import project.Models.Person;
 import project.Models.Presence;
-import project.Models.PresenceRegisterDAO;
 import project.Models.Product;
 import project.Models.ProductsDAO;
 import project.Models.Supplier;
@@ -33,35 +29,30 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.NumberFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.Scanner;
 import java.util.TreeSet;
 import java.util.Locale.Category;
 
 public class ViewController {
     private Scanner keyboard = new Scanner(System.in);
 
-    private ClientDAO daoClient = new ClientDAO<>();
-    private SupplierDAO daoSupplier = new SupplierDAO<>();
-    private ProductsDAO daoProduct = new ProductsDAO<>();
+    // DAOs
+    private ClientDAO<Client> daoClient = new ClientDAO<>();
+    private SupplierDAO<Supplier> daoSupplier = new SupplierDAO<>();
+    private ProductsDAO<Product> daoProduct = new ProductsDAO<>();
     private PresenceRegisterDAO prd = new PresenceRegisterDAO();
 
+    // Variables para menús
     private Product prod;
     private Pack pack;
     private int id;
@@ -72,25 +63,27 @@ public class ViewController {
     private String surname;
     private String dni;
     private Person person;
+
+    // Fechas
     private LocalDate startCatalog;
     private LocalDate endCatalog;
     private LocalDate date;
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    //
     private static final String PRODUCT_PATH = "products.dat";
     private static final String SUPPLIER_PATH = "suppliers.dat";
     private static final String CLIENT_PATH = "clients.dat";
 
     // Internacionalizacion
-    private Locale lDefault = Locale.getDefault(Category.DISPLAY);
-    private Locale lFormat = Locale.getDefault(Category.FORMAT);
     private ResourceBundle text;
-    NumberFormat nFormatter;
-    NumberFormat cFormatter;
 
+    // Logs
     private static Logger logger = Logger.getLogger(ViewController.class.getName());
 
     public void run() throws IOException {
-
+        Locale lDefault = Locale.getDefault(Category.DISPLAY);
+        System.out.println(lDefault.toLanguageTag());
         // try (DataInputStream dis = new DataInputStream(
         // new BufferedInputStream(new FileInputStream("a.txt")))) {
         // while (dis.available() > 0) {
@@ -120,7 +113,6 @@ public class ViewController {
         // System.out.println(dtf.parse("dsfdsfvsd"));
         // getDate(false);
 
-        System.out.println(lDefault.toLanguageTag());
         // ProductsDAO dd = new ProductsDAO<>();
         // File productFile = new File(PRODUCT_PATH);
 
@@ -132,8 +124,9 @@ public class ViewController {
         // System.out.println(lFormat.equals(new Locale("en", "US")));
         // setLocale();
 
-        GenericFormater.setLocale();
-        text = GenericFormater.getText();
+        GenericFormatter.setLocale();
+        text = GenericFormatter.getText();
+        // GenericFormatter.owo();
 
         // System.out.println(GenericFormater.formatNumber(100000));
         // System.out.println(GenericFormater.formatPrice(100000));
@@ -142,29 +135,14 @@ public class ViewController {
 
         try {
             mainMenu();
-        } catch (DateTimeParseException e) {
-            System.out.println(e);
+        } catch (Exception e) {
+            // guardo la excepcion
+            logger.warning(e.toString());
+            System.out.println("\n" + e);
             // Caza cualquier excepción y guarda todos los DAOs
             // TODO no guarda todos los daos
             saveDAO();
         }
-    }
-
-    private void setLocale() {
-        if (!lDefault.equals(new Locale("es", "ES")) && !lDefault.equals(new Locale("ca", "ES"))) {
-            System.out.println("1");
-            lDefault = new Locale("es", "ES");
-            System.out.println(lDefault);
-        }
-        if (!lFormat.equals(new Locale("es", "ES")) && !lFormat.equals(new Locale("ca", "ES"))) {
-            System.out.println("2");
-            lFormat = new Locale("es", "ES");
-            System.out.println(lFormat);
-        }
-		nFormatter = NumberFormat.getNumberInstance(lFormat);
-		cFormatter = NumberFormat.getCurrencyInstance(lFormat);
-		
-        text = ResourceBundle.getBundle("Texts", lDefault);
     }
 
     public void loadDAO() throws IOException {
@@ -209,13 +187,13 @@ public class ViewController {
     public void mainMenu() throws IOException {
         String option;
         do {
-            System.out.println(text.getString("000")+":");
+            System.out.println(text.getString("000") + ":");
             System.out.println("[0] " + text.getString("001"));
             System.out.println("[1] " + text.getString("002"));
             System.out.println("[2] " + text.getString("003"));
             System.out.println("[3] " + text.getString("004"));
             System.out.println("[4] " + text.getString("005"));
-            System.out.print(text.getString("006")+": ");
+            System.out.print(text.getString("006") + ": ");
             option = keyboard.nextLine();
 
             switch (option) {
@@ -248,7 +226,6 @@ public class ViewController {
     private void clockInOutMenu() {
         int id = 1;
         String option;
-        DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("HH:mm:ss");
 
         do {
             System.out.println("Elige una opción:");
@@ -494,11 +471,11 @@ public class ViewController {
             System.out.println(prod.toString() + "\n");
         }
         // for (Product product : hm.values()) {
-        //     if (product.getEndCatalog().isBefore(date)) {
-        //         System.out.print("Días de diferencia: ");
-        //         System.out.println(ChronoUnit.DAYS.between(product.getEndCatalog(), date));
-        //         System.out.println(product.toString() + "\n");
-        //     }
+        // if (product.getEndCatalog().isBefore(date)) {
+        // System.out.print("Días de diferencia: ");
+        // System.out.println(ChronoUnit.DAYS.between(product.getEndCatalog(), date));
+        // System.out.println(product.toString() + "\n");
+        // }
         // }
     }
 
@@ -601,8 +578,7 @@ public class ViewController {
             prod.setName(name);
         }
 
-
-        price = getDouble("Precio [" + GenericFormater.formatPrice(prod.getPrice()) + "]: ", true);
+        price = getDouble("Precio [" + GenericFormatter.formatPrice(prod.getPrice()) + "]: ", true);
         if (price != 0) {
             prod.setPrice(price);
         }
@@ -628,7 +604,7 @@ public class ViewController {
             System.out.println("Producto modificado!\n");
             System.out.println(pack.toString() + "\n");
         } else {
-            stock = getInteger("Stock [" + GenericFormater.formatNumber(prod.getStock()) + "]: ", true);
+            stock = getInteger("Stock [" + GenericFormatter.formatNumber(prod.getStock()) + "]: ", true);
             if (stock != null) {
                 prod.setStock(stock);
             }
@@ -675,15 +651,16 @@ public class ViewController {
                         case "1":
                             id = getExistingId(daoProduct, "ID de un producto: ");
                             stock = getInteger("Stock que añadir: ", false);
-                            prod = (Product) daoProduct.get(id);
+                            prod = daoProduct.get(id);
                             prod.putStock(stock);
+                            System.out.println("Stock añadido!");
                             break;
                         case "2":
                             String filePath = getString("Nombre del archivo donde leer la comanda: ", false);
-                            System.out.println(filePath);
+                            // System.out.println(filePath);
                             if (fileIsValid(filePath)) {
                                 putStockFromFile(filePath);
-                                System.out.println("Stock añadido");
+                                System.out.println("Stock añadido!");
                             }
                             break;
                     }
@@ -692,8 +669,10 @@ public class ViewController {
                 case "2":
                     id = getExistingId(daoProduct, "ID de un producto: ");
                     stock = getInteger("Stock que quitar: ", false);
+                    prod = daoProduct.get(id);
                     try {
                         prod.takeStock(stock);
+                        System.out.println("Stock quitado!");
                     } catch (StockInsuficientException e) {
                         System.out.println("No puedes quitar tanto stock al producto!");
                         // e.printStackTrace();
@@ -712,20 +691,23 @@ public class ViewController {
     }
 
     private void putStockFromFile(String filePathString) throws FileNotFoundException, IOException {
-        int id;
+        String id;
+        Integer idInt;
         int quantity;
+        // TODO 
         try (DataInputStream dis = new DataInputStream(
                 new BufferedInputStream(new FileInputStream(filePathString)))) {
             while (dis.available() > 0) {
-                id = dis.readInt();
+                id = dis.readUTF();
                 quantity = dis.readInt();
-                if (id != 0) {
+                if (!id.equals("0")) {
                     // System.out.println(id + " " + quantity);
-                    prod = (Product) daoProduct.get(id);
+                    idInt = Integer.parseInt(id);
+                    prod = daoProduct.get(idInt);
                     if (prod != null) {
                         prod.putStock(quantity);
                     } else {
-                        // System.out.println("producto id: "+ id + "no existe");
+                        // System.out.println("producto id: " + id + "no existe");
                     }
                 }
             }

@@ -1,0 +1,12 @@
+feb 28, 2022 4:32:52 P. M. project.ViewController run
+WARNING: java.util.NoSuchElementException: No line found
+feb 28, 2022 4:39:40 P. M. project.ViewController run
+WARNING: java.util.NoSuchElementException: No line found
+feb 28, 2022 4:43:28 P. M. project.ViewController run
+WARNING: java.util.NoSuchElementException: No line found
+feb 28, 2022 4:49:53 P. M. project.ViewController run
+WARNING: java.util.NoSuchElementException: No line found
+feb 28, 2022 4:51:16 P. M. project.ViewController run
+WARNING: java.lang.NullPointerException: Cannot invoke "project.Models.Product.takeStock(int)" because "this.prod" is null
+feb 28, 2022 4:52:16 P. M. project.ViewController run
+WARNING: java.lang.NullPointerException: Cannot invoke "project.Models.Product.takeStock(int)" because "this.prod" is null
