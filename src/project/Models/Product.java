@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import project.GenericFormater;
 import project.Exceptions.StockInsuficientException;
 
 public class Product implements Identificable, Serializable, Comparable<Product>, Cloneable {
@@ -65,8 +66,10 @@ public class Product implements Identificable, Serializable, Comparable<Product>
 
     @Override
     public String toString() {
-        return "Product [id=" + id + ", name=" + name + ", price=" + price
-                + ", startCatalog=" + startCatalog + ", endCatalog=" + endCatalog + ", stock=" + stock + "]";
+        // GenericFormater.formatNumber()
+        // GenericFormater.formatPrice()
+        return "Product [id=" + id + ", name=" + name + ", price=" + GenericFormater.formatPrice(price)
+        + ", startCatalog=" + startCatalog + ", endCatalog=" + endCatalog + ", stock=" + GenericFormater.formatNumber(stock) + "]";
     }
 
     public void putStock(int num) {

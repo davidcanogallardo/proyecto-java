@@ -130,8 +130,15 @@ public class ViewController {
 
         loadDAO();
         // System.out.println(lFormat.equals(new Locale("en", "US")));
-        setLocale();
-        System.out.println(cFormatter.format(43));
+        // setLocale();
+
+        GenericFormater.setLocale();
+        text = GenericFormater.getText();
+
+        // System.out.println(GenericFormater.formatNumber(100000));
+        // System.out.println(GenericFormater.formatPrice(100000));
+
+        // System.out.println(cFormatter.format(43));
 
         try {
             mainMenu();
@@ -594,7 +601,8 @@ public class ViewController {
             prod.setName(name);
         }
 
-        price = getDouble("Precio [" + prod.getPrice() + "]: ", true);
+
+        price = getDouble("Precio [" + GenericFormater.formatPrice(prod.getPrice()) + "]: ", true);
         if (price != 0) {
             prod.setPrice(price);
         }
@@ -611,7 +619,7 @@ public class ViewController {
 
         if (prod instanceof Pack) {
             Pack pack = (Pack) prod;
-            discount = getDiscount("Descuento (0-100) [" + pack.getDiscount() + "]: ", true);
+            discount = getDiscount("Descuento (0-100) [" + pack.getDiscount() + "% ]: ", true);
             if (discount != null) {
                 pack.setDiscount(discount);
             }
@@ -620,7 +628,7 @@ public class ViewController {
             System.out.println("Producto modificado!\n");
             System.out.println(pack.toString() + "\n");
         } else {
-            stock = getInteger("Stock [" + prod.getStock() + "]: ", true);
+            stock = getInteger("Stock [" + GenericFormater.formatNumber(prod.getStock()) + "]: ", true);
             if (stock != null) {
                 prod.setStock(stock);
             }

@@ -15,7 +15,16 @@ public class main {
         //     fh.setFormatter(new SimpleFormatter());
         //     logger.addHandler(fh);
         //     logger.setLevel(Level.ALL);
+        System.out.print("null: ");
+            // System.out.println(GenericFormater.formatNumber((Integer)null));
+            // System.out.println(GenericFormater.formatPrice((Double)null));
+            // GenericFormater.owo();
             
+            // System.out.println(GenericFormater.getOwo());
+
+
+
+
             ViewController v = new ViewController();
             v.run();
         // } catch (IOException ex) {
