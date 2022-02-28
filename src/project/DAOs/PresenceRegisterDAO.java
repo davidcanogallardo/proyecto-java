@@ -1,8 +1,10 @@
-package project.Models;
+package project.DAOs;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.TreeSet;
+
+import project.Classes.Presence;
 
 public class PresenceRegisterDAO {
     public TreeSet<Presence> hashSet = new TreeSet<>();

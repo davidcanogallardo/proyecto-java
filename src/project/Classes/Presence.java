@@ -1,10 +1,10 @@
-package project.Models;
+package project.Classes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import project.GenericFormatter;
+import project.Utils.GenericFormatter;
 
 public class Presence implements Comparable<Presence> {
     private Integer id;

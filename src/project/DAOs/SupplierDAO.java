@@ -1,4 +1,4 @@
-package project.Models;
+package project.DAOs;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,6 +11,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import project.Models.Identificable;
+import project.Models.Persistable;
 
 public class SupplierDAO<Supplier extends Identificable> implements Persistable<Supplier>, Serializable {
     private HashMap<Integer, Supplier> hashMap = new HashMap<>();

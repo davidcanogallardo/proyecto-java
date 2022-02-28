@@ -1,22 +1,23 @@
 package project;
 
 import java.util.Scanner;
-import project.Models.Client;
-import project.Models.ClientDAO;
-import project.Models.PresenceRegisterDAO;
-
 import java.util.logging.Logger;
 
+import project.Classes.Address;
+import project.Classes.Client;
+import project.Classes.Pack;
+import project.Classes.Person;
+import project.Classes.Presence;
+import project.Classes.Product;
+import project.Classes.Supplier;
+import project.DAOs.ClientDAO;
+import project.DAOs.PresenceRegisterDAO;
+import project.DAOs.ProductsDAO;
+import project.DAOs.SupplierDAO;
 import project.Exceptions.StockInsuficientException;
-import project.Models.Address;
-import project.Models.Pack;
 import project.Models.Persistable;
-import project.Models.Person;
-import project.Models.Presence;
-import project.Models.Product;
-import project.Models.ProductsDAO;
-import project.Models.Supplier;
-import project.Models.SupplierDAO;
+import project.Utils.GenericFormatter;
+import project.Utils.MenuUtils;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -84,54 +85,11 @@ public class ViewController {
     public void run() throws IOException {
         Locale lDefault = Locale.getDefault(Category.DISPLAY);
         System.out.println(lDefault.toLanguageTag());
-        // try (DataInputStream dis = new DataInputStream(
-        // new BufferedInputStream(new FileInputStream("a.txt")))) {
-        // while (dis.available() > 0) {
-        // System.out.println(dis.readInt());
-        // System.out.println(dis.readInt());
-        // }
-        // }
-
-        // DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        // LocalDate owo = LocalDate.parse("22/05/2000", dtf);
-        // System.out.println((owo.format(dtf)));
-
-        // DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("HH:mm:ss");
-        // LocalTime now = LocalTime.now();
-        // System.out.println(dtf2.format(now));
-
-        // LocalDate today = LocalDate.now();
-        // System.out.println(today);
-
-        // LocalDateTime ldt = LocalDateTime.of(LocalDate.now(), LocalTime.now());
-        // LocalDateTime ldt2 = LocalDateTime.of(LocalDate.now(),
-        // LocalTime.now().plusHours(1));
-        // System.out.println(ldt.compareTo(ldt2));
-
-        // LocalDate date = LocalDate.of(2022,02,18);
-        // System.out.println(dtf.parse("22/05/2000"));
-        // System.out.println(dtf.parse("dsfdsfvsd"));
-        // getDate(false);
-
-        // ProductsDAO dd = new ProductsDAO<>();
-        // File productFile = new File(PRODUCT_PATH);
-
-        // dd.load(PRODUCT_PATH);
-
-        // System.out.println(dd.getMap().toString());
 
         loadDAO();
-        // System.out.println(lFormat.equals(new Locale("en", "US")));
-        // setLocale();
 
         GenericFormatter.setLocale();
         text = GenericFormatter.getText();
-        // GenericFormatter.owo();
-
-        // System.out.println(GenericFormater.formatNumber(100000));
-        // System.out.println(GenericFormater.formatPrice(100000));
-
-        // System.out.println(cFormatter.format(43));
 
         try {
             mainMenu();
@@ -216,7 +174,7 @@ public class ViewController {
                     saveDAO();
                     break;
                 default:
-                    deleteLine(7);
+                    MenuUtils.deleteLine(7);
                     System.out.println("Introduce una opción correcta!");
                     break;
             }
@@ -241,7 +199,7 @@ public class ViewController {
 
             switch (option) {
                 case "1":
-                    id = getInteger("Id con el que quieres fichar: ", false);
+                    id = MenuUtils.getInteger("Id con el que quieres fichar: ", false);
                     LocalTime now = LocalTime.now();
 
                     Presence p = new Presence(id, today, now);
@@ -253,7 +211,7 @@ public class ViewController {
                     }
                     break;
                 case "2":
-                    id = getInteger("Id con el que quieres fichar: ", false);
+                    id = MenuUtils.getInteger("Id con el que quieres fichar: ", false);
                     if (prd.addLeaveTime(id)) {
                         System.out.println("Has fichado de salida");
                     } else {
@@ -266,7 +224,7 @@ public class ViewController {
                 case "0":
                     break;
                 default:
-                    deleteLine(7);
+                    MenuUtils.deleteLine(7);
                     System.out.println("Introduce una opción correcta!");
                     break;
             }
@@ -298,7 +256,7 @@ public class ViewController {
                 case "1":
                     System.out.println("");
                     do {
-                        option = getString("Qué quieres añadir? (producto/pack) [producto] ", true);
+                        option = MenuUtils.getString("Qué quieres añadir? (producto/pack) [producto] ", true);
                         if (option.equals("")) {
                             answer = "producto";
                         } else {
@@ -351,7 +309,7 @@ public class ViewController {
                     break;
                 case "8":
                     String today = LocalDate.now().format(dtf);
-                    date = getDate("Introduce una fecha [" + today + "]: ", true);
+                    date = MenuUtils.getDate("Introduce una fecha [" + today + "]: ", true);
                     if (date != null) {
                         listDiscontinuedProducts(date);
                     } else {
@@ -363,7 +321,7 @@ public class ViewController {
                     System.out.println("\n");
                     break;
                 default:
-                    deleteLine(9);
+                    MenuUtils.deleteLine(9);
                     System.out.println("Introduce una opción correcta!");
                     break;
             }
@@ -393,9 +351,9 @@ public class ViewController {
 
                 // Obtener el pack que añadir al producto
                 do {
-                    id = getExistingId(daoProduct, "ID del pack al que añadir el producto: ");
+                    id = MenuUtils.getExistingId(daoProduct, "ID del pack al que añadir el producto: ");
                     if (!(daoProduct.get(id) instanceof Pack)) {
-                        deleteLine(2);
+                        MenuUtils.deleteLine(2);
                         System.out.println("Elige un pack");
                     }
                 } while (!(daoProduct.get(id) instanceof Pack));
@@ -410,9 +368,9 @@ public class ViewController {
                     // Obtener el producto que añadir
                     // TODO añadir aviso prod repetido
                     do {
-                        id = getExistingId(daoProduct, "ID del producto que añadir al pack: ");
+                        id = MenuUtils.getExistingId(daoProduct, "ID del producto que añadir al pack: ");
                         if (daoProduct.get(id) instanceof Pack) {
-                            deleteLine(2);
+                            MenuUtils.deleteLine(2);
                             System.out.println("El producto no puede ser un pack");
                         }
                     } while (daoProduct.get(id) instanceof Pack);
@@ -455,7 +413,7 @@ public class ViewController {
                     System.out.println("Pack repetido");
                 }
             } else if (!"0".equals(option)) {
-                deleteLine(6);
+                MenuUtils.deleteLine(6);
                 System.out.println("Introduce una opción correcta!");
             }
         } while (!"0".equals(option));
@@ -523,19 +481,19 @@ public class ViewController {
     private void addProduct(boolean isPack) {
         System.out.println("Introduce las propiedades del producto:\n");
         // Pedir un ID de un producto que exista
-        id = getFreeId(daoProduct, "ID del producto: ");
+        id = MenuUtils.getFreeId(daoProduct, "ID del producto: ");
 
-        name = getString("Nombre: ", false);
-        price = getDouble("Precio: ", false);
-        startCatalog = getDate("Introduce la fecha de inicio del catálogo (dd/MM/yyyy): ", false);
-        endCatalog = getDate("Introduce la fecha de fin del catálogo (dd/MM/yyyy): ", false);
+        name = MenuUtils.getString("Nombre: ", false);
+        price = MenuUtils.getDouble("Precio: ", false);
+        startCatalog = MenuUtils.getDate("Introduce la fecha de inicio del catálogo (dd/MM/yyyy): ", false);
+        endCatalog = MenuUtils.getDate("Introduce la fecha de fin del catálogo (dd/MM/yyyy): ", false);
 
         // Según si quiere añadir un pack o producto pide diferentes propiedades
         if (!isPack) {
-            stock = getInteger("Stock: ", false);
+            stock = MenuUtils.getInteger("Stock: ", false);
             prod = new Product(id, name, price, stock, startCatalog, endCatalog);
         } else {
-            discount = getDiscount("Descuento (0-100): ", false);
+            discount = MenuUtils.getDiscount("Descuento (0-100): ", false);
             // lista de productos de un pack (vacía por defecto)
             // ArrayList<Integer> productList = new ArrayList<>();
             TreeSet<Product> productList = new TreeSet<>();
@@ -554,7 +512,7 @@ public class ViewController {
 
     private void searchProduct() {
         System.out.println();
-        id = getInteger("ID del producto: ", false);
+        id = MenuUtils.getInteger("ID del producto: ", false);
         prod = (Product) daoProduct.get(id);
         if (prod != null) {
             System.out.println("\n" + prod.toString() + "\n");
@@ -567,35 +525,35 @@ public class ViewController {
         // TODO modificar fecha catalogo
         System.out.println("");
         // Pedir un ID de un producto que exista
-        id = getExistingId(daoProduct, "ID del producto que quieres modificar: ");
+        id = MenuUtils.getExistingId(daoProduct, "ID del producto que quieres modificar: ");
 
         prod = (Product) daoProduct.get(id);
 
         // Reemplaza las propiedades del producto
         // si el usuario introduce algo
-        name = getString("Nombre [" + prod.getName() + "]: ", true);
+        name = MenuUtils.getString("Nombre [" + prod.getName() + "]: ", true);
         if (!name.equals("")) {
             prod.setName(name);
         }
 
-        price = getDouble("Precio [" + GenericFormatter.formatPrice(prod.getPrice()) + "]: ", true);
+        price = MenuUtils.getDouble("Precio [" + GenericFormatter.formatPrice(prod.getPrice()) + "]: ", true);
         if (price != 0) {
             prod.setPrice(price);
         }
 
-        startCatalog = getDate("Inicio catálogo [" + prod.getStartCatalog().format(dtf) + "]: ", true);
+        startCatalog = MenuUtils.getDate("Inicio catálogo [" + prod.getStartCatalog().format(dtf) + "]: ", true);
         if (startCatalog != null) {
             prod.setStartCatalog(startCatalog);
         }
 
-        endCatalog = getDate("Fin catálogo [" + prod.getEndCatalog().format(dtf) + "]: ", true);
+        endCatalog = MenuUtils.getDate("Fin catálogo [" + prod.getEndCatalog().format(dtf) + "]: ", true);
         if (endCatalog != null) {
             prod.setEndCatalog(endCatalog);
         }
 
         if (prod instanceof Pack) {
             Pack pack = (Pack) prod;
-            discount = getDiscount("Descuento (0-100) [" + pack.getDiscount() + "% ]: ", true);
+            discount = MenuUtils.getDiscount("Descuento (0-100) [" + pack.getDiscount() + "% ]: ", true);
             if (discount != null) {
                 pack.setDiscount(discount);
             }
@@ -604,7 +562,7 @@ public class ViewController {
             System.out.println("Producto modificado!\n");
             System.out.println(pack.toString() + "\n");
         } else {
-            stock = getInteger("Stock [" + GenericFormatter.formatNumber(prod.getStock()) + "]: ", true);
+            stock = MenuUtils.getInteger("Stock [" + GenericFormatter.formatNumber(prod.getStock()) + "]: ", true);
             if (stock != null) {
                 prod.setStock(stock);
             }
@@ -617,7 +575,7 @@ public class ViewController {
     private void deleteProduct() {
         System.out.println("\nIntroduce el id del producto que quieres borrar:");
         // Pedir un ID de un producto que exista
-        id = getInteger("ID del producto: ", false);
+        id = MenuUtils.getInteger("ID del producto: ", false);
         if (daoProduct.get(id) != null) {
             daoProduct.delete(daoProduct.get(id));
             System.out.println("\nProducto borrado!\n");
@@ -649,16 +607,16 @@ public class ViewController {
                     // TODO el menu bien
                     switch (option) {
                         case "1":
-                            id = getExistingId(daoProduct, "ID de un producto: ");
-                            stock = getInteger("Stock que añadir: ", false);
+                            id = MenuUtils.getExistingId(daoProduct, "ID de un producto: ");
+                            stock = MenuUtils.getInteger("Stock que añadir: ", false);
                             prod = daoProduct.get(id);
                             prod.putStock(stock);
                             System.out.println("Stock añadido!");
                             break;
                         case "2":
-                            String filePath = getString("Nombre del archivo donde leer la comanda: ", false);
+                            String filePath = MenuUtils.getString("Nombre del archivo donde leer la comanda: ", false);
                             // System.out.println(filePath);
-                            if (fileIsValid(filePath)) {
+                            if (MenuUtils.fileIsValid(filePath)) {
                                 putStockFromFile(filePath);
                                 System.out.println("Stock añadido!");
                             }
@@ -667,8 +625,8 @@ public class ViewController {
                     System.out.println("");
                     break;
                 case "2":
-                    id = getExistingId(daoProduct, "ID de un producto: ");
-                    stock = getInteger("Stock que quitar: ", false);
+                    id = MenuUtils.getExistingId(daoProduct, "ID de un producto: ");
+                    stock = MenuUtils.getInteger("Stock que quitar: ", false);
                     prod = daoProduct.get(id);
                     try {
                         prod.takeStock(stock);
@@ -683,7 +641,7 @@ public class ViewController {
                     System.out.println("\n");
                     break;
                 default:
-                    deleteLine(6);
+                    MenuUtils.deleteLine(6);
                     System.out.println("Introduce una opción correcta!");
                     break;
             }
@@ -694,7 +652,7 @@ public class ViewController {
         String id;
         Integer idInt;
         int quantity;
-        // TODO 
+        // TODO
         try (DataInputStream dis = new DataInputStream(
                 new BufferedInputStream(new FileInputStream(filePathString)))) {
             while (dis.available() > 0) {
@@ -718,7 +676,7 @@ public class ViewController {
     private void saveOrderFile() throws IOException {
         String id = "";
         String stock = "";
-        String filePath = getString("Nombre del archivo donde guardar la comanda: ", false);
+        String filePath = MenuUtils.getString("Nombre del archivo donde guardar la comanda: ", false);
         Path p = Paths.get(filePath);
         if (Files.notExists(p)) {
             ArrayList<Integer> products = new ArrayList<Integer>();
@@ -729,7 +687,7 @@ public class ViewController {
                     System.out.print("ID: ");
                     id = keyboard.nextLine();
                     if (id.equals("")) {
-                        deleteLine(1);
+                        MenuUtils.deleteLine(1);
                     }
                 } while (id.equals(""));
 
@@ -739,17 +697,17 @@ public class ViewController {
                         System.out.print("Stock: ");
                         stock = keyboard.nextLine();
                         if (stock.equals("")) {
-                            deleteLine(1);
+                            MenuUtils.deleteLine(1);
                         }
                     } while (stock.equals(""));
 
                     if (!stock.equalsIgnoreCase("q")) {
-                        if (isNumber(stock) && isNumber(id) && !stock.equals("0")) {
+                        if (MenuUtils.isNumber(stock) && MenuUtils.isNumber(id) && !stock.equals("0")) {
                             products.add(Integer.parseInt(id));
                             products.add(Integer.parseInt(stock));
                             System.out.println("");
                         } else {
-                            deleteLine(3);
+                            MenuUtils.deleteLine(3);
                             System.out.println("El id y el stock deben ser números y el stock no puede ser 0");
                         }
                     }
@@ -802,7 +760,7 @@ public class ViewController {
                     System.out.println("\n");
                     break;
                 default:
-                    deleteLine(9);
+                    MenuUtils.deleteLine(9);
                     System.out.println("Introduce una opción correcta!");
                     break;
             }
@@ -844,7 +802,7 @@ public class ViewController {
                     System.out.println("\n");
                     break;
                 default:
-                    deleteLine(9);
+                    MenuUtils.deleteLine(9);
                     System.out.println("Introduce una opción correcta!");
                     break;
             }
@@ -855,15 +813,15 @@ public class ViewController {
         System.out.println("\nIntroduce los datos de la persona:");
         // Pedir un ID de un producto que exista
         if (isClient) {
-            id = getFreeId(daoClient, "ID: ");
+            id = MenuUtils.getFreeId(daoClient, "ID: ");
         } else {
-            id = getFreeId(daoSupplier, "ID: ");
+            id = MenuUtils.getFreeId(daoSupplier, "ID: ");
         }
 
         // Pedir datos del cliente/proveedor
-        dni = getValidDni("DNI: ", false);
-        name = getString("Nombre: ", false);
-        surname = getString("Apellido: ", false);
+        dni = MenuUtils.getValidDni("DNI: ", false);
+        name = MenuUtils.getString("Nombre: ", false);
+        surname = MenuUtils.getString("Apellido: ", false);
         Address address = askAddress();
         LinkedHashSet<String> phoneNumber = askPhoneNumber();
 
@@ -894,13 +852,13 @@ public class ViewController {
         String address;
 
         System.out.println("Introduce los datos de la dirección:");
-        locality = getString("Localidad: ", false);
+        locality = MenuUtils.getString("Localidad: ", false);
 
-        province = getString("Provincia: ", false);
+        province = MenuUtils.getString("Provincia: ", false);
 
-        zipCode = getZipCode("Código Postal (número de 5 cifras): ", false);
+        zipCode = MenuUtils.getZipCode("Código Postal (número de 5 cifras): ", false);
 
-        address = getString("Dirección: ", false);
+        address = MenuUtils.getString("Dirección: ", false);
 
         return new Address(locality, province, zipCode, address);
     }
@@ -912,7 +870,7 @@ public class ViewController {
         String phone;
 
         do {
-            phone = getPhoneNumber("Número de teléfono: ");
+            phone = MenuUtils.getPhoneNumber("Número de teléfono: ");
             if (phoneNumber.contains(phone)) {
                 System.out.println("Número de teléfono repetido");
             } else {
@@ -934,7 +892,7 @@ public class ViewController {
     }
 
     private void searchPerson(boolean isClient) {
-        id = getInteger("\nID de la persona: ", false);
+        id = MenuUtils.getInteger("\nID de la persona: ", false);
 
         // Según si es cliente o no busca en una clase u otra
         if (isClient) {
@@ -957,21 +915,21 @@ public class ViewController {
     private void modifyPerson(boolean isClient) {
         // Pedir un ID de un producto que exista
         if (isClient) {
-            person = (Person) daoClient.get(getExistingId(daoClient, "ID: "));
+            person = (Person) daoClient.get(MenuUtils.getExistingId(daoClient, "ID: "));
         } else {
-            person = (Person) daoSupplier.get(getExistingId(daoSupplier, "ID: "));
+            person = (Person) daoSupplier.get(MenuUtils.getExistingId(daoSupplier, "ID: "));
         }
 
         // dni, nombre, apellidos
-        dni = getValidDni("DNI [" + person.getDni() + "]: ", true);
+        dni = MenuUtils.getValidDni("DNI [" + person.getDni() + "]: ", true);
         if (!dni.equals("")) {
             person.setDni(dni);
         }
-        name = getString("Nombre [" + person.getName() + "]: ", true);
+        name = MenuUtils.getString("Nombre [" + person.getName() + "]: ", true);
         if (!name.equals("")) {
             person.setName(name);
         }
-        surname = getString("Apellidos [" + person.getSurname() + "]: ", true);
+        surname = MenuUtils.getString("Apellidos [" + person.getSurname() + "]: ", true);
         if (!surname.equals("")) {
             person.setSurname(surname);
         }
@@ -984,22 +942,22 @@ public class ViewController {
         Address addr = person.getFullAddress();
 
         System.out.println("Introduce los datos de la dirección:");
-        locality = getString("Localidad [" + addr.getLocality() + "]: ", true);
+        locality = MenuUtils.getString("Localidad [" + addr.getLocality() + "]: ", true);
         if (!locality.equals("")) {
             addr.setLocality(locality);
         }
 
-        province = getString("Provincia [" + addr.getProvince() + "]: ", true);
+        province = MenuUtils.getString("Provincia [" + addr.getProvince() + "]: ", true);
         if (!province.equals("")) {
             addr.setProvince(province);
         }
 
-        zipCode = getZipCode("Código Postal [" + addr.getZipCode() + "]: ", true);
+        zipCode = MenuUtils.getZipCode("Código Postal [" + addr.getZipCode() + "]: ", true);
         if (!zipCode.equals("")) {
             addr.setZipCode(zipCode);
         }
 
-        address = getString("Dirección [" + addr.getAddress() + "]: ", true);
+        address = MenuUtils.getString("Dirección [" + addr.getAddress() + "]: ", true);
         if (!address.equals("")) {
             addr.setAddress(address);
         }
@@ -1044,7 +1002,7 @@ public class ViewController {
     private void deletePerson(boolean isClient) {
         System.out.println("");
         // Pedir un ID de un producto que exista
-        id = getInteger("ID del cliente que borrar: ", false);
+        id = MenuUtils.getInteger("ID del cliente que borrar: ", false);
 
         if (isClient) {
             if (daoClient.get(id) == null) {
@@ -1071,240 +1029,5 @@ public class ViewController {
             // System.out.println(cFormatter.format(values.toString()) + "\n");
 
         }
-    }
-
-    /******************************** UTILS **************************************/
-
-    private boolean fileIsValid(String filePath) {
-        File file;
-        Path p = Paths.get(filePath);
-
-        file = new File(filePath);
-        if (Files.notExists(p)) {
-            System.out.println("\nEl archivo no existe!");
-            return false;
-        }
-        if (!file.isFile()) {
-            System.out.println("\nNo es un archivo");
-            return false;
-        }
-        if (!Files.isReadable(p)) {
-            System.out.println("\nEl archivo no tiene permisos de lectura");
-            return false;
-        }
-        return true;
-    }
-
-    private void deleteLine(int linesToDelete) {
-        System.out.print(String.format("\033[%dA", linesToDelete)); // Move up
-        System.out.print("\033[2K"); // Erase line content
-    }
-
-    private String getPhoneNumber(String question) {
-        String phone;
-        boolean isPhoneNumber = true;
-        String phoneRegex = "\\d{9}";
-        do {
-            System.out.println("");
-            System.out.print(question);
-            phone = keyboard.nextLine();
-            // TODO trim
-            // https://www.geeksforgeeks.org/java-string-trim-method-example/
-            if (phone.equals("")) {
-                isPhoneNumber = false;
-            } else if (phone.matches(phoneRegex)) {
-                isPhoneNumber = true;
-            } else {
-                isPhoneNumber = false;
-            }
-        } while (!isPhoneNumber);
-
-        return phone;
-    }
-
-    private Integer getInteger(String question, boolean returnNull) {
-        String num;
-        do {
-            System.out.print(question);
-            num = keyboard.nextLine();
-            if (returnNull && num.equals("")) {
-                return null;
-            } else {
-                if (!isNumber(num)) {
-                    deleteLine(1);
-                }
-            }
-        } while (!isNumber(num));
-
-        return Integer.parseInt(num);
-    }
-
-    private double getDouble(String question, boolean returnNull) {
-        boolean invalidDouble = true;
-        double value = 0;
-        String doubleStr;
-        System.out.println("\n");
-        do {
-            System.out.print(question);
-            doubleStr = keyboard.nextLine();
-            try {
-                invalidDouble = false;
-                if (returnNull && doubleStr.equals("")) {
-                    return 0;
-                }
-                value = Double.parseDouble(doubleStr);
-            } catch (Exception InputMismatchException) {
-                deleteLine(3);
-                logger.warning("Input error");
-                // System.out.println("Precio incorrecto");
-                invalidDouble = true;
-            }
-        } while (invalidDouble);
-
-        return value;
-    }
-
-    private String getString(String question, boolean returnEmpty) {
-        String string;
-        do {
-            System.out.print(question);
-            string = keyboard.nextLine();
-            if (returnEmpty && string.equals("")) {
-                return "";
-            } else {
-                if (string.equals("")) {
-                    deleteLine(1);
-                }
-            }
-        } while (string.equals(""));
-        return string;
-    }
-
-    private boolean isNumber(String num) {
-        String numberRegex = "\\d{1,10}";
-        return num.matches(numberRegex);
-    }
-
-    private Integer getDiscount(String question, boolean returnEmpty) {
-        Integer num;
-        do {
-            num = getInteger(question, returnEmpty);
-            if (!returnEmpty) {
-                if (num > 100) {
-                    deleteLine(1);
-                }
-            } else {
-                num = 0;
-            }
-        } while ((num > 100) && !returnEmpty);
-        return num;
-    }
-
-    private int getFreeId(Persistable dao, String question) {
-        Object obj;
-        boolean exists;
-        do {
-            id = getInteger(question, false);
-            obj = dao.get(id);
-            if (obj != null) {
-                exists = true;
-                deleteLine(2);
-                System.out.println("Ya existe ese ID!");
-            } else {
-                exists = false;
-            }
-        } while (exists);
-
-        return id;
-    }
-
-    private int getExistingId(Persistable dao, String question) {
-        Object obj;
-        boolean exists;
-        do {
-            id = getInteger(question, false);
-            obj = dao.get(id);
-            if (obj != null) {
-                exists = true;
-            } else {
-                exists = false;
-                deleteLine(2);
-                System.out.println("No existe ese ID!");
-            }
-        } while (!exists);
-
-        return id;
-    }
-
-    private String getValidDni(String question, boolean returnEmpty) {
-        String dniRegex = "\\d{8}[a-zA-Z]{1}";
-        System.out.println("");
-        do {
-            do {
-                dni = getString(question, returnEmpty);
-                if (dni.equals("") && returnEmpty) {
-                    return "";
-                }
-                if (!dni.matches(dniRegex)) {
-                    deleteLine(2);
-                    System.out.println("Introduce un DNI con 7 números y una letra");
-                }
-            } while (!dni.matches(dniRegex));
-            if (!isDniLetterValid(dni.substring(8), Integer.parseInt(dni.substring(0, 8)))) {
-                deleteLine(2);
-                System.out.println("Introduce un DNI correcto");
-            }
-        } while (!isDniLetterValid(dni.substring(8), Integer.parseInt(dni.substring(0, 8))));
-
-        return dni;
-    }
-
-    private boolean isDniLetterValid(String letter, int num) {
-        String[] letters = {
-                "t", "r", "w", "a", "g", "m", "y", "f", "p", "d", "x", "b",
-                "n", "j", "z", "s", "q", "v", "h", "l", "c", "k", "e"
-        };
-        return letter.equalsIgnoreCase(letters[num % 23]);
-    }
-
-    private String getZipCode(String question, boolean returnEmpty) {
-        String zipRegex = "\\d{5}";
-        String zipCode;
-        System.out.println("");
-        do {
-            zipCode = getString(question, returnEmpty);
-            if (zipCode.equals("") && returnEmpty) {
-                return "";
-            }
-            if (!zipCode.matches(zipRegex)) {
-                deleteLine(3);
-                System.out.println("El código postal es un número de 5 cifras");
-            }
-        } while (!zipCode.matches(zipRegex));
-
-        return zipCode;
-    }
-
-    private LocalDate getDate(String question, boolean returnEmpty) {
-        boolean dateValid = true;
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate inputDate = null;
-
-        do {
-            System.out.print(question);
-            String date = keyboard.nextLine();
-            try {
-                inputDate = LocalDate.parse(date, dtf);
-                dateValid = true;
-            } catch (Exception e) {
-                if (!returnEmpty) {
-                    System.out.println("Introduce una fecha correcta: ");
-                }
-                dateValid = false;
-                // TODO: handle exception
-            }
-        } while (!dateValid && !returnEmpty);
-
-        return inputDate;
     }
 }
