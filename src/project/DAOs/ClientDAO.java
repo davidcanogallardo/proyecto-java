@@ -12,10 +12,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import project.Classes.Client;
 import project.Models.Identificable;
 import project.Models.Persistable;
 
-public class ClientDAO<Client extends Identificable> implements Persistable<Client>, Serializable {
+public class ClientDAO implements Persistable<Client>, Serializable {
     private HashMap<Integer, Client> hashMap = new HashMap<>();
 
     public Client add(Client obj) {

@@ -15,7 +15,7 @@ import project.Classes.Product;
 import project.Classes.Supplier;
 import project.DAOs.ClientDAO;
 import project.DAOs.PresenceRegisterDAO;
-import project.DAOs.ProductsDAO;
+import project.DAOs.ProductDAO;
 import project.DAOs.SupplierDAO;
 import project.Models.Persistable;
 

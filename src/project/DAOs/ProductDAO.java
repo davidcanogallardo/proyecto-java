@@ -1,7 +1,6 @@
 package project.DAOs;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,10 +11,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import project.Classes.Product;
 import project.Models.Identificable;
 import project.Models.Persistable;
 
-public class ProductsDAO<Product extends Identificable> implements Persistable<Product>, Serializable {
+public class ProductDAO implements Persistable<Product>, Serializable {
     private HashMap<Integer, Product> hashMap = new HashMap<>();
 
     public Product add(Product obj) {
@@ -82,14 +82,12 @@ public class ProductsDAO<Product extends Identificable> implements Persistable<P
     public List<Product> getDiscontinuedProducts(LocalDate date) {
         List<Product> list = new ArrayList<Product>();
         for (Product product : hashMap.values()) {
-            Product prod = (Product) product;
-            System.out.println(prod);
-            // if (product.getEndCatalog().isBefore(date)) {
-            //     // System.out.print("Días de diferencia: ");
-            //     // System.out.println(ChronoUnit.DAYS.between(product.getEndCatalog(), date));
-            //     // System.out.println(product.toString() + "\n");
-            //     list.add(product);
-            // }
+            if (product.getEndCatalog().isBefore(date)) {
+                // System.out.print("Días de diferencia: ");
+                // System.out.println(ChronoUnit.DAYS.between(product.getEndCatalog(), date));
+                // System.out.println(product.toString() + "\n");
+                list.add(product);
+            }
         }
 
         return list;

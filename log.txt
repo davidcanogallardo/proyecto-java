@@ -16,3 +16,7 @@ feb 28, 2022 5:14:18 P. M. project.ViewController run
 WARNING: java.util.NoSuchElementException: No line found
 feb 28, 2022 5:14:25 P. M. project.ViewController run
 WARNING: java.util.NoSuchElementException: No line found
+Mar 01, 2022 3:58:13 PM project.ViewController run
+WARNING: java.lang.NullPointerException: temporal
+Mar 01, 2022 4:00:16 PM project.ViewController run
+WARNING: java.lang.NullPointerException: temporal

@@ -11,11 +11,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import project.Classes.Supplier;
 
 import project.Models.Identificable;
 import project.Models.Persistable;
 
-public class SupplierDAO<Supplier extends Identificable> implements Persistable<Supplier>, Serializable {
+
+public class SupplierDAO implements Persistable<Supplier>, Serializable {
     private HashMap<Integer, Supplier> hashMap = new HashMap<>();
 
     public Supplier add(Supplier obj) {
