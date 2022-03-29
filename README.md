@@ -206,3 +206,5 @@ Para fichar de salida la función devuelve un boolean que indica si se ha podido
 En control de presencia se hace en la función clockInOutMenu() de el ViewController
 
 ## Internacionalizacion
+### Ejercicio 1
+### Ejercicio 2
