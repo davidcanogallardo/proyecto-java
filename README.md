@@ -167,7 +167,7 @@ La fecha es el día en el que se ficha de entrada y **salida**.
 Luego he añadido dos contructores uno sin la hora de salida (para fichar de entrada) y otro con todos los campos.
 
 Luego he creado una DAO de Presence con las funciones add para fichar de entrada y addLeaveTime para ficha de salida.
-
+Fichar entrada:
 ```jsx
 public Presence add(Presence obj) {
    for (Presence presence : hashSet) {
@@ -187,6 +187,22 @@ public boolean equals(Object obj) {
    return this.id == obj2.id && this.date.equals(obj2.date) && this.leaveTime == null;
 }
 ```
+Fichar salida:
+```jsx
+public boolean addLeaveTime(int id) {
+ LocalDate today = LocalDate.now();
+ for (Presence presence : this.hashSet) {
+     if (presence.getId() == id && presence.getDate().compareTo(today) == 0 && presence.getLeaveTime() == null) {
+         LocalTime now = LocalTime.now();
+         presence.setLeaveTime(now);
+         return true;
+     }
+ }
+ return false;
+}
+```
+Para fichar de salida la función devuelve un boolean que indica si se ha podido fichar o no. El criterio para poder fichar es que el usuario que se pasa por parámetro haya fichado de entrada hoy, es decir que el id exista en el DAO, su campo de fecha sea hoy y su campo de hora de salida sea nulo.
 
+En control de presencia se hace en la función clockInOutMenu() de el ViewController
 
 ## Internacionalizacion
