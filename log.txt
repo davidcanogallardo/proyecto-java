@@ -20,3 +20,5 @@ Mar 01, 2022 3:58:13 PM project.ViewController run
 WARNING: java.lang.NullPointerException: temporal
 Mar 01, 2022 4:00:16 PM project.ViewController run
 WARNING: java.lang.NullPointerException: temporal
+mar 30, 2022 11:48:41 P. M. project.ViewController run
+WARNING: java.util.NoSuchElementException: No line found
