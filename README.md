@@ -206,5 +206,59 @@ Para fichar de salida la función devuelve un boolean que indica si se ha podido
 En control de presencia se hace en la función clockInOutMenu() de el ViewController
 
 ## Internacionalizacion
-### Ejercicio 1
-### Ejercicio 2
+Para internacionalización he creado una clase estática llamada GenericFormatter. Mediante la función setLocale() (que llamo al principio del código) compruebo el Locale del ordenador y pongo un valor a los atributos de de Locale de la clase:
+
+Atributos para formatar fechas, monedas y números
+```jsx
+    static Locale lDefault = Locale.getDefault(Category.DISPLAY);
+    static Locale lFormat = Locale.getDefault(Category.FORMAT);
+    static NumberFormat  nFormatter;
+    static NumberFormat cFormatter;
+```
+
+Función setLocale():
+```jsx
+public static void setLocale() {
+ if (!lDefault.equals(new Locale("es", "ES")) && !lDefault.equals(new Locale("ca", "ES"))) {
+     System.out.println("1");
+     lDefault = new Locale("es", "ES");
+     System.out.println(lDefault);
+     df = DateFormat.getDateInstance(DateFormat.SHORT, lDefault);
+ }
+ if (!lFormat.equals(new Locale("es", "ES")) && !lFormat.equals(new Locale("ca", "ES"))) {
+     System.out.println("2");
+     lFormat = new Locale("es", "ES");
+     System.out.println(lFormat);
+ }
+nFormatter = NumberFormat.getNumberInstance(lFormat);
+cFormatter = NumberFormat.getCurrencyInstance(lFormat);
+
+ text = ResourceBundle.getBundle("Texts", lDefault);
+}
+```
+
+Para traducir texto tengo un getter del ResourceBundle disponible para llamar en cualquier parte del código.
+```jsx
+public static ResourceBundle getText() {
+ return text;
+}
+```
+Y, por ejemplo, para formatar un número utilizo esta función:
+```jsx
+public static String formatNumber(Integer num) {
+ if (num != null) {
+     return nFormatter.format(num);
+ }
+ return " ";
+}
+```
+
+Que puedo llamar en cualquier parte del código, ejemplo:
+```jsx
+// toString de Product
+@Override
+public String toString() {
+       return "Product [id=" + id + ", name=" + name + ", price=" + GenericFormatter.formatPrice(price)
+       + ", startCatalog=" + GenericFormatter.formatDate(startCatalog) + ", endCatalog=" +                                  GenericFormatter.formatDate(endCatalog) + ", stock=" + GenericFormatter.formatNumber(stock) + "]";
+}
+```
