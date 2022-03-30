@@ -1,4 +1,4 @@
-package project.Classes;
+package project.classes;
 
 import static java.lang.Math.abs;
 
@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashSet;
 
-import project.Models.Identificable;
+import project.models.Identificable;
 
 public abstract class Person implements Identificable, Serializable {
     private Integer id;

@@ -1,4 +1,4 @@
-package project.Exceptions;
+package project.exceptions;
 
 public class StockInsuficientException extends Exception {
     public StockInsuficientException() {

@@ -1,4 +1,4 @@
-package project.Utils;
+package project.utils;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -8,16 +8,16 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
-import project.Classes.Client;
-import project.Classes.Pack;
-import project.Classes.Person;
-import project.Classes.Product;
-import project.Classes.Supplier;
-import project.DAOs.ClientDAO;
-import project.DAOs.PresenceRegisterDAO;
-import project.DAOs.ProductDAO;
-import project.DAOs.SupplierDAO;
-import project.Models.Persistable;
+import project.classes.Client;
+import project.classes.Pack;
+import project.classes.Person;
+import project.classes.Product;
+import project.classes.Supplier;
+import project.dao.ClientDAO;
+import project.dao.PresenceRegisterDAO;
+import project.dao.ProductDAO;
+import project.dao.SupplierDAO;
+import project.models.Persistable;
 
 public class MenuUtils {
     private static Scanner keyboard = new Scanner(System.in);

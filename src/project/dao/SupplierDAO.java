@@ -1,4 +1,4 @@
-package project.DAOs;
+package project.dao;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,10 +11,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import project.Classes.Supplier;
 
-import project.Models.Identificable;
-import project.Models.Persistable;
+import project.classes.Supplier;
+import project.models.Identificable;
+import project.models.Persistable;
 
 
 public class SupplierDAO implements Persistable<Supplier>, Serializable {

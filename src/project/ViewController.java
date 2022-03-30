@@ -3,21 +3,21 @@ package project;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-import project.Classes.Address;
-import project.Classes.Client;
-import project.Classes.Pack;
-import project.Classes.Person;
-import project.Classes.Presence;
-import project.Classes.Product;
-import project.Classes.Supplier;
-import project.DAOs.ClientDAO;
-import project.DAOs.PresenceRegisterDAO;
-import project.DAOs.ProductDAO;
-import project.DAOs.SupplierDAO;
-import project.Exceptions.StockInsuficientException;
-import project.Models.Persistable;
-import project.Utils.GenericFormatter;
-import project.Utils.MenuUtils;
+import project.classes.Address;
+import project.classes.Client;
+import project.classes.Pack;
+import project.classes.Person;
+import project.classes.Presence;
+import project.classes.Product;
+import project.classes.Supplier;
+import project.dao.ClientDAO;
+import project.dao.PresenceRegisterDAO;
+import project.dao.ProductDAO;
+import project.dao.SupplierDAO;
+import project.exceptions.StockInsuficientException;
+import project.models.Persistable;
+import project.utils.GenericFormatter;
+import project.utils.MenuUtils;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -31,6 +31,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -89,7 +90,7 @@ public class ViewController {
         loadDAO();
 
         GenericFormatter.setLocale();
-        text = GenericFormatter.getText();
+        text = GenericFormatter.getResourceBundle();
 
         try {
             mainMenu();
@@ -202,7 +203,7 @@ public class ViewController {
                     id = MenuUtils.getInteger("Id con el que quieres fichar: ", false);
                     LocalTime now = LocalTime.now();
 
-                    Presence p = new Presence(id, today, now);
+                    Presence p = new Presence(id, LocalDateTime.now());
                     if (prd.add(p) != null) {
                         System.out.println("Has fichado de entrada");
                     } else {

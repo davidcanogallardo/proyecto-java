@@ -1,12 +1,12 @@
-package project.Classes;
+package project.classes;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import project.Exceptions.StockInsuficientException;
-import project.Models.Identificable;
-import project.Utils.GenericFormatter;
+import project.exceptions.StockInsuficientException;
+import project.models.Identificable;
+import project.utils.GenericFormatter;
 
 public class Product implements Identificable, Serializable, Comparable<Product>, Cloneable {
     private Integer id;

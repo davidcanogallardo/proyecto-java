@@ -1,4 +1,4 @@
-package project.Models;
+package project.models;
 
 public interface Identificable{
     public Integer getId();

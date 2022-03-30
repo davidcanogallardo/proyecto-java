@@ -1,9 +1,9 @@
-package project.Utils;
+package project.utils;
 
-import java.io.Console;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -11,23 +11,16 @@ import java.util.ResourceBundle;
 import java.util.Locale.Category;
 
 public class GenericFormatter {
-    // Internacionalizacion
     static Locale lDefault = Locale.getDefault(Category.DISPLAY);
     static Locale lFormat = Locale.getDefault(Category.FORMAT);
     static DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
     static ResourceBundle text;
-    static NumberFormat  nFormatter;
+    static NumberFormat nFormatter;
     static NumberFormat cFormatter;
     static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    
-    // static String owo = "not owo";
-    // public static String getOwo() {
-    //     return owo;
-    // }
-    // public static void owo() {
-    //     owo="owo";
-    // }
+    static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
 
     public static void setLocale() {
         if (!lDefault.equals(new Locale("es", "ES")) && !lDefault.equals(new Locale("ca", "ES"))) {
@@ -51,8 +44,7 @@ public class GenericFormatter {
         text = ResourceBundle.getBundle("Texts", lDefault);
     }
 
-
-    public static ResourceBundle getText() {
+    public static ResourceBundle getResourceBundle() {
         return text;
     }
 
@@ -69,6 +61,7 @@ public class GenericFormatter {
         }
         return " ";
     }
+
     public static String formatTime(LocalTime time) {
         if (time != null) {
             return timeFormatter.format(time);
@@ -79,9 +72,14 @@ public class GenericFormatter {
     public static String formatDate(LocalDate date) {
         if (date != null) {
             return date.format(dateFormatter);
-        } 
+        }
         return null;
     }
 
-
+    public static String formatDateTime(LocalDateTime date) {
+        if (date != null) {
+            return date.format(dateTimeFormatter);
+        }
+        return null;
+    }
 }

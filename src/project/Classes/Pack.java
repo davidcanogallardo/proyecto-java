@@ -1,4 +1,4 @@
-package project.Classes;
+package project.classes;
 
 import java.io.Serializable;
 import java.time.LocalDate;
