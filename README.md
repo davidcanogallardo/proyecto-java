@@ -167,38 +167,32 @@ La fecha es el día en el que se ficha de entrada y **salida**.
 Luego he añadido dos contructores uno sin la hora de salida (para fichar de entrada) y otro con todos los campos.
 
 Luego he creado una DAO de Presence con las funciones ``add()`` para fichar de entrada y ``addLeaveTime()`` para ficha de salida.
+
+En el DAO un trabajador podrá fichar (entrada y salida) varias veces solo si ha fichado de salida o aún no ha fichado. Para comprobar que haya fichado de salida al fichar de entrada itero todos los fichajes y comparo que no haya otro fichaje con ese id que tenga la fecha de salida.
+
 Fichar entrada:
 ```jsx
 public Presence add(Presence obj) {
-   for (Presence presence : hashSet) {
-       if (presence.equals(obj)) {
-           return null;
-       }
-   }
-   this.hashSet.add(obj);
-   return obj;
+    for (Presence presence : map) {
+        if (presence.getId() == obj.getId() && presence.getLeaveTime() == null) {
+            return null;
+        }
+    }
+    this.map.add(obj);
+    return obj;
 }
 ```
-En el DAO un trabajador podrá fichar (entrada y salida) varias veces solo si ha fichado de salida o aún no ha fichado. Para comprobar que haya fichado de salida al fichar de entrada itero todos los fichajes y los comparo con ``equals()``. El método ``equals()`` de ``Presence`` lo he redefinido para que dos Presence sean iguales cuando tienen un mismo id y fecha y tienen la hora de salida en null (es decir solo han fichado de entrada)
 
-```jsx
-public boolean equals(Object obj) {
-   Presence obj2 = (Presence) obj;
-   return this.id == obj2.id && this.date.equals(obj2.date) && this.leaveTime == null;
-}
-```
 Fichar salida:
 ```jsx
 public boolean addLeaveTime(int id) {
- LocalDate today = LocalDate.now();
- for (Presence presence : this.hashSet) {
-     if (presence.getId() == id && presence.getDate().compareTo(today) == 0 && presence.getLeaveTime() == null) {
-         LocalTime now = LocalTime.now();
-         presence.setLeaveTime(now);
-         return true;
-     }
- }
- return false;
+    for (Presence presence : this.map) {
+        if (presence.getId() == id && presence.getLeaveTime() == null) {
+            presence.setLeaveTime(LocalDateTime.now());
+            return true;
+        }
+    }
+    return false;
 }
 ```
 Para fichar de salida la función devuelve un boolean que indica si se ha podido fichar o no. El criterio para poder fichar es que el usuario que se pasa por parámetro haya fichado de entrada hoy, es decir que el id exista en el DAO, su campo de fecha sea hoy y su campo de hora de salida sea nulo.
