@@ -1,16 +1,16 @@
 # proyecto-java
 
 ## Control de errores
-En la clase main he creado un logger para el fichero log.txt
+En la clase ``main`` he creado un logger para el fichero log.txt
 
-Luego en la clase ViewController he creado un logger
+Luego en la clase ``ViewController`` he creado un logger
 
 ``` jsx
 // Logs
 private static Logger logger = Logger.getLogger(ViewController.class.getName());
 ```
 
-Y  he añadido un try catch en la función principal de la ViewController para que cace todos los errores y si encuentra un error lo guardará en en el log y guardará la información de los DAOs en un .dat
+Y  he añadido un ``try catch`` en la función principal de la ``ViewController`` para que cace todos los errores y si encuentra un error lo guardará en en el log y guardará la información de los DAOs en un .dat
 ``` jsx
 try {
        mainMenu();
@@ -21,7 +21,7 @@ try {
    }
 ```
 
-He creado una excepcion llamada StockInsuficientException que puede lanzarse en ``stockGestor()`` en el ViewController cuando se quiere quitar más stock de un producto del que tiene.
+He creado una excepcion llamada ``StockInsuficientException`` que puede lanzarse en ``stockGestor()`` en el ``ViewController`` cuando se quiere quitar más stock de un producto del que tiene.
 
 ```jsx
 id = MenuUtils.getExistingId(daoProduct, "ID de un producto: ");
@@ -36,11 +36,11 @@ try {
 }
 ```
 
-Para gestionar el stock he añadido las funciones takeStock y putStock en la clase Product
+Para gestionar el stock he añadido las funciones ``takeStock`` y ``putStock`` en la clase ``Product``
 
 ## Ficheros
 ### Ejercicio 1
-En ``stockGestor()`` en en el ViewController he modificado el menú de añadir stock a un producto para que puedas añadir stock manualmente o a partir de un fichero .dat
+En ``stockGestor()`` en en el ``ViewController`` he modificado el menú de añadir stock a un producto para que puedas añadir stock manualmente o a partir de un fichero .dat
 ```jsx
 System.out.println("\nElige una opción:");
 System.out.println("[0] Volver");
@@ -68,7 +68,7 @@ switch (option) {
 ```
 ### Ejercicio 2
 
-He creado la funciones save() y load() en los DAOs que guardan/lee de un fichero .dat el HashMap del DAO.
+He creado las funciones ``save()`` y ``load()`` en los DAOs que guardan/lee de un fichero .dat el HashMap del DAO.
 
 ### Ejercicio 1 NO DUAL
 He creado una opción en el menú de productos para que pida un ID de producto y el stock para grabarlo en un archivo .dat de un pedido.
@@ -76,14 +76,14 @@ En el .dat guardo primero un ID y luego el stock y al leerlo, leo de dos en dos.
 
 ## Colecciones
 ### Ejercicio 1
-En teoría el HashMap no ordena, pero como a mí me lo hace no he cambiado nada.
+En teoría el HashMap no ordena, pero como a mí me lo hace así que no he cambiado nada.
 
 ### Ejercicio 2 
 En la clase pack he guardado el array de producto como TreeSet.
 Y los teléfonos en un LinkedHashSet
 
 ### Ejercicio 3 
-Para comprobar que el pack no sea repetido he iterado todos los packs del DAO y luego he comparado con .equals() el TreeSet de dicho pack y el del pack que estoy modificando.
+Para comprobar que el pack no sea repetido he iterado todos los packs del DAO y luego he comparado con ``.equals()`` el TreeSet de dicho pack y el del pack que estoy modificando.
 ```jsx
  System.out.println("Comprobando si el pack es repetido...");
  HashMap<Integer, Product> hm = daoProduct.getMap();
@@ -99,7 +99,7 @@ Para comprobar que el pack no sea repetido he iterado todos los packs del DAO y 
 
 
 ### Ejercicio 1 NO DUAL
-He añadido un menú en la función listProducts() para que pregunte qué método de ordenación quiere.
+He añadido un menú en la función ``listProducts()`` para que pregunte qué método de ordenación quiere.
 
 ```jsx
 String option;
@@ -137,8 +137,8 @@ switch (option) {
 
 ## Fechas
 ### Ejercicio 1 
-He añadido al contructor de Products los dos campos que pide y he modificado el menú de añadir Products para que pida una fecha válida.
-En el menú de Products he añadido una opción para que muestre productos descatalogados a partir de una fecha.
+He añadido al constructor de ``Product`` los dos campos que pide y he modificado el menú de añadir Product para que pida una fecha válida.
+En el menú de Product he añadido una opción para que muestre productos descatalogados a partir de una fecha.
 ```jsx
 String today = LocalDate.now().format(dtf);
 date = MenuUtils.getDate("Introduce una fecha [" + today + "]: ", true);
@@ -156,7 +156,7 @@ for (Product prod : list) {
 ```
 
 ### Ejercicio 1 NO DUAL
-Para el control de persistencia he creado la Clase Presence con los campos
+Para el control de persistencia he creado la clase ``Presence`` con los campos
 - id
 - fecha 
 - hora entrada
@@ -166,7 +166,7 @@ La fecha es el día en el que se ficha de entrada y **salida**.
 
 Luego he añadido dos contructores uno sin la hora de salida (para fichar de entrada) y otro con todos los campos.
 
-Luego he creado una DAO de Presence con las funciones add para fichar de entrada y addLeaveTime para ficha de salida.
+Luego he creado una DAO de Presence con las funciones ``add()`` para fichar de entrada y ``addLeaveTime()`` para ficha de salida.
 Fichar entrada:
 ```jsx
 public Presence add(Presence obj) {
@@ -179,7 +179,7 @@ public Presence add(Presence obj) {
    return obj;
 }
 ```
-En el DAO un trabajador podrá fichar (entrada y salida) varias veces solo si ha fichado de salida o aún no ha fichado. Para comprobar que haya fichado de salida al fichar de entrada itero todos los fichajes y los comparo con equals(). El método equals() de Presence lo he redefinido para que dos Presence sean iguales cuando tienen un mismo id y fecha y tienen la hora de salida en null (es decir solo han fichado de entrada)
+En el DAO un trabajador podrá fichar (entrada y salida) varias veces solo si ha fichado de salida o aún no ha fichado. Para comprobar que haya fichado de salida al fichar de entrada itero todos los fichajes y los comparo con ``equals()``. El método ``equals()`` de ``Presence`` lo he redefinido para que dos Presence sean iguales cuando tienen un mismo id y fecha y tienen la hora de salida en null (es decir solo han fichado de entrada)
 
 ```jsx
 public boolean equals(Object obj) {
@@ -203,10 +203,10 @@ public boolean addLeaveTime(int id) {
 ```
 Para fichar de salida la función devuelve un boolean que indica si se ha podido fichar o no. El criterio para poder fichar es que el usuario que se pasa por parámetro haya fichado de entrada hoy, es decir que el id exista en el DAO, su campo de fecha sea hoy y su campo de hora de salida sea nulo.
 
-En control de presencia se hace en la función clockInOutMenu() de el ViewController
+En control de presencia se hace en la función ``clockInOutMenu()`` de el ``ViewController``.
 
 ## Internacionalizacion
-Para internacionalización he creado una clase estática llamada GenericFormatter. Mediante la función setLocale() (que llamo al principio del código) compruebo el Locale del ordenador y pongo un valor a los atributos de de Locale de la clase:
+Para internacionalización he creado una clase estática llamada ``GenericFormatter``. Mediante la función ``setLocale()`` (que llamo al principio del código) compruebo el Locale del ordenador y pongo un valor a los atributos de de Locale de la clase:
 
 Atributos para formatar fechas, monedas y números
 ```jsx
@@ -216,7 +216,7 @@ Atributos para formatar fechas, monedas y números
     static NumberFormat cFormatter;
 ```
 
-Función setLocale():
+Función ``setLocale()``:
 ```jsx
 public static void setLocale() {
  if (!lDefault.equals(new Locale("es", "ES")) && !lDefault.equals(new Locale("ca", "ES"))) {
