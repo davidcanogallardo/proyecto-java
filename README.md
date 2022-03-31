@@ -158,15 +158,12 @@ for (Product prod : list) {
 ### Ejercicio 1 NO DUAL
 Para el control de persistencia he creado la clase ``Presence`` con los campos
 - id
-- fecha 
-- hora entrada
-- hora salida
-
-La fecha es el día en el que se ficha de entrada y **salida**.
+- fecha y hora entrada
+- fecha y hora salida
 
 Luego he añadido dos contructores uno sin la hora de salida (para fichar de entrada) y otro con todos los campos.
 
-Luego he creado una DAO de Presence con las funciones ``add()`` para fichar de entrada y ``addLeaveTime()`` para ficha de salida.
+Luego he creado una DAO de Presence con las funciones ``add()`` para fichar de entrada y ``addLeaveTime()`` para fichar de salida.
 
 En el DAO un trabajador podrá fichar (entrada y salida) varias veces solo si ha fichado de salida o aún no ha fichado. Para comprobar que haya fichado de salida al fichar de entrada itero todos los fichajes y comparo que no haya otro fichaje con ese id que tenga la fecha de salida.
 
